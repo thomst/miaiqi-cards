@@ -29,10 +29,16 @@ a:hover {
 img {
     max-width: 300px;
     height: auto;
+    border: 1px solid #ccc;
+    padding: 2px;
+    background: #fff;
 }
 
 .detail-image {
     max-width: 500px;
+    border: 1px solid #ccc;
+    padding: 2px;
+    background: #fff;
 }
 
 .postcard-image {
