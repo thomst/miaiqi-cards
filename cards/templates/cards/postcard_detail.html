@@ -10,7 +10,7 @@
     <h1>{{ postcard.title }}</h1>
     <p><strong>Description:</strong> {{ postcard.description }}</p>
     <p><strong>Created:</strong> {{ postcard.created_at }}</p>
-    <img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" style="max-width: 300px;">
+    <img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" class="detail-image">
     <br>
     <a href="{% url 'postcard_list' %}">Back to list</a>
 </body>

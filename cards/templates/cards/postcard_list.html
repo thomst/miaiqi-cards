@@ -2,16 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Postcards</title>
+    <title>miaiqi cards</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'cards/styles.css' %}">
 </head>
 <body>
-    <h1>Postcards</h1>
+    <h1>miaiqi cards</h1>
+    <p>Hi. Hier findest du meine mit viel Liebe gestalteten Postkarten. (Neue Postkarten kommen bald!)</p>
+    <p>Wenn sie Dir gefallen und Du welche bestellen möchtest, schreib mir gerne eine E-Mail <a href="mailto:thomas.leichtfuss@posteo.de">thomas.leichtfuss@posteo.de</a>.</p>
+    <p>(Diese Webseite befindet sich im Aufbau.)</p>
     <ul>
         {% for postcard in postcards %}
         <li>
-            <img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" style="max-width: 100px; height: auto; margin-right: 10px;">
+            <img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" class="postcard-image">
             <a href="{{ postcard.get_absolute_url }}">{{ postcard.title }}</a>
         </li>
         {% empty %}

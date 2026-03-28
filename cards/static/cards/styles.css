@@ -1,6 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
 }
 
 h1 {
@@ -22,4 +24,18 @@ a {
 
 a:hover {
     text-decoration: underline;
+}
+
+img {
+    max-width: 300px;
+    height: auto;
+}
+
+.detail-image {
+    max-width: 500px;
+}
+
+.postcard-image {
+    display: block;
+    margin-bottom: 5px;
 }
