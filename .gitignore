@@ -1,0 +1,11 @@
+*.pyc
+*~
+.*/
+*.db
+/db/
+staticfiles/
+media/
+/.python-version
+/.vscode/
+/my.cnf
+/backups/

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Postcards</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'cards/styles.css' %}">
+</head>
+<body>
+    <h1>Postcards</h1>
+    <ul>
+        {% for postcard in postcards %}
+        <li>
+            <img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" style="max-width: 100px; height: auto; margin-right: 10px;">
+            <a href="{{ postcard.get_absolute_url }}">{{ postcard.title }}</a>
+        </li>
+        {% empty %}
+        <li>No postcards available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
