@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>miaiqi cards</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'cards/styles.css' %}">
-</head>
-<body>
+{% extends 'cards/base.html' %}
+{% load static %}
+
+{% block title %}miaiqi cards{% endblock %}
+
+{% block content %}
     <h1>miaiqi cards</h1>
     <p>Hi. Hier findest du meine mit viel Liebe gestalteten Postkarten. (Neue Postkarten kommen bald!)</p>
     <p>Wenn sie Dir gefallen und Du welche bestellen möchtest, schreib mir gerne eine E-Mail <a href="mailto:thomas.leichtfuss@posteo.de">thomas.leichtfuss@posteo.de</a>.</p>
@@ -21,5 +18,4 @@
         <li>No postcards available.</li>
         {% endfor %}
     </ul>
-</body>
-</html>
+{% endblock %}
