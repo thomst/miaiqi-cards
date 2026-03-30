@@ -10,14 +10,14 @@ ul {
 
 a {
     text-decoration: none;
-    color:#666;
+    color: inherit;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-/* Layout */
+/* Main Layout */
 
 body {
     padding: clamp(20px, 5vw, 40px);
@@ -29,18 +29,27 @@ div.container {
     flex-direction: row;
     gap: clamp(10px, 3vw, 20px);
     align-items: stretch;
+    border: solid 1px #ccc;
 }
 
-.sidebar  {
+aside {
+    flex-basis: 23%;
+    border: solid 1px #ccc;
+    position: sticky;
+    top: clamp(20px, 5vw, 40px);
+    align-self: flex-start;
+}
+
+main {
+    border: solid 1px #ccc;
+    padding-left: clamp(30px, 6vw, 50px);
+    padding-right: clamp(30px, 6vw, 50px);
+}
+
+aside div.sidebar  {
     display: flex;
     flex-direction: column;
     gap: clamp(30px, 6vw, 50px);
-    border: solid 1px #ccc;
-}
-
-.main-content  {
-    flex-basis: 77%;
-    border: solid 1px #ccc;
 }
 
 
@@ -53,18 +62,14 @@ body {
 }
 
 .sidebar-logo img {
-    max-width: 60%;
-    display: block;
+    width: 60%;
 }
 
 .sidebar-logo h2 {
-    max-width: 60%;
-    text-align: center;
     margin: 10px 0 0 0;
 }
 
 .sidebar-logo h2 {
-    /* margin-bottom: 20px; */
     font-size: 40px;
     font-weight: 100;
 }

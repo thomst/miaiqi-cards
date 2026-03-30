@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}miaiqi cards{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'cards/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <aside>
+            {% include 'layout/sidebar.html' %}
+        </aside>
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>
