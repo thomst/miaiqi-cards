@@ -1,0 +1,27 @@
+h1 {
+    font-size: 60px;
+}
+
+.postcards-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: clamp(30px, 5vw, 50px);
+    margin-top: clamp(30px, 5vw, 50px);
+}
+
+.postcard-image {
+    max-width: 300px;
+    height: auto;
+    border: 1px solid #ccc;
+    padding: 2px;
+    background: #fff;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.postcard-item div {
+    text-align: center;
+    font-size: 28px;
+    color: #666;
+}

@@ -1,0 +1,32 @@
+/* Welcome */
+
+img.welcome-image {
+    position: fixed;
+    top: 0vh;
+    left: 14vw;
+    height: 100vh;
+    width: auto;
+    z-index: -1;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+div.welcome-text {
+    margin-top: 20vh;
+    margin-left: 20vw;
+}
+
+h1 {
+    font-size: 30px;
+}
+
+h2 {
+    color: black;
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 110%;
+    margin-top: 20px;
+}
