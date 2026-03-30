@@ -30,8 +30,8 @@ class PostcardViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "View Test")
 
-    def test_postcard_detail_view(self):
-        response = self.client.get(reverse('postcard_detail', args=[self.postcard.pk]))
+    def test_postcard_view(self):
+        response = self.client.get(reverse('postcard', args=[self.postcard.pk]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "View Test")
         self.assertContains(response, "View Test")

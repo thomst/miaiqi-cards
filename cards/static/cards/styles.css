@@ -84,17 +84,3 @@ body {
     font-weight: 500;
     line-height: 140%;
 }
-
-/* Postcard Grid */
-
-.detail-image {
-    max-width: 500px;
-    border: 1px solid #ccc;
-    padding: 2px;
-    background: #fff;
-}
-
-.postcard-image {
-    display: block;
-    margin-bottom: 5px;
-}

@@ -14,4 +14,4 @@ class Postcard(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('postcard_detail', args=[self.pk])
+        return reverse('postcard', args=[self.pk])

@@ -1,0 +1,25 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'cards/postcard.css' %}">
+{% endblock %}
+
+{% block title %}{{ postcards.1.title }} - miaiqi cards{% endblock %}
+
+{% block content %}
+    <h1>{{ postcards.1.title }}</h1>
+    <div class="postcard-container">
+        <img src="{{ postcards.1.image.url }}" alt="{{ postcards.1.title }}">
+        <p>{{ postcards.1.description }}</p>
+    </div>
+    <nav>
+        {% if postcards.0 %}
+            <a href="{{ postcards.0.get_absolute_url }}">◅ last · </a>
+        {% endif %}
+        <a href="{% url 'galery' %}">close</a>
+        {% if postcards.2 %}
+            <a href="{{ postcards.2.get_absolute_url }}">· next ▻</a>
+        {% endif %}
+    </nav>
+{% endblock %}

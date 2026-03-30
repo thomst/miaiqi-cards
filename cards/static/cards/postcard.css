@@ -1,0 +1,27 @@
+h1 {
+    font-size: 60px;
+}
+
+.postcard-container {
+    display: flex;
+    flex-direction: row;
+    gap: clamp(20px, 3vw, 40px);
+    align-items: flex-start;
+    margin-top: clamp(30px, 5vw, 50px);
+}
+
+.postcard-container img {
+    max-width: 500px;
+    border: 1px solid #ccc;
+}
+
+.postcard-container p {
+    font-size: 28px;
+}
+
+main nav a {
+    display: inline-block;
+    margin-top: clamp(20px, 3vw, 40px);
+    font-size: 24px;
+}
+
