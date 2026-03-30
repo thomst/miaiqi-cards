@@ -6,7 +6,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    gap: clamp(30px, 5vw, 50px);
+    gap: clamp(20px, 3vw, 40px);
     margin-top: clamp(30px, 5vw, 50px);
 }
 
