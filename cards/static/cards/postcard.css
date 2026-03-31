@@ -1,5 +1,7 @@
 h1 {
     font-size: 60px;
+    font-family: "Cherry Swash", cursive;
+    font-weight: 400;
 }
 
 .postcard-container {
@@ -16,6 +18,7 @@ h1 {
 }
 
 .postcard-container p {
+    font-family: Andada Pro, serif;
     font-size: 28px;
 }
 

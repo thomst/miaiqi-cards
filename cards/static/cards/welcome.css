@@ -23,7 +23,9 @@ h1 {
     font-size: 30px;
 }
 
-h2 {
+main h2 {
+    font-family: "Cherry Swash", cursive;
+    font-weight: normal !important;
     color: black;
     font-size: 64px;
     font-weight: 600;
