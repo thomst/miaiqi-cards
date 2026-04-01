@@ -1,3 +1,4 @@
+
 h1 {
     font-size: 60px;
     font-family: "Cherry Swash", cursive;
@@ -12,13 +13,13 @@ h1 {
     margin-top: clamp(30px, 5vw, 50px);
 }
 
-.postcard-container img {
+img.postcard-image {
     max-width: 500px;
-    border: 1px solid #ccc;
 }
 
 .postcard-container p {
-    font-family: Andada Pro, serif;
+    font-family: Ysabeau, sans serif;
+    font-weight: 300;
     font-size: 28px;
 }
 

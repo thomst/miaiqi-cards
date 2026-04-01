@@ -1,3 +1,4 @@
+
 h1 {
     font-size: 60px;
     font-family: Cherry Swash, serif;
@@ -10,31 +11,26 @@ h1 {
     flex-direction: row;
     gap: clamp(20px, 3vw, 40px);
     margin-top: clamp(30px, 5vw, 50px);
-    /* font-family: Andada Pro, serif; */
-}
-
-.postcard-image {
-    max-width: 300px;
-    height: auto;
-    border: 1px solid #ccc;
-    padding: 2px;
-    background: #fff;
-    display: block;
-    margin-bottom: 5px;
+    font-weight: 300;
 }
 
 .postcard-item div {
-    text-align: center;
-    font-size: 28px;
-    color: #666;
+    /* text-align: center; */
+    margin-top: 10px;
+    font-size: 24px;
+    color: #999;
 }
 
-.more-cards {
+img.postcard-image {
+    width: 300px;
+}
+
+div.postcard-image {
     width: 300px;
     height: 300px;
-    border: 1px solid #ccc;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
+    color: #999;
 }

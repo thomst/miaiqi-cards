@@ -13,12 +13,12 @@
     <div class="postcards-container">
         {% for postcard in postcards %}
             <a class="postcard-item" href="{{ postcard.get_absolute_url }}">
-                <img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" class="postcard-image">
+                <img class="postcard-image" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
                 <div>{{ postcard.title }}</div>
             </a>
         {% empty %}
             <p>No postcards available.</p>
         {% endfor %}
-        <div class="more-cards">More are coming soon...</div>
+        <div class="postcard-image">More are coming soon...</div>
     </div>
 {% endblock %}

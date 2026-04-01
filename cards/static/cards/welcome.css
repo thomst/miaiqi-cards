@@ -19,16 +19,19 @@ div.welcome-text {
     margin-left: 20vw;
 }
 
-h1 {
-    font-size: 30px;
+main h1 {
+    font-family: "Albert Sans", sans-serif;
+    font-size: 42px;
+    font-weight: 600;
+    color: #ad0808;
+    margin-bottom: 15px;
+    padding-left: 10px;
 }
 
 main h2 {
     font-family: "Cherry Swash", cursive;
-    font-weight: normal !important;
+    font-weight: normal;
     color: black;
     font-size: 64px;
-    font-weight: 600;
     line-height: 110%;
-    margin-top: 20px;
 }

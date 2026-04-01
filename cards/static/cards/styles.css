@@ -60,9 +60,14 @@ aside div.sidebar  {
 /* Typography and Styling */
 
 body {
+    font-family: "Ysabeau", sans-serif;
     font-family: "Albert Sans", sans-serif;
     background: #fff;
     color:#333;
+}
+
+aside {
+    font-family: "Albert Sans", sans-serif;
 }
 
 .sidebar-logo img {
@@ -83,4 +88,14 @@ body {
     font-size: 25px;
     font-weight: 500;
     line-height: 140%;
+}
+
+/*Postcard style */
+
+.postcard-image {
+    height: auto;
+    display: block;
+    background: #fff;
+    box-shadow: #ccc 4px 4px 3px;
+    border: 1px solid #ccc;
 }
