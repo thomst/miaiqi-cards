@@ -1,11 +1,15 @@
 
-h1 {
-    font-size: 60px;
-    font-family: "Cherry Swash", cursive;
-    font-weight: 400;
+section.postcard {
+    margin-bottom: 0;
 }
 
-.postcard-container {
+h1 {
+    font-size: 64px;
+    font-family: "Cherry Swash", cursive;
+    font-weight: normal;
+}
+
+div.postcard {
     display: flex;
     flex-direction: row;
     gap: clamp(20px, 3vw, 40px);
@@ -13,19 +17,23 @@ h1 {
     margin-top: clamp(30px, 5vw, 50px);
 }
 
-img.postcard-image {
+div.postcard img {
     max-width: 500px;
 }
 
-.postcard-container p {
+div.postcard p {
     font-family: Ysabeau, sans serif;
     font-weight: 300;
     font-size: 28px;
 }
 
-main nav a {
+nav a {
     display: inline-block;
     margin-top: clamp(20px, 3vw, 40px);
     font-size: 24px;
 }
 
+nav a.disabled {
+    color: var(--light-color);
+    pointer-events: none;
+}

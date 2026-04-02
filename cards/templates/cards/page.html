@@ -1,0 +1,57 @@
+{% extends 'cards/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>miaiqi cards</title>
+    {{ block.super }}
+    <style>
+        body {
+            background-image: url("{{ postcards.0.image.url }}");
+            background-size: cover;
+            background-position: 30% center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: 85vh;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <section id="welcome">
+        <div>
+            <h1>miaiqi cards</h1>
+            <h2>Mit Liebe gezeichnete Postkarten. Inspiriert von der Schönheit der Natur.</h2>
+        </div>
+    </section>
+    <section id="postcards">
+        <h2>Gallerie</h2>
+        <div>
+            {% for postcard in postcards %}
+                <a href="{{ postcard.get_absolute_url }}">
+                    <figure>
+                        <img class="postcard-image" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
+                        <figcaption>{{ postcard.title }}</figcaption>
+                    </figure>
+                </a>
+            {% empty %}
+                <p>No postcards available.</p>
+            {% endfor %}
+            <div class="postcard-image">More are coming soon...</div>
+        </div>
+    </section>
+    <section id="shop">
+        <h2>Shop</h2>
+        <p>Postkarten können in zwei Größen gekauft werden:</p>
+        <ul>
+            <li>Standardgröße (12,1 x 12,1cm): 2,50€</li>
+            <li>Großformat (14,8 x 14,8cm): 5,00€</li>
+        </ul>
+        <p>Bitte schreib mir eine Email mit Deinen Wünschen</p>
+        <a href="mailto:thomas.leichtfuss@posteo.de">Email senden</a>
+    </section>
+    <footer>
+        {% block footer %}
+            <p>Copyright © 2024 miaiqi cards. Alle Rechte vorbehalten.</p>
+        {% endblock %}
+    </footer>
+{% endblock %}

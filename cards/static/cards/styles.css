@@ -1,3 +1,5 @@
+/* Defaults */
+
 * {
     margin: 0;
     padding: 0;
@@ -17,85 +19,127 @@ a:hover {
     text-decoration: underline;
 }
 
+/* Color theme */
+
+:root {
+    --accent-color: #ad0808;
+    --dark-color: #333;
+    --not-so-dark-color: #666;
+    --light-color: #ccc;
+    --background-color: #fff;
+    --background-cover-color: rgba(255, 255, 255, .9);
+}
+
+
 /* Main Layout */
 
-/* div.container, aside, main {
-    border: solid 1px #ccc;
-} */
-
-body {
-    padding: clamp(20px, 5vw, 40px);
-    background-color: #fff;
-}
-
-div.container {
-    padding-top: clamp(20px, 5vw, 40px);
-    padding-left: clamp(20px, 5vw, 40px);
-    display: flex;
-    flex-direction: row;
-    gap: clamp(10px, 3vw, 20px);
-    align-items: stretch;
-}
-
-aside {
-    flex-basis: 23%;
-    position: sticky;
-    top: clamp(40px, 10vw, 80px);
-    align-self: flex-start;
-}
-
 main {
-    max-width: 73%;
-    padding-left: clamp(30px, 6vw, 50px);
-    padding-right: clamp(30px, 6vw, 50px);
-}
-
-aside div.sidebar  {
     display: flex;
     flex-direction: column;
-    gap: clamp(30px, 6vw, 50px);
+    /* max-width: clamp(800px, 80vw, 1200px); */
+    margin: 0 auto;
+}
+
+section:first-child {
+    border: none;
+}
+
+section {
+    border-top: solid 1px var(--light-color);
+    border-bottom: solid 1px var(--light-color);
+    background-color: var(--background-cover-color);
+    padding-left: clamp(100px, 18vw, 400px);
+    padding-right: clamp(100px, 18vw, 400px);
+    padding-top: clamp(30px, 5vh, 50px);
+    padding-bottom: clamp(30px, 5vh, 50px);
+    margin-bottom: clamp(100px, 20vh, 200px);
 }
 
 
-/* Typography and Styling */
+/* Main Typography */
 
 body {
-    font-family: "Ysabeau", sans-serif;
+    /* font-family: "Ysabeau", sans-serif; */
     font-family: "Albert Sans", sans-serif;
-    background: #fff;
-    color:#333;
+    color: var(--dark-color);
 }
 
-aside {
-    font-family: "Albert Sans", sans-serif;
+h2 {
+    font-family: "Cherry Swash", cursive;
+    font-weight: normal;
+    color: var(--dark-color);
+    font-size: 64px;
+    line-height: 110%;
 }
 
-.sidebar-logo img {
-    width: clamp(80px, 8vw, 200px);
-}
-
-.sidebar-logo h2 {
-    margin-top: clamp(5px, 1vw, 10px);
-}
-
-.sidebar-logo h2 {
-    font-size: 60px;
-    line-height: 90%;
-    font-weight: 100;
-}
-
-.sidebar-nav li {
-    font-size: 25px;
-    font-weight: 500;
-    line-height: 140%;
-}
-
-/*Postcard style */
-
-.postcard-image {
+img.postcard-image {
     height: auto;
     display: block;
-    background: #fff;
-    box-shadow: #ccc 4px 4px 3px;
-    border: 1px solid #ccc;
+    box-shadow: var(--light-color) 4px 4px 3px;
+    border: 1px solid var(--light-color);
+    background-color: var(--background-color);
+}
+
+
+/* Welcome Layout */
+
+section#welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: unset;
+    margin-bottom: 0;
+}
+
+section#welcome div {
+    margin-left: 20vw;
+}
+
+/* Welcome Typography */
+
+section#welcome h1 {
+    font-family: "Albert Sans", sans-serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--accent-color);
+    margin-bottom: 15px;
+}
+
+section#welcome h2 {
+    font-size: 64px;
+    line-height: 110%;
+}
+
+
+/* Postcards Layout */
+
+section#postcards > div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: clamp(20px, 3vw, 40px);
+    margin-top: clamp(30px, 5vw, 50px);
+    font-weight: 300;
+}
+
+section#postcards figure img {
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+section#postcards > div > div:last-child{
+    width: 300px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*Postcards Typography */
+
+section#postcards {
+    font-size: 24px;
+    color: var(--not-so-dark-color);
 }
