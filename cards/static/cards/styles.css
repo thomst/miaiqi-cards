@@ -28,6 +28,7 @@ a:hover {
     --light-color: #ccc;
     --background-color: #fff;
     --background-cover-color: rgba(255, 255, 255, .9);
+    --background-dark-color: #333;
 }
 
 
@@ -36,15 +37,10 @@ a:hover {
 main {
     display: flex;
     flex-direction: column;
-    /* max-width: clamp(800px, 80vw, 1200px); */
     margin: 0 auto;
 }
 
-section:first-child {
-    border: none;
-}
-
-section {
+section, footer {
     border-top: solid 1px var(--light-color);
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
@@ -55,11 +51,21 @@ section {
     margin-bottom: clamp(100px, 20vh, 200px);
 }
 
+section:first-child {
+    border: none;
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
 
 /* Main Typography */
 
 body {
-    /* font-family: "Ysabeau", sans-serif; */
     font-family: "Albert Sans", sans-serif;
     color: var(--dark-color);
 }
@@ -80,6 +86,10 @@ img.postcard-image {
     background-color: var(--background-color);
 }
 
+footer {
+    color: var(--light-color);
+    background-color: var(--dark-color);
+}
 
 /* Welcome Layout */
 
