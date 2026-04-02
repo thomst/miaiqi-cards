@@ -1,25 +1,23 @@
-{% extends 'layout/base.html' %}
+{% extends 'cards/base.html' %}
 {% load static %}
 
-{% block extra_head %}
+{% block head %}
+    <title>{{ postcards.1.title }}</title>
     <link rel="stylesheet" href="{% static 'cards/postcard.css' %}">
+    {{ block.super }}
 {% endblock %}
 
-{% block title %}{{ postcards.1.title }} - miaiqi cards{% endblock %}
-
 {% block content %}
-    <h1>{{ postcards.1.title }}</h1>
-    <div class="postcard-container">
-        <img class="postcard-image" src="{{ postcards.1.image.url }}" alt="{{ postcards.1.title }}">
-        <p>{{ postcards.1.description }}</p>
-    </div>
-    <nav>
-        {% if postcards.0 %}
-            <a href="{{ postcards.0.get_absolute_url }}">◅ last · </a>
-        {% endif %}
-        <a href="{% url 'galery' %}">close</a>
-        {% if postcards.2 %}
-            <a href="{{ postcards.2.get_absolute_url }}">· next ▻</a>
-        {% endif %}
-    </nav>
+    <section id="postcard">
+        <h1>{{ postcards.1.title }}</h1>
+        <div class="postcard">
+            <img class="postcard-image" src="{{ postcards.1.image.url }}" alt="{{ postcards.1.title }}">
+            <p>{{ postcards.1.description }}</p>
+        </div>
+        <nav>
+            <a href="{{ postcards.0.get_absolute_url }}"{% if not postcards.0 %} class="disabled"{% endif %}>◅ last</a> ·
+            <a href="{% url 'page' %}#postcards">close</a> ·
+            <a href="{{ postcards.2.get_absolute_url }}"{% if not postcards.2 %} class="disabled"{% endif %}>next ▻</a>
+        </nav>
+    </section>
 {% endblock %}

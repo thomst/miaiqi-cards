@@ -4,13 +4,9 @@ from .models import Postcard
 
 # Create your views here.
 
-def welcome(request):
-    postcard = Postcard.objects.filter(is_public=True).first()
-    return render(request, 'cards/welcome.html', {'postcard': postcard})
-
-def galery(request):
+def page(request):
     postcards = Postcard.objects.filter(is_public=True)
-    return render(request, 'cards/galery.html', {'postcards': postcards})
+    return render(request, 'cards/page.html', {'postcards': postcards})
 
 def postcard(request, pk):
     postcards = [None, *Postcard.objects.filter(is_public=True), None]
