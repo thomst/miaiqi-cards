@@ -78,7 +78,7 @@ h2 {
     line-height: 110%;
 }
 
-img.postcard-image {
+img.postcard-image, div.postcard-image {
     height: auto;
     display: block;
     box-shadow: var(--light-color) 4px 4px 3px;
