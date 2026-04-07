@@ -153,3 +153,12 @@ section#postcards {
     font-size: 24px;
     color: var(--not-so-dark-color);
 }
+
+
+/* Info Layout and Typography */
+
+section#info p {
+    font-family: Ysabeau, sans serif;
+    font-size: 22px;
+    margin-top: 10px;
+}
