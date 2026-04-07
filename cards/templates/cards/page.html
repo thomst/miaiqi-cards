@@ -6,12 +6,11 @@
     {{ block.super }}
     <style>
         body {
-            background-image: url("{{ postcards.0.image.url }}");
-            background-size: cover;
+            background-image: url("{% static 'cards/background.png' %}");
             background-position: 30% center;
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-size: 85vh;
+            background-size: auto 100vh;
         }
     </style>
 {% endblock %}
@@ -39,21 +38,18 @@
             <div class="postcard-image">More are coming soon...</div>
         </div>
     </section>
-    <section id="shop">
-        <h2>Shop</h2>
-        <p>Postkarten können in zwei Größen gekauft werden:</p>
-        <ul>
-            <li>Standardgröße (12,1 x 12,1cm): 2,50€</li>
-            <li>Großformat (14,8 x 14,8cm): 5,00€</li>
-        </ul>
-        <p>Bitte schreib mir eine Email mit Deinen Wünschen</p>
-        <a href="mailto:thomas.leichtfuss@posteo.de">Email senden</a>
+    <section id="info">
+        <h2>Info</h2>
+        <p>Miaiqi-Cards sind in zwei Größen verfügbar: 12,1 x 12,1cm und 14,8 x 14,8cm.</p>
+        <p>Sie werden auf hochwertigem nachhaltig produziertem Naturkarton gedruckt.</p>
+        <p>Sie sind gegen eine Spende von 2 bis 3 Euro erhältlich.</p>
+        <p>Schreib mir einfach eine Email wenn Du Interesse hast: <i>thomas.leichtfuss(at)posteo.de</i></p>
     </section>
     <footer>
         {% block footer %}
             <div>
                 <p>Kontakt:</p>
-                <p>thomas.leichtfuss@posteo.de</p>
+                <p>thomas.leichtfuss(at)posteo.de</p>
                 <p>0152 33894457</p>
             </div>
             <div>
