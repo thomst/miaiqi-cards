@@ -125,7 +125,7 @@ section#welcome h2 {
 
 /* Postcards Layout */
 
-section#postcards > div {
+section.gallery > div {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -134,12 +134,12 @@ section#postcards > div {
     font-weight: 300;
 }
 
-section#postcards figure img {
+section.gallery figure img {
     width: 300px;
     margin-bottom: 10px;
 }
 
-section#postcards > div > div:last-child{
+section.gallery > div > div:last-child{
     width: 300px;
     height: 300px;
     display: flex;
@@ -149,7 +149,7 @@ section#postcards > div > div:last-child{
 
 /*Postcards Typography */
 
-section#postcards {
+section.gallery {
     font-size: 24px;
     color: var(--not-so-dark-color);
 }
@@ -157,7 +157,7 @@ section#postcards {
 
 /* Info Layout and Typography */
 
-section#info p {
+section.text-section p {
     font-family: Ysabeau, sans serif;
     font-size: 22px;
     margin-top: 10px;
