@@ -1,0 +1,49 @@
+{% extends 'pages/base.html' %}
+
+{% block head %}
+
+    <title>miaiqi cards</title>
+    {{ block.super }}
+    {{ media }}
+
+    <style>
+        body {
+            background-image: url("{{ page.background_image.url }}");
+            background-position: 30% center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: auto 100vh;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <main>
+        <section id="welcome">
+            <div>
+                <h1>{{ page.title }}</h1>
+                <h2>{{ page.subtitle }}</h2>
+            </div>
+        </section>
+
+        {% for section in regions.main.sections %}
+            <section class="{{ section.obj.css_class }}">
+                {{ section.html }}
+            </section>
+        {% endfor %}
+
+    </main>
+
+    <footer>
+
+        {% for section in regions.footer.sections %}
+            <div>
+                {{ section.html }}
+            </div>
+        {% endfor %}
+
+    </footer>
+
+{% endblock %}
