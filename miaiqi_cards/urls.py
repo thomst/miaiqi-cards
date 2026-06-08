@@ -23,7 +23,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', include('cards.urls')),
     path('admin/', admin.site.urls),
-    path('markdownx/', include('markdownx.urls')),
 ]
 
 if settings.DEBUG:
