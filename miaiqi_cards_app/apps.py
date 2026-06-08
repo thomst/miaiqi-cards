@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class CardsConfig(AppConfig):
+class MiaiqiCardsAppConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'cards'
+    name = 'miaiqi_cards_app'

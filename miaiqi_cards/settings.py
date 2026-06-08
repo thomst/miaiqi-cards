@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'markdownx',
     'reorder_items_widget',
     'simple_page',
-    'cards',
+    'miaiqi_cards_app',
 ]
 
 MIDDLEWARE = [
