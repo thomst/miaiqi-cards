@@ -40,7 +40,7 @@ main {
     margin: 0 auto;
 }
 
-section, footer {
+section:not(#welcome), footer {
     border-top: solid 1px var(--light-color);
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
@@ -49,10 +49,6 @@ section, footer {
     padding-top: clamp(30px, 5vh, 50px);
     padding-bottom: clamp(30px, 5vh, 50px);
     margin-bottom: clamp(100px, 20vh, 200px);
-}
-
-section:first-child {
-    border: none;
 }
 
 footer {
@@ -95,7 +91,7 @@ footer {
 
 section#welcome {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     height: 100vh;
@@ -103,23 +99,70 @@ section#welcome {
     margin-bottom: 0;
 }
 
-section#welcome div {
-    margin-left: 20vw;
+section#welcome h1,
+section#welcome h2,
+section#welcome img {
+    height: 100vh;
+    width:auto;
 }
 
-/* Welcome Typography */
-
 section#welcome h1 {
-    font-family: "Albert Sans", sans-serif;
-    font-size: 42px;
-    font-weight: 300;
-    color: var(--accent-color);
-    margin-bottom: 15px;
+    border-right: 2px solid #ccc;
 }
 
 section#welcome h2 {
-    font-size: 64px;
+    border-left: 2px solid #ccc;
+}
+
+section#welcome h2 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 3vw;
+    text-align: left;
+    font-size: 10.5vh;
     line-height: 110%;
+    color: var(--dark-color);
+    /* background-color: aliceblue; */
+}
+
+
+section#welcome h1 {
+    font-family: "Albert Sans", sans-serif;
+    font-size: 16vh;
+    font-weight: bold;
+    color: crimson;
+    /* background-color: antiquewhite; */
+    writing-mode: sideways-lr;
+    text-orientation: sideways;
+    padding: 2vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 16vw;
+    white-space: nowrap;
+}
+
+section#welcome a {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+
+section#welcome h2:hover {
+    background-color: lightcyan;
+    transition: background-color 500ms linear;
+}
+
+section#welcome h1:hover {
+    background-color: lightpink;
+    transition: background-color 500ms linear;
+}
+
+section#welcome img:hover {
+    background-color: lightyellow;
+    transition: background-color 500ms linear;
 }
 
 
