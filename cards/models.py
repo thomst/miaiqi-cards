@@ -1,6 +1,5 @@
 import re
 from django.db import models
-from django.utils.text import slugify
 from markdownx.models import MarkdownxField
 from reorder_items_widget import ReorderItemsField
 from simple_page.models import Section, Page

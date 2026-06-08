@@ -1,6 +1,5 @@
-from django.http import Http404
 from django.shortcuts import render, get_object_or_404
-from .models import Gallery, Postcard
+from .models import Gallery
 
 
 def postcard(request, gallery_id, postcard_id):
