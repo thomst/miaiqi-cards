@@ -44,11 +44,13 @@ section:not(#welcome), footer {
     border-top: solid 1px var(--light-color);
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
-    padding-left: clamp(100px, 18vw, 400px);
-    padding-right: clamp(100px, 18vw, 400px);
-    padding-top: clamp(30px, 5vh, 50px);
-    padding-bottom: clamp(30px, 5vh, 50px);
-    margin-bottom: clamp(100px, 20vh, 200px);
+    padding: 5vh 12vw;
+    position: relative;
+    top: 100vh;
+}
+
+section:not(#welcome) {
+    padding-bottom: 20vh;
 }
 
 footer {
@@ -70,7 +72,7 @@ h2 {
     font-family: "Cherry Swash", cursive;
     font-weight: normal;
     color: var(--dark-color);
-    font-size: 64px;
+    font-size: 10.5vh;
     line-height: 110%;
 }
 
@@ -97,21 +99,17 @@ section#welcome {
     height: 100vh;
     background-color: unset;
     margin-bottom: 0;
+    position: fixed;
 }
 
-section#welcome h1,
-section#welcome h2,
-section#welcome img {
+section#welcome > a > * {
     height: 100vh;
     width:auto;
 }
 
-section#welcome h1 {
+section#welcome h1,
+section#welcome img {
     border-right: 2px solid #ccc;
-}
-
-section#welcome h2 {
-    border-left: 2px solid #ccc;
 }
 
 section#welcome h2 {
@@ -123,16 +121,14 @@ section#welcome h2 {
     font-size: 10.5vh;
     line-height: 110%;
     color: var(--dark-color);
-    /* background-color: aliceblue; */
 }
 
 
 section#welcome h1 {
     font-family: "Albert Sans", sans-serif;
-    font-size: 16vh;
+    font-size: 15vh;
     font-weight: bold;
     color: crimson;
-    /* background-color: antiquewhite; */
     writing-mode: sideways-lr;
     text-orientation: sideways;
     padding: 2vw;
@@ -161,7 +157,7 @@ section#welcome h1:hover {
 }
 
 section#welcome img:hover {
-    background-color: lightyellow;
+    background-color: lightgoldenrodyellow;
     transition: background-color 500ms linear;
 }
 
@@ -172,19 +168,19 @@ section.gallery > div {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    gap: clamp(20px, 3vw, 40px);
-    margin-top: clamp(30px, 5vw, 50px);
+    gap: 3vw;
+    margin-top: 5vw;
     font-weight: 300;
 }
 
 section.gallery figure img {
-    width: 300px;
+    width: 22vw;
     margin-bottom: 10px;
 }
 
 section.gallery > div > div:last-child{
-    width: 300px;
-    height: 300px;
+    width: 22vw;
+    height: 22vw;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -193,7 +189,7 @@ section.gallery > div > div:last-child{
 /*Postcards Typography */
 
 section.gallery {
-    font-size: 24px;
+    font-size: 3.5vh;
     color: var(--not-so-dark-color);
 }
 
@@ -202,6 +198,6 @@ section.gallery {
 
 section.text-section p {
     font-family: Ysabeau, sans serif;
-    font-size: 22px;
+    font-size: 3vh;
     margin-top: 10px;
 }
