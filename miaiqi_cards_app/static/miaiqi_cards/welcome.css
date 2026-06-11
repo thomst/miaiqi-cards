@@ -1,0 +1,69 @@
+section.welcome-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: unset;
+    margin-bottom: 0;
+    position: fixed;
+}
+
+section.welcome-section > a > * {
+    height: 100vh;
+    width:auto;
+}
+
+section.welcome-section h1,
+section.welcome-section img {
+    border-right: 2px solid #ccc;
+}
+
+section.welcome-section h2 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 3vw;
+    text-align: left;
+    font-size: 10.5vh;
+    line-height: 110%;
+    color: var(--dark-color);
+}
+
+
+section.welcome-section h1 {
+    font-family: "Albert Sans", sans-serif;
+    font-size: 15vh;
+    font-weight: bold;
+    color: crimson;
+    writing-mode: sideways-lr;
+    text-orientation: sideways;
+    padding: 2vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 16vw;
+    white-space: nowrap;
+}
+
+section.welcome-section a {
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+}
+
+section.welcome-section h2:hover {
+    background-color: lightcyan;
+    transition: background-color 500ms linear;
+}
+
+section.welcome-section h1:hover {
+    background-color: lightpink;
+    transition: background-color 500ms linear;
+}
+
+section.welcome-section img:hover {
+    background-color: lightgoldenrodyellow;
+    transition: background-color 500ms linear;
+}

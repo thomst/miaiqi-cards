@@ -40,7 +40,7 @@ main {
     margin: 0 auto;
 }
 
-section:not(#welcome), footer {
+section:not(.welcome-section), footer {
     border-top: solid 1px var(--light-color);
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
@@ -49,7 +49,7 @@ section:not(#welcome), footer {
     top: 100vh;
 }
 
-section:not(#welcome) {
+section:not(.welcome-section) {
     padding-bottom: 20vh;
 }
 
@@ -88,79 +88,6 @@ footer {
     color: var(--light-color);
     background-color: var(--dark-color);
 }
-
-/* Welcome Layout */
-
-section#welcome {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: unset;
-    margin-bottom: 0;
-    position: fixed;
-}
-
-section#welcome > a > * {
-    height: 100vh;
-    width:auto;
-}
-
-section#welcome h1,
-section#welcome img {
-    border-right: 2px solid #ccc;
-}
-
-section#welcome h2 {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 0 3vw;
-    text-align: left;
-    font-size: 10.5vh;
-    line-height: 110%;
-    color: var(--dark-color);
-}
-
-
-section#welcome h1 {
-    font-family: "Albert Sans", sans-serif;
-    font-size: 15vh;
-    font-weight: bold;
-    color: crimson;
-    writing-mode: sideways-lr;
-    text-orientation: sideways;
-    padding: 2vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 16vw;
-    white-space: nowrap;
-}
-
-section#welcome a {
-    padding: 0;
-    margin: 0;
-    text-decoration: none;
-}
-
-section#welcome h2:hover {
-    background-color: lightcyan;
-    transition: background-color 500ms linear;
-}
-
-section#welcome h1:hover {
-    background-color: lightpink;
-    transition: background-color 500ms linear;
-}
-
-section#welcome img:hover {
-    background-color: lightgoldenrodyellow;
-    transition: background-color 500ms linear;
-}
-
 
 /* Postcards Layout */
 

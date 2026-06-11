@@ -4,8 +4,13 @@ from django.urls import reverse
 from markdownx.admin import MarkdownxModelAdmin
 from django.utils.html import format_html
 from reorder_items_widget import ReorderItemsInline
-from simple_page.admin import BasePageAdmin
-from .models import Postcard, MiaiqiCardsPage, TextSection, FooterSection, Gallery, GalleryPostcard
+from .models import Postcard, WelcomeSection, TextSection, FooterSection, Gallery, GalleryPostcard
+
+
+@admin.register(WelcomeSection)
+class WelcomeSection(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
 
 
 @admin.register(TextSection)
@@ -47,9 +52,3 @@ class PostcardAdmin(MarkdownxModelAdmin):
         url = reverse('postcard', kwargs=dict(gallery_id=gallery.id, postcard_id=obj.id))
         return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">Open</a>', url)
     view_link.short_description = 'Open in new tab'
-
-
-@admin.register(MiaiqiCardsPage)
-class MiaiqiCardsPageAdmin(BasePageAdmin):
-    search_fields = ("title", "slug")
-    prepopulated_fields = {"slug": ("title",)}

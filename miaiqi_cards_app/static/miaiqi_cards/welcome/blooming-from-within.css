@@ -1,0 +1,15 @@
+section.welcome-section h1 {
+    color: crimson;
+}
+
+section.welcome-section h2:hover {
+    background-color: lightcyan;
+}
+
+section.welcome-section h1:hover {
+    background-color: lightpink;
+}
+
+section.welcome-section img:hover {
+    background-color: lightgoldenrodyellow;
+}

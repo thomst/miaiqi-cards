@@ -1,5 +1,6 @@
 import re
 from django.db import models
+from django.utils.text import slugify
 from markdownx.models import MarkdownxField
 from reorder_items_widget import ReorderItemsField
 from simple_page.models import Section, Page
@@ -11,13 +12,25 @@ class MiaiqiCardsPage(Page):
         ('footer', 'Footer'),
     ]
 
-    subtitle = models.CharField(max_length=255)
-    background_image = models.ImageField(upload_to='backgrounds/')
+    class Meta:
+        proxy = True
 
 
 class CSSMixin:
     def css_class(self):
         return re.sub(r'(?<!^)(?=[A-Z])', '-', type(self).__name__).lower()
+
+    def css_id(self):
+        return f"{slugify(self.title)}-section"
+
+
+class WelcomeSection(CSSMixin, Section):
+    title = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=255)
+    postcards = models.ManyToManyField('Postcard')
+    title_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_title')
+    subtitle_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_subtitle')
+    postcard_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_postcard')
 
 
 class TextSection(CSSMixin, Section):
