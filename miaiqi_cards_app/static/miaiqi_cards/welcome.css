@@ -1,3 +1,15 @@
+
+/* Default color-scheme. Overwritten by postcard specific css files. */
+section.welcome-section {
+    --strong-color: crimson;
+    --h1-bg-color: lightpink;
+    --h1-bg-color-trans: rgba(255, 182, 193, 0.6);
+    --h2-bg-color: lightcyan;
+    --h2-bg-color-trans: rgba(224, 255, 255, 0.6);
+    --img-bg-color: lightgoldenrodyellow;
+    --img-bg-color-trans: rgba(250, 250, 210, 0.6);
+}
+
 section.welcome-section {
     display: flex;
     flex-direction: row;
@@ -9,13 +21,12 @@ section.welcome-section {
     position: fixed;
 }
 
-section.welcome-section > a > * {
+section.welcome-section :is(h1, h2, img) {
     height: 100vh;
     width:auto;
 }
 
-section.welcome-section h1,
-section.welcome-section img {
+section.welcome-section :is(h1, img) {
     border-right: 2px solid #ccc;
 }
 
@@ -35,7 +46,7 @@ section.welcome-section h1 {
     font-family: "Albert Sans", sans-serif;
     font-size: 15vh;
     font-weight: bold;
-    color: crimson;
+    color: var(--strong-color);
     writing-mode: sideways-lr;
     text-orientation: sideways;
     padding: 2vw;
@@ -51,19 +62,50 @@ section.welcome-section a {
     padding: 0;
     margin: 0;
     text-decoration: none;
+    position: relative;
 }
 
-section.welcome-section h2:hover {
-    background-color: lightcyan;
+section.welcome-section > a > div {
+    position: absolute;
+    font-size: 8vh;
+    font-family: "Albert Sans", sans-serif;
+    font-weight: 200;
+    opacity: 0;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+section.welcome-section > a:hover > div {
+    opacity: 1;
+    transition: opacity 500ms linear;
+}
+
+section.welcome-section :is(h1:hover, h2:hover, img:hover) {
     transition: background-color 500ms linear;
 }
 
 section.welcome-section h1:hover {
-    background-color: lightpink;
-    transition: background-color 500ms linear;
+    background-color: var(--h1-bg-color);
+}
+
+section.welcome-section h2:hover {
+    background-color: var(--h2-bg-color);
 }
 
 section.welcome-section img:hover {
-    background-color: lightgoldenrodyellow;
-    transition: background-color 500ms linear;
+    background-color: var(--img-bg-color);
+}
+
+section.welcome-section div:has(+ h1) {
+    background-color: var(--h1-bg-color-trans);
+}
+
+
+section.welcome-section div:has(+ h2) {
+    background-color: var(--h2-bg-color-trans);
+}
+
+section.welcome-section div:has(+ img) {
+    background-color: var(--img-bg-color-trans);
 }
