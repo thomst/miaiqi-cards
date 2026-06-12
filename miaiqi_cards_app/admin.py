@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.db import models
 from django.urls import reverse
-from markdownx.admin import MarkdownxModelAdmin
 from django.utils.html import format_html
 from reorder_items_widget import ReorderItemsInline
 from .models import Postcard, WelcomeSection, TextSection, FooterSection, Gallery, GalleryPostcard
@@ -14,13 +13,13 @@ class WelcomeSection(admin.ModelAdmin):
 
 
 @admin.register(TextSection)
-class TextSectionAdmin(MarkdownxModelAdmin):
+class TextSectionAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
 
 
 @admin.register(FooterSection)
-class FooterSectionAdmin(MarkdownxModelAdmin):
+class FooterSectionAdmin(admin.ModelAdmin):
     list_display = ['title_view']
 
     def title_view(self, obj):
@@ -35,7 +34,7 @@ class PostcardsInline(ReorderItemsInline):
 
 
 @admin.register(Gallery)
-class GalleryAdmin(MarkdownxModelAdmin):
+class GalleryAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
     exclude = ['postcards']
@@ -43,7 +42,7 @@ class GalleryAdmin(MarkdownxModelAdmin):
 
 
 @admin.register(Postcard)
-class PostcardAdmin(MarkdownxModelAdmin):
+class PostcardAdmin(admin.ModelAdmin):
     list_display = ['title', 'created_at', 'is_public', 'view_link']
     search_fields = ['title']
 

@@ -1,7 +1,6 @@
 import re
 from django.db import models
 from django.utils.text import slugify
-from markdownx.models import MarkdownxField
 from reorder_items_widget import ReorderItemsField
 from simple_page.models import Section, Page
 
@@ -35,14 +34,14 @@ class WelcomeSection(CSSMixin, Section):
 
 class TextSection(CSSMixin, Section):
     title = models.CharField(max_length=255)
-    body = MarkdownxField(blank=True)
+    body = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
 
 
 class FooterSection(Section):
-    body = MarkdownxField(blank=True)
+    body = models.TextField(blank=True)
 
 
 class GalleryPostcard(models.Model):
@@ -56,7 +55,7 @@ class GalleryPostcard(models.Model):
 
 class Postcard(models.Model):
     title = models.CharField(max_length=200)
-    description = MarkdownxField(blank=True)
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='postcards/')
     is_public = models.BooleanField(default=True)
@@ -67,7 +66,7 @@ class Postcard(models.Model):
 
 class Gallery(CSSMixin, Section):
     title = models.CharField(max_length=100)
-    description = MarkdownxField(blank=True)
+    description = models.TextField(blank=True)
     postcards = models.ManyToManyField(
         Postcard,
         through=GalleryPostcard,

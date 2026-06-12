@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'markdownx',
     'reorder_items_widget',
     'simple_page',
     'miaiqi_cards_app',
