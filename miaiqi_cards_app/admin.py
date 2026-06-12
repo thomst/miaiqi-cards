@@ -1,24 +1,23 @@
 from django.contrib import admin
-from django.db import models
 from django.urls import reverse
 from django.utils.html import format_html
 from reorder_items_widget import ReorderItemsInline
-from .models import Postcard, WelcomeSection, TextSection, FooterSection, Gallery, GalleryPostcard
+from . import models
 
 
-@admin.register(WelcomeSection)
+@admin.register(models.WelcomeSection)
 class WelcomeSection(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
 
 
-@admin.register(TextSection)
+@admin.register(models.TextSection)
 class TextSectionAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
 
 
-@admin.register(FooterSection)
+@admin.register(models.FooterSection)
 class FooterSectionAdmin(admin.ModelAdmin):
     list_display = ['title_view']
 
@@ -28,12 +27,12 @@ class FooterSectionAdmin(admin.ModelAdmin):
 
 
 class PostcardsInline(ReorderItemsInline):
-    model = GalleryPostcard
+    model = models.GalleryPostcard
     extra = 1
     fields = ['postcard']
 
 
-@admin.register(Gallery)
+@admin.register(models.Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
@@ -41,7 +40,7 @@ class GalleryAdmin(admin.ModelAdmin):
     inlines = [PostcardsInline]
 
 
-@admin.register(Postcard)
+@admin.register(models.Postcard)
 class PostcardAdmin(admin.ModelAdmin):
     list_display = ['title', 'created_at', 'is_public', 'view_link']
     search_fields = ['title']
