@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reorder_items_widget',
     'simple_page',
-    'miaiqi_cards_app',
+    'miaiqi_cards.website',
 ]
 
 MIDDLEWARE = [
