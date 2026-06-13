@@ -1,0 +1,42 @@
+/* Layout */
+
+section:not(.welcome-section), footer {
+    border-top: solid 1px var(--light-color);
+    border-bottom: solid 1px var(--light-color);
+    background-color: var(--background-cover-color);
+    padding: 5vh 12vw;
+    position: relative;
+    top: 100vh;
+}
+
+section:not(.welcome-section) {
+    padding-bottom: 20vh;
+}
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+
+/* Typography */
+
+h2 {
+    font-family: "Cherry Swash", cursive;
+    font-weight: normal;
+    color: var(--dark-color);
+    font-size: 10.5vh;
+    line-height: 110%;
+}
+
+footer {
+    color: var(--light-color);
+    background-color: var(--dark-color);
+}
+
+section > p {
+    font-family: Ysabeau, sans serif;
+    font-size: 3vh;
+    margin-top: 10px;
+}

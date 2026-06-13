@@ -1,0 +1,38 @@
+/* Layout */
+
+section.gallery :is(img.postcard-image, div.postcard-image) {
+    height: auto;
+    display: block;
+    box-shadow: var(--light-color) 4px 4px 3px;
+    border: 1px solid var(--light-color);
+    background-color: var(--background-color);
+}
+
+section.gallery > div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 3vw;
+    margin-top: 5vw;
+    font-weight: 300;
+}
+
+section.gallery figure img {
+    width: 22vw;
+    margin-bottom: 10px;
+}
+
+section.gallery > div > div:last-child{
+    width: 22vw;
+    height: 22vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*Postcards Typography */
+
+section.gallery {
+    font-size: 3.5vh;
+    color: var(--not-so-dark-color);
+}

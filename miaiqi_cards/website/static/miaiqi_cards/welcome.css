@@ -27,7 +27,7 @@ section.welcome-section :is(h1, h2, img) {
 }
 
 section.welcome-section :is(h1, img) {
-    border-right: 2px solid #ccc;
+    border-right: 2px solid var(--light-color);
 }
 
 section.welcome-section h2 {
@@ -75,7 +75,7 @@ section.welcome-section > a > div {
     height: 15vh;
     line-height: 15vh;
     text-align: center;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid var(--light-color);
 }
 
 section.welcome-section > a:hover > div {

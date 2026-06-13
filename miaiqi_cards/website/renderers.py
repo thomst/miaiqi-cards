@@ -4,7 +4,19 @@ from django.utils.text import slugify
 from django.contrib.staticfiles.finders import find
 from simple_page import renderers
 from simple_page.models import Section
-from .models import WelcomeSection
+from .models import Gallery, WelcomeSection, MiaiqiCardsPage
+
+
+@renderers.register(MiaiqiCardsPage)
+class MiaiqiCardsPageRenderer(renderers.PageRenderer):
+    class Media:
+        css = dict(all=['miaiqi_cards/miaiqi_cards.css'])
+
+
+@renderers.register(Gallery)
+class GalleryRenderer(renderers.SectionRenderer):
+    class Media:
+        css = dict(all=['miaiqi_cards/gallery.css'])
 
 
 @renderers.register(WelcomeSection)
