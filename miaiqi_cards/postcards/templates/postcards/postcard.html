@@ -1,0 +1,27 @@
+{% extends 'miaiqi_cards/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>{{ postcard.title }}</title>
+    <link rel="stylesheet" href="{% static 'miaiqi_cards/postcard.css' %}">
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <main>
+        <section class="postcard-section">
+            <h1>{{ postcard.title }}</h1>
+            <div class="postcard">
+                <img class="postcard-image" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
+                <p>{{ postcard.description }}</p>
+            </div>
+            {% if previous_postcard or next_postcard %}
+                <nav>
+                    <a href="{{ previous_postcard.get_absolute_url }}?gallery_id={{ gallery.id }}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
+                    <a href="{% url 'page' %}#{{ gallery.css_id }}">close</a> ·
+                    <a href="{{ next_postcard.get_absolute_url }}?gallery_id={{ gallery.id }}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
+                </nav>
+            {% endif %}
+        </section>
+    </main>
+{% endblock %}

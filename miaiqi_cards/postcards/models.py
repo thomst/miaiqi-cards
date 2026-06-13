@@ -13,10 +13,7 @@ class Postcard(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        gallery = self.galleries.first()
-        if gallery:
-            return reverse('postcard', kwargs={'gallery_id': gallery.pk, 'postcard_id': self.pk})
-        return '#'
+        return reverse('postcard', kwargs=dict(postcard_id=self.pk))
 
     class Meta:
         db_table = 'website_postcard'

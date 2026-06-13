@@ -44,7 +44,7 @@ main {
     margin: 0 auto;
 }
 
-section:not(.welcome-section), footer {
+section:not(.welcome-section, .postcard-section), footer {
     border-top: solid 1px var(--light-color);
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
