@@ -1,13 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.base import ContentFile
-from .models import Postcard
+from miaiqi_cards.postcards.models import Postcard
+from .models import Gallery, GalleryPostcard
 
-# Create your tests here.
 
 class PostcardModelTest(TestCase):
     def test_postcard_creation(self):
-        # Create a dummy image
         image_content = b'dummy image content'
         postcard = Postcard.objects.create(
             title="Test Postcard",
@@ -18,20 +17,17 @@ class PostcardModelTest(TestCase):
         self.assertEqual(str(postcard), "Test Postcard")
         self.assertTrue(postcard.is_public)
 
+
 class PostcardViewTest(TestCase):
     def setUp(self):
         self.postcard = Postcard.objects.create(
             title="View Test",
             image=ContentFile(b'dummy', name='test.jpg')
         )
-
-    def test_postcard_list_view(self):
-        response = self.client.get(reverse('postcard_list'))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "View Test")
+        self.gallery = Gallery.objects.create(title="Test Gallery")
+        GalleryPostcard.objects.create(gallery=self.gallery, postcard=self.postcard, index=0)
 
     def test_postcard_view(self):
-        response = self.client.get(reverse('postcard', args=[self.postcard.pk]))
+        response = self.client.get(reverse('postcards:postcard', args=[self.gallery.pk, self.postcard.pk]))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "View Test")
         self.assertContains(response, "View Test")

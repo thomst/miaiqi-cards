@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'reorder_items_widget',
     'simple_page',
     'miaiqi_cards.website',
+    'miaiqi_cards.postcards',
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,4 @@
 from django.contrib import admin
-from django.urls import reverse
-from django.utils.html import format_html
 from reorder_items_widget import ReorderItemsInline
 from . import models
 
@@ -38,15 +36,3 @@ class GalleryAdmin(admin.ModelAdmin):
     search_fields = ['title']
     exclude = ['postcards']
     inlines = [PostcardsInline]
-
-
-@admin.register(models.Postcard)
-class PostcardAdmin(admin.ModelAdmin):
-    list_display = ['title', 'created_at', 'is_public', 'view_link']
-    search_fields = ['title']
-
-    def view_link(self, obj):
-        gallery = obj.galleries.first()
-        url = reverse('postcard', kwargs=dict(gallery_id=gallery.id, postcard_id=obj.id))
-        return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">Open</a>', url)
-    view_link.short_description = 'Open in new tab'
