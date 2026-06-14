@@ -1,10 +1,14 @@
 
-section.postcard {
-    margin-bottom: 0;
+section.postcard-section {
+    padding: 5vh 12vw;
+    display: flex;
+    flex-direction: column;
+    /* text-align: center; */
+    align-items: center;
 }
 
 h1 {
-    font-size: 64px;
+    font-size: 8vh;
     font-family: "Cherry Swash", cursive;
     font-weight: normal;
 }
@@ -12,25 +16,33 @@ h1 {
 div.postcard {
     display: flex;
     flex-direction: row;
-    gap: clamp(20px, 3vw, 40px);
-    align-items: flex-start;
-    margin-top: clamp(30px, 5vw, 50px);
+    gap: 3vw;
+    align-items: center;
+    /* text-align: center; */
+    margin-top: 3vw;
+
 }
 
 div.postcard img {
-    max-width: 500px;
+    max-height: 60vh;
+    box-shadow: var(--light-color) 4px 4px 3px;
+    border: 1px solid var(--light-color);
 }
 
-div.postcard p {
+div.postcard > div {
     font-family: Ysabeau, sans serif;
     font-weight: 300;
-    font-size: 28px;
+    font-size: 3vh;
+    max-width: 60vh;
+    max-height: 60vh;
+
 }
 
 nav a {
+    font-family: "Albert Sans", sans serif;
     display: inline-block;
-    margin-top: clamp(20px, 3vw, 40px);
-    font-size: 24px;
+    margin-top: 3vw;
+    font-size: 3vh;
 }
 
 nav a.disabled {

@@ -13,14 +13,12 @@
             <h1>{{ postcard.title }}</h1>
             <div class="postcard">
                 <img class="postcard-image" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
-                <div>{{ postcard.description|markdown_to_html }}</div>
+                {% if postcard.description %}
+                    <div>{{ postcard.description|markdown_to_html }}</div>
+                {% endif %}
             </div>
             {% if previous_postcard or next_postcard %}
-                <nav>
-                    <a href="{{ previous_postcard.get_absolute_url }}{% if gallery %}?gallery_id={{ gallery.id }}{% endif %}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
-                    <a href="{% url 'page' %}{% if gallery %}#{{ gallery.css_id }}{% endif %}">close</a> ·
-                    <a href="{{ next_postcard.get_absolute_url }}{% if gallery %}?gallery_id={{ gallery.id }}{% endif %}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
-                </nav>
+                {% include "postcards/navigation.html" %}
             {% endif %}
         </section>
     </main>
