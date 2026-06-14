@@ -1,5 +1,5 @@
 {% extends 'miaiqi_cards/base.html' %}
-{% load static %}
+{% load static markdown %}
 
 {% block head %}
     <title>{{ postcard.title }}</title>
@@ -13,13 +13,13 @@
             <h1>{{ postcard.title }}</h1>
             <div class="postcard">
                 <img class="postcard-image" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
-                <p>{{ postcard.description }}</p>
+                <div>{{ postcard.description|markdown_to_html }}</div>
             </div>
             {% if previous_postcard or next_postcard %}
                 <nav>
-                    <a href="{{ previous_postcard.get_absolute_url }}?gallery_id={{ gallery.id }}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
-                    <a href="{% url 'page' %}#{{ gallery.css_id }}">close</a> ·
-                    <a href="{{ next_postcard.get_absolute_url }}?gallery_id={{ gallery.id }}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
+                    <a href="{{ previous_postcard.get_absolute_url }}{% if gallery %}?gallery_id={{ gallery.id }}{% endif %}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
+                    <a href="{% url 'page' %}{% if gallery %}#{{ gallery.css_id }}{% endif %}">close</a> ·
+                    <a href="{{ next_postcard.get_absolute_url }}{% if gallery %}?gallery_id={{ gallery.id }}{% endif %}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
                 </nav>
             {% endif %}
         </section>
