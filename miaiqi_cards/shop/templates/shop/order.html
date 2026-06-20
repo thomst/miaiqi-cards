@@ -1,0 +1,11 @@
+{% extends "shop/shop.html" %}
+{% block content %}
+    <form action="{% url 'shop-checkout' shop.shop.id %}" method="post">
+        {{ shop.formset.management_form }}
+        {% for form in shop.formset %}
+            {{ form }}
+        {% endfor %}
+        <input type="button"  value="add">
+        <input type="submit" value="Checkout">
+    </form>
+{% endblock %}

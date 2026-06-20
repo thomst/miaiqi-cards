@@ -2,7 +2,7 @@
 {% load cart_tags %}
 
 {% block content %}
-    {% if cart.is_empty %}
+    {% if shop.cart.is_empty %}
         <p>Your cart is empty.</p>
     {% else %}
         <ul>
@@ -11,8 +11,8 @@
                 {{ item.total_price }}</li>
         {% endfor %}
         </ul>
-        <p>Summary: {{ cart.summary }}</p>
-        <p>Discount: {{ cart.discount_amount }}</p>
-        <p>Total: {{ cart.total }}</p>
+        <p>Summary: {{ shop.cart.summary }}</p>
+        <p>Discount: {{ shop.cart.discount_amount }}</p>
+        <p>Total: {{ shop.cart.total }}</p>
     {% endif %}
 {% endblock %}

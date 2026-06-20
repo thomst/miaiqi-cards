@@ -6,7 +6,8 @@ from django.template.loader import render_to_string
 from cart.cart import Cart
 from simple_page import renderers
 from simple_page.models import Section
-from miaiqi_cards.shop.forms import CartItemFormset
+from miaiqi_cards.shop.models import Shop
+from miaiqi_cards.shop.views import ShopView
 from . import models
 
 
@@ -53,18 +54,8 @@ class GalleryRenderer(renderers.SectionRenderer):
 
 @renderers.register(models.ShopSection)
 class ShopRenderer(renderers.SectionRenderer):
-    def get_shop(self):
-        cart = Cart(self.request)
-        if cart.is_empty():
-            formset = CartItemFormset(self.request.POST)
-            print(formset.forms)
-            return render_to_string('shop/formset.html', dict(formset=formset))
-        elif not cart.cart.checked_out:
-            return render_to_string('shop/cart.html', dict(cart=cart))
-        else:
-            return render_to_string('shop/confirmation.html', dict(cart=cart))
-
     def get_context(self):
         context = super().get_context()
-        context['shop'] = self.get_shop()
+        shop_view = ShopView(self.request, self.obj.shop.id)
+        context['shop_html'] = shop_view.html
         return context

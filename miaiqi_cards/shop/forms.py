@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import formset_factory
+from miaiqi_cards.postcards.models import Postcard
 
 
 class EmailForm(forms.Form):
@@ -8,11 +8,8 @@ class EmailForm(forms.Form):
 
 class CartItemForm(forms.Form):
     # Choices will be set by the shop section renderer.
-    product = forms.ChoiceField(choices=[], required=True)
+    product = forms.ModelChoiceField(Postcard.objects.all(), required=True)
     quantity = forms.IntegerField(min_value=1, required=True)
 
     class Media:
         js = ['shop/shop.js']
-
-
-CartItemFormset = formset_factory(CartItemForm, can_delete=True, extra=1)

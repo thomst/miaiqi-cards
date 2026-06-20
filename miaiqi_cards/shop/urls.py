@@ -1,9 +1,9 @@
 from django.urls import path
 
-from . import views
+from .views import ShopView
 
 urlpatterns = [
-    path('formset/', views.formset, name='shop-formset'),
-    path('cart/', views.checkout, name='shop-cart'),
-    path('confirmation/', views.buy, name='shop-confirmation'),
+    path('shop/<int:shop_id>/order/', ShopView.order, name='shop-order'),
+    path('shop/<int:shop_id>/checkout/', ShopView.checkout, name='shop-checkout'),
+    path('shop/<int:shop_id>/confirmation/', ShopView.confirmation, name='shop-confirmation'),
 ]
