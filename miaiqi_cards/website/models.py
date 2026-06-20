@@ -1,8 +1,9 @@
 import re
 from django.db import models
 from django.utils.text import slugify
-from reorder_items_widget import ReorderItemsField
 from simple_page.models import Section, Page
+from ..postcards.models import Gallery
+from ..shop.models import Shop
 
 
 class MiaiqiCardsPage(Page):
@@ -15,15 +16,18 @@ class MiaiqiCardsPage(Page):
         proxy = True
 
 
-class CSSMixin:
+class SectionMixin:
     def css_class(self):
         return re.sub(r'(?<!^)(?=[A-Z])', '-', type(self).__name__).lower()
 
     def css_id(self):
         return f"{slugify(self.title)}-section"
 
+    def __str__(self):
+        return self.title
 
-class WelcomeSection(CSSMixin, Section):
+
+class WelcomeSection(SectionMixin, Section):
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255)
     postcards = models.ManyToManyField('postcards.Postcard')
@@ -32,35 +36,26 @@ class WelcomeSection(CSSMixin, Section):
     postcard_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_postcard')
 
 
-class TextSection(CSSMixin, Section):
+class TextSection(SectionMixin, Section):
     title = models.CharField(max_length=255)
     body = models.TextField(blank=True)
 
-    def __str__(self):
-        return self.title
+
+class GallerySection(SectionMixin, Section):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    gallery = models.OneToOneField(Gallery, null=True, on_delete=models.SET_NULL)
+
+
+class ShopSection(SectionMixin, Section):
+    title = models.CharField(max_length=100)
+    body = models.TextField(blank=True)
+    shop = models.OneToOneField(Shop, null=True, on_delete=models.SET_NULL)
 
 
 class FooterSection(Section):
+    name = models.CharField(max_length=100, blank=True)
     body = models.TextField(blank=True)
 
-
-class GalleryPostcard(models.Model):
-    gallery = models.ForeignKey('Gallery', on_delete=models.CASCADE)
-    postcard = models.ForeignKey('postcards.Postcard', on_delete=models.CASCADE)
-    index = ReorderItemsField()
-
-    class Meta:
-        unique_together = ('gallery', 'postcard')
-
-
-class Gallery(CSSMixin, Section):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    postcards = models.ManyToManyField(
-        'postcards.Postcard',
-        through=GalleryPostcard,
-        related_name='galleries',
-    )
-
     def __str__(self):
-        return self.title
+        return self.name

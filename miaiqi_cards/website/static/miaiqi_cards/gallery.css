@@ -1,6 +1,6 @@
 /* Layout */
 
-section.gallery :is(img.postcard-image, div.postcard-image) {
+section.gallery-section :is(img.postcard-image, div.postcard-image) {
     height: auto;
     display: block;
     box-shadow: var(--light-color) 4px 4px 3px;
@@ -8,7 +8,7 @@ section.gallery :is(img.postcard-image, div.postcard-image) {
     background-color: var(--background-color);
 }
 
-section.gallery > div {
+section.gallery-section > div {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
@@ -17,12 +17,12 @@ section.gallery > div {
     font-weight: 300;
 }
 
-section.gallery figure img {
+section.gallery-section figure img {
     width: 22vw;
     margin-bottom: 10px;
 }
 
-section.gallery > div > div:last-child{
+section.gallery-section > div > div:last-child{
     width: 22vw;
     height: 22vw;
     display: flex;
@@ -32,7 +32,7 @@ section.gallery > div > div:last-child{
 
 /*Postcards Typography */
 
-section.gallery {
+section.gallery-section {
     font-size: 3.5vh;
     color: var(--not-so-dark-color);
 }

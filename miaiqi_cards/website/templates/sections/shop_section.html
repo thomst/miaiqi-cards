@@ -1,0 +1,6 @@
+{% load markdown %}
+
+<h2>{{ section.title }}</h2>
+{{ section.body|markdown_to_html }}
+
+{{ shop }}

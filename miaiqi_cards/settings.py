@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'reorder_items_widget',
+    'cart',
     'simple_page',
     'miaiqi_cards.website',
     'miaiqi_cards.postcards',
+    'miaiqi_cards.shop',
 ]
 
 MIDDLEWARE = [

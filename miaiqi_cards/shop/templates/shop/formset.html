@@ -1,0 +1,10 @@
+{% extends "shop/shop.html" %}
+{% block content %}
+    <form action="{% url 'shop-formset' %}" method="post">
+        {% for form in formset %}
+            {{ form }}
+        {% endfor %}
+        <input type="button">add</input>
+        <input type="submit">Checkout</input>
+    </form>
+{% endblock %}
