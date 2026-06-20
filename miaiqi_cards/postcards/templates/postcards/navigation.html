@@ -1,5 +1,5 @@
 <nav>
-    <a href="{{ previous_postcard.get_absolute_url }}{% if gallery %}?gallery_id={{ gallery.id }}{% endif %}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
-    <a href="{% url 'page' %}{% if gallery %}#{{ gallery.css_id }}{% endif %}">close</a> ·
-    <a href="{{ next_postcard.get_absolute_url }}{% if gallery %}?gallery_id={{ gallery.id }}{% endif %}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
+    <a href="{{ previous_postcard.get_absolute_url }}{% if section %}?section_id={{ section.id }}{% endif %}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
+    <a href="{% url 'page' %}{% if section %}#{{ section.css_id }}{% endif %}">close</a> ·
+    <a href="{{ next_postcard.get_absolute_url }}{% if section %}?section_id={{ section.id }}{% endif %}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
 </nav>
