@@ -2,8 +2,6 @@ import random
 from django import forms
 from django.utils.text import slugify
 from django.contrib.staticfiles.finders import find
-from django.template.loader import render_to_string
-from cart.cart import Cart
 from simple_page import renderers
 from simple_page.models import Section
 from miaiqi_cards.shop.models import Shop
