@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.forms import formset_factory, ModelChoiceField
 from django.template.loader import render_to_string
@@ -54,12 +53,12 @@ class ShopView:
                 break
 
     def get_order_html(self):
-        return render_to_string('shop/order.html', dict(shop=self))
+        return render_to_string('shop/order.html', dict(shop=self), self.request)
 
     def get_checkout_html(self):
         if self.formset.is_valid():
             self.checkout_cart()
-            return render_to_string('shop/checkout.html', dict(shop=self))
+            return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         else:
             return self.get_order_html()
 
@@ -67,7 +66,7 @@ class ShopView:
         if self.email_form.is_valid():
             # TODO: Send confirmation email.
             self.cart.checkout()
-            render(self.request, 'shop/confirmation.html', dict(shop=self))
+            render_to_string('shop/confirmation.html', dict(shop=self), self.request)
         else:
             return self.get_checkout_html()
 
@@ -82,15 +81,15 @@ class ShopView:
 
     @classmethod
     def order(cls, request, shop_id):
-        shop = cls.__init__(request, shop_id)
+        shop = cls(request, shop_id)
         return HttpResponse(shop.get_order_html())
 
     @classmethod
     def checkout(cls, request, shop_id):
-        shop = cls.__init__(request, shop_id)
+        shop = cls(request, shop_id)
         return HttpResponse(shop.get_checkout_html())
 
     @classmethod
     def confirmation(cls, request, shop_id):
-        shop = cls.__init__(request, shop_id)
+        shop = cls(request, shop_id)
         return HttpResponse(shop.get_confirmation_html())
