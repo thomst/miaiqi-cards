@@ -56,6 +56,7 @@ class GalleryRenderer(renderers.SectionRenderer):
 class ShopRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['shop/shop.css'])
+        js = ['shop/shop.js']
 
     def get_context(self):
         context = super().get_context()
