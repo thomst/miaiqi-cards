@@ -1,11 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const addButton = document.querySelector('div.buttons input[type="button"]');
-    if (!addButton) return;
+(function() {
+    "use strict";
 
-    addButton.addEventListener('click', function(event) {
+    function reloadFormset(event) {
         event.preventDefault();
-
         const form = document.querySelector('div.shop > form');
+        const addButton = form.querySelector('div.buttons input[type="button"]');
         const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
         const totalForms = form.querySelector('div.shop input[id$=-TOTAL_FORMS');
         const currentValue = parseInt(totalForms.value, 10);
@@ -28,9 +27,19 @@ document.addEventListener('DOMContentLoaded', function() {
             const wrapper = document.createElement('div');
             wrapper.innerHTML = html.trim();
             document.querySelector('div.shop').replaceWith(wrapper.firstChild);
+            initButtons();
+
         })
         .catch(function() {
-            alert('Error loading the shop html.');
+            alert('Error reloading the formset.');
         });
-    });
-});
+    }
+
+    function initButtons() {
+        const addButton = document.querySelector('div.buttons input[type="button"]');
+        if (!addButton) return;
+        addButton.addEventListener('click', reloadFormset);
+    }
+
+    document.addEventListener('DOMContentLoaded', initButtons);
+})();
