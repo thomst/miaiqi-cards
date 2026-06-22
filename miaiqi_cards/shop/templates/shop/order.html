@@ -1,11 +1,19 @@
-{% extends "shop/shop.html" %}
-{% block content %}
-    <form action="{% url 'shop-checkout' shop.shop.id %}" method="post">
+<div class="shop">
+    <form method="POST">
+        {% csrf_token %}
         {{ shop.formset.management_form }}
+
         {% for form in shop.formset %}
-            {{ form }}
+            {% if forloop.first %}
+                <div class="headers">{% for field in form %}<div>{{ field.label }}</div>{% endfor %}</div>
+            {% endif %}
+            <div class="fields">{% for field in form %}<div class="field">{{ field }}</div>{% endfor %}</div>
         {% endfor %}
-        <input type="button"  value="add">
-        <input type="submit" value="Checkout">
+
+        <div class="buttons">
+            <input type="button" value="Mehr..." data-url="{% url 'shop-order' shop.shop.id %}">
+            <input type="submit" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}">
+        </div>
+
     </form>
-{% endblock %}
+</div>

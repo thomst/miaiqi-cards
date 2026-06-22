@@ -54,6 +54,9 @@ class GalleryRenderer(renderers.SectionRenderer):
 
 @renderers.register(models.ShopSection)
 class ShopRenderer(renderers.SectionRenderer):
+    class Media:
+        css = dict(all=['shop/shop.css'])
+
     def get_context(self):
         context = super().get_context()
         shop_view = ShopView(self.request, self.obj.shop.id)
