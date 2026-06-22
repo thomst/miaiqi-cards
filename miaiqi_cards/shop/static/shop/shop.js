@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         const form = document.querySelector('div.shop > form');
+        const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
         const totalForms = form.querySelector('div.shop input[id$=-TOTAL_FORMS');
         const currentValue = parseInt(totalForms.value, 10);
         totalForms.value = currentValue + 1;
@@ -13,9 +14,10 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(addButton.dataset.url, {
             method: 'POST',
             credentials: 'same-origin',
-            data: new FormData(form),
+            body: new FormData(form),
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrftoken
             }
         })
         .then(function(response) {
@@ -23,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.text();
         })
         .then(function(html) {
-            document.querySelector('div.shop').replaceWith(html);
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html.trim();
+            document.querySelector('div.shop').replaceWith(wrapper.firstChild);
         })
         .catch(function() {
             alert('Error loading the shop html.');
