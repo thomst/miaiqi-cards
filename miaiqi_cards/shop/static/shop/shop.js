@@ -63,8 +63,6 @@
                 div.querySelectorAll('[name^="form-"]').forEach(element => {
                     element.name = element.name.replace(/form-\d/, `form-${index}`);
                     element.id = element.id.replace(/form-\d/, `form-${index}`);
-                    console.log(element.id);
-                    if (element.value) element.value = '';
                 });
             });
         }
@@ -74,16 +72,22 @@
             const firstForm = this.form.querySelector('div:nth-child(1 of .fields)');
             const lastForm = this.form.querySelector('div:nth-last-child(1 of .fields)');
             const newForm = firstForm.cloneNode(true);
+            newForm.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
             lastForm.after(newForm);
             this.updateFormCount();
             this.initRemoveButtons();
         }
-        removeForm () {
-            if (this.total == 1) return;
-            this.total--;
-            this.totalInput.value = this.total;
-            event.target.parentNode.parentNode.remove();
-            this.updateFormCount();
+        removeForm (event) {
+            if (this.total == 1) {
+                const form = event.target.parentNode.parentNode;
+                form.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
+                form.querySelector('input[name^="form-"]').value = '';
+            } else {
+                this.total--;
+                this.totalInput.value = this.total;
+                event.target.parentNode.parentNode.remove();
+                this.updateFormCount();
+            }
         }
     }
 
@@ -93,7 +97,7 @@
             formset.addForm();
         },
         removeForm: function(event) {
-            formset.removeForm();
+            formset.removeForm(event);
         },
     }
 
