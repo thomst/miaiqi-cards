@@ -7,11 +7,16 @@
             {% if forloop.first %}
                 <div class="headers">{% for field in form %}<div>{{ field.label }}</div>{% endfor %}</div>
             {% endif %}
-            <div class="fields">{% for field in form %}<div class="field">{{ field }}</div>{% endfor %}</div>
+            <div class="fields">
+                {% for field in form %}
+                    <div>{{ field }}</div>
+                {% endfor %}
+                <div><input class="remove-form" type="button" value="Delete"></div>
+            </div>
         {% endfor %}
 
         <div class="buttons">
-            <input type="button" value="Mehr..." data-url="{% url 'shop-order' shop.shop.id %}" data-action="addForm">
+            <input type="button" value="Add" data-url="{% url 'shop-order' shop.shop.id %}" data-action="addForm">
             <input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}" data-action="checkout">
         </div>
 

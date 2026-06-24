@@ -43,23 +43,72 @@
         ajaxCall(event, ajaxData)
     }
 
-    const actions = {
-        addForm: function(event) {
-            event.preventDefault();
-            const totalForms = document.querySelector('div.shop input[id$=-TOTAL_FORMS');
-            const currentValue = parseInt(totalForms.value, 10);
-            totalForms.value = currentValue + 1;
-            postRequest(event)
+    var formset;
 
+    class Formset {
+        constructor (form) {
+            this.form = form;
+            this.totalInput = form.querySelector('input[id$="-TOTAL_FORMS"]');
+            this.total = parseInt(this.totalInput.value);
+            this.initRemoveButtons();
+        }
+        initRemoveButtons () {
+            this.form.querySelectorAll("input.remove-form").forEach(element => {
+                element.addEventListener('click', actions.removeForm);
+            });
+
+        }
+        updateFormCount () {
+            this.form.querySelectorAll('div.fields').forEach((div, index) => {
+                div.querySelectorAll('[name^="form-"]').forEach(element => {
+                    element.name = element.name.replace(/form-\d/, `form-${index}`);
+                    element.id = element.id.replace(/form-\d/, `form-${index}`);
+                    console.log(element.id);
+                    if (element.value) element.value = '';
+                });
+            });
+        }
+        addForm () {
+            this.total++;
+            this.totalInput.value = this.total;
+            const firstForm = this.form.querySelector('div:nth-child(1 of .fields)');
+            const lastForm = this.form.querySelector('div:nth-last-child(1 of .fields)');
+            const newForm = firstForm.cloneNode(true);
+            lastForm.after(newForm);
+            this.updateFormCount();
+            this.initRemoveButtons();
+        }
+        removeForm () {
+            if (this.total == 1) return;
+            this.total--;
+            this.totalInput.value = this.total;
+            event.target.parentNode.parentNode.remove();
+            this.updateFormCount();
         }
     }
 
+
+    const actions = {
+        addForm: function(event) {
+            formset.addForm();
+        },
+        removeForm: function(event) {
+            formset.removeForm();
+        },
+    }
+
     function initButtons() {
-        const buttons = document.querySelectorAll('div.buttons > input');
+        const buttons = document.querySelectorAll('div.buttons > input[type="button"]');
         for (const button of buttons) {
             button.addEventListener('click', actions[button.dataset.action]);
         }
     }
 
-    document.addEventListener('DOMContentLoaded', initButtons);
+    function init () {
+        initButtons();
+        const form = document.querySelector('div.shop form:has(div.fields)');
+        if (form) formset = new Formset(form);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
 })();

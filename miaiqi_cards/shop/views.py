@@ -20,7 +20,7 @@ class ShopView:
     def formset_class(self):
         field = ModelChoiceField(self.shop.gallery.postcards.all(), required=True)
         form_class = type('CartItemForm', (forms.CartItemForm,), dict(product=field))
-        return formset_factory(form_class, can_delete=True, extra=1)
+        return formset_factory(form_class, extra=1)
 
     @property
     def formset(self):

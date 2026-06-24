@@ -65,9 +65,3 @@ div.shop :is(.headers, .fields, .buttons) > :is(div:first-child, input:first-chi
 div.shop div.headers {
     border-top: 2px solid #ccc;
 }
-
-/* Delete checkbox */
-
-div.shop input[type="checkbox"] {
-    visibility: hidden;
-}
