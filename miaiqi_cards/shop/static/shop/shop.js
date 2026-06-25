@@ -99,6 +99,15 @@
         removeForm: function(event) {
             formset.removeForm(event);
         },
+        checkout: function(event) {
+            postRequest(event);
+        },
+        order: function(event) {
+            getRequest(event);
+        },
+        confirmation: function(event) {
+            postRequest(event);
+        }
     }
 
     function initButtons() {
