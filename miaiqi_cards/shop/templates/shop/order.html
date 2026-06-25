@@ -16,7 +16,7 @@
         {% endfor %}
 
         <div class="buttons">
-            <input type="button" value="Add" data-url="{% url 'shop-order' shop.shop.id %}" data-action="addForm">
+            <input type="button" value="Add" data-action="addForm">
             <input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}" data-action="checkout">
         </div>
 
