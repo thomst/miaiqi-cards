@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.forms import formset_factory, ModelChoiceField
 from django.template.loader import render_to_string
+from django.utils.functional import cached_property
 from django.http import HttpResponse
 from cart.cart import Cart, InvalidDiscountError
 from . import models
@@ -8,39 +9,56 @@ from . import forms
 
 
 class ShopView:
+    ORDER_STATE = 'order'
+    CHECKOUT_STATE = 'checkout'
+    CONFIRMATION_STATE = 'confirmation'
+
+
     def __init__(self, request, shop_id):
         self.request = request
         self.shop = get_object_or_404(models.Shop, pk=shop_id)
 
-    @property
+    @cached_property
     def cart(self):
         return Cart(self.request)
 
     @property
+    def state(self):
+        return self.request.session.get('shop-state') or self.ORDER_STATE
+
+    @state.setter
+    def state(self, value):
+        self.request.session['shop-state'] = value
+
+    @cached_property
     def formset_class(self):
+        # FIXME: Update limit_choices_to on formfield instead of creating new field and form.
         field = ModelChoiceField(self.shop.gallery.postcards.all(), required=True)
         form_class = type('CartItemForm', (forms.CartItemForm,), dict(product=field))
-        return formset_factory(form_class, extra=1)
+        extra = 1 if self.cart.is_empty() else 0
+        return formset_factory(form_class, extra=extra)
 
-    @property
+    @cached_property
     def formset(self):
-        if not self.cart.is_empty():
-            initial = [dict(procuct=i.product, quantity=i.quantity) for i in self.cart]
-            self.cart.clear()
-            return self.formset_class(initial=initial)
-        elif self.request.POST:
+        if self.request.POST:
             return self.formset_class(self.request.POST)
+        elif not self.cart.is_empty():
+            initial = [dict(product=i.product.pk, quantity=i.quantity) for i in self.cart]
+            return self.formset_class(initial=initial)
         else:
             return self.formset_class()
 
-    @property
+    @cached_property
     def email_form(self):
-        return forms.EmailForm(self.request.POST)
+        if self.request.POST:
+            return forms.EmailForm(self.request.POST)
+        else:
+            return forms.EmailForm()
 
-    def checkout_cart(self):
+    def checkout_cart(self, data):
         self.cart.clear()
         price = self.shop.prices.first().price  # FIXME: Selection should come from the forms.
-        data = [dict(**d, unit_price=price) for d in self.formset.cleaned_data]
+        data = [dict(**d, unit_price=price) for d in data]
         self.cart.add_bulk(data)
 
         # Apply quantity discount.
@@ -53,16 +71,21 @@ class ShopView:
                 break
 
     def get_order_html(self):
+        self.state = self.ORDER_STATE
         return render_to_string('shop/order.html', dict(shop=self), self.request)
 
     def get_checkout_html(self):
-        if self.formset.is_valid():
-            self.checkout_cart()
+        if self.state == self.CHECKOUT_STATE:
+            return render_to_string('shop/checkout.html', dict(shop=self), self.request)
+        elif self.formset.is_valid():
+            self.checkout_cart(self.formset.cleaned_data)
+            self.state = self.CHECKOUT_STATE
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         else:
             return self.get_order_html()
 
     def get_confirmation_html(self):
+        self.state = self.CONFIRMATION_STATE
         if self.email_form.is_valid():
             # TODO: Send confirmation email.
             self.cart.checkout()
@@ -70,13 +93,13 @@ class ShopView:
         else:
             return self.get_checkout_html()
 
-    @property
+    @cached_property
     def html(self):
-        if self.cart.is_empty():
+        if self.state == self.ORDER_STATE:
             return self.get_order_html()
-        elif not self.cart.cart.checked_out:
+        if self.state == self.CHECKOUT_STATE:
             return self.get_checkout_html()
-        else:
+        elif self.state == self.CONFIRMATION_STATE:
             return self.get_confirmation_html()
 
     @classmethod
