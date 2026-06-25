@@ -5,7 +5,7 @@
         const wrapper = document.createElement('div');
         wrapper.innerHTML = html.trim();
         document.querySelector('div.shop').replaceWith(wrapper.firstChild);
-        initButtons();
+        init();
     }
 
     function ajaxCall(event, data) {
@@ -23,7 +23,7 @@
     }
 
     function getRequest(event) {
-        ajaxData = {
+        const ajaxData = {
             method: "GET",
             credentials: 'same-origin',
             headers: {'X-Requested-With': 'XMLHttpRequest'}
