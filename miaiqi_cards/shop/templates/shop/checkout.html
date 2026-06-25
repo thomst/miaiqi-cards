@@ -1,7 +1,5 @@
-{% extends "shop/shop.html" %}
 {% load cart_tags %}
-
-{% block content %}
+<div class="shop">
     {% if shop.cart.is_empty %}
         <p>Your cart is empty.</p>
     {% else %}
@@ -15,4 +13,12 @@
         <p>Discount: {{ shop.cart.discount_amount }}</p>
         <p>Total: {{ shop.cart.total }}</p>
     {% endif %}
-{% endblock %}
+
+    {{ shop.email_form }}
+
+    <div class="buttons">
+        <input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}" data-action="order">
+        <input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}" data-action="confirmation">
+    </div>
+
+</div>
