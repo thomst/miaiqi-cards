@@ -4,17 +4,19 @@
         <p>Your cart is empty.</p>
     {% else %}
         <ul>
-        {% for item in cart %}
-            <li>{{ item.quantity }} × {{ item.product }} —
-                {{ item.total_price }}</li>
+        {% for item in shop.cart %}
+            <li>{{ item.quantity }} × {{ item.product }} — {{ item.total_price }}</li>
         {% endfor %}
         </ul>
-        <p>Summary: {{ shop.cart.summary }}</p>
-        <p>Discount: {{ shop.cart.discount_amount }}</p>
+        {% if shop.cart.discount_amount %}
+            <p>Summary: {{ shop.cart.summary }}</p>
+            <p>Discount: {{ shop.cart.discount_amount }}</p>
+        {% endif %}
         <p>Total: {{ shop.cart.total }}</p>
     {% endif %}
 
     <form>
+        {% csrf_token %}
         {{ shop.email_form }}
 
         <div class="buttons">
