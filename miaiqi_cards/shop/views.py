@@ -77,7 +77,6 @@ class ShopView:
 
     def get_order_html(self):
         self.state = self.ORDER_STATE
-        print(self.formset.forms)
         return render_to_string('shop/order.html', dict(shop=self), self.request)
 
     def get_checkout_html(self):
