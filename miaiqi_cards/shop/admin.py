@@ -11,7 +11,7 @@ class DiscountAdmin(admin.ModelAdmin):
     fields = ["value", "min_cart_value"]
 
     def get_queryset(self, request):
-        return super().get_queryset.filter(code__startswith=QuantityDiscount.CODE_PREFIX)
+        return super().get_queryset(request).filter(code__startswith=QuantityDiscount.CODE_PREFIX)
 
 
 class PriceInline(admin.TabularInline):
