@@ -14,11 +14,13 @@
         <p>Total: {{ shop.cart.total }}</p>
     {% endif %}
 
-    {{ shop.email_form }}
+    <form>
+        {{ shop.email_form }}
 
-    <div class="buttons">
-        <input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}" data-action="order">
-        <input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}" data-action="confirmation">
-    </div>
+        <div class="buttons">
+            <input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}" data-action="order">
+            <input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}" data-action="confirmation">
+        </div>
+    </form>
 
 </div>
