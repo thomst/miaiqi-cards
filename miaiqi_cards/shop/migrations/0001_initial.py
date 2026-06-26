@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('cart', '0007_rename_cart_item_cart_id_content_cart_item_cart_id_2d9eff_idx_and_more'),
+        ('cart', '0006_indexes_and_quantity_validator'),
         ('postcards', '0001_initial'),
     ]
 
