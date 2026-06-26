@@ -24,10 +24,15 @@ class ShopView:
 
     @property
     def state(self):
-        return self.request.session.get('shop-state') or self.ORDER_STATE
+        return self.request.session.get('shop-state')
+
+    @property
+    def old_state(self):
+        return self.request.session.get('old-shop-state')
 
     @state.setter
     def state(self, value):
+        self.request.session['old-shop-state'] = self.state
         self.request.session['shop-state'] = value
 
     @cached_property
@@ -40,7 +45,7 @@ class ShopView:
 
     @cached_property
     def formset(self):
-        if self.request.POST:
+        if self.request.POST and self.old_state == self.ORDER_STATE:
             return self.formset_class(self.request.POST)
         elif not self.cart.is_empty():
             initial = [dict(product=i.product.pk, quantity=i.quantity) for i in self.cart]
@@ -50,7 +55,7 @@ class ShopView:
 
     @cached_property
     def email_form(self):
-        if self.request.POST:
+        if self.request.POST and self.old_state == self.CHECKOUT_STATE:
             return forms.EmailForm(self.request.POST)
         else:
             return forms.EmailForm()
@@ -72,14 +77,15 @@ class ShopView:
 
     def get_order_html(self):
         self.state = self.ORDER_STATE
+        print(self.formset.forms)
         return render_to_string('shop/order.html', dict(shop=self), self.request)
 
     def get_checkout_html(self):
-        if self.state == self.CHECKOUT_STATE:
+        self.state = self.CHECKOUT_STATE
+        if self.old_state == self.CHECKOUT_STATE:
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         elif self.formset.is_valid():
             self.checkout_cart(self.formset.cleaned_data)
-            self.state = self.CHECKOUT_STATE
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         else:
             return self.get_order_html()
@@ -95,7 +101,7 @@ class ShopView:
 
     @cached_property
     def html(self):
-        if self.state == self.ORDER_STATE:
+        if not self.state or self.state == self.ORDER_STATE:
             return self.get_order_html()
         if self.state == self.CHECKOUT_STATE:
             return self.get_checkout_html()
