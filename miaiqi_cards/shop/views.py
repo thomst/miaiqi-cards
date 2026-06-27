@@ -62,7 +62,7 @@ class ShopView:
 
     def checkout_cart(self, data):
         self.cart.clear()
-        self.cart.cart.discount = None
+        self.cart.remove_discount()
         price = self.shop.prices.first().price  # FIXME: Selection should come from the forms.
         data = [dict(**d, unit_price=price) for d in data if d]
         self.cart.add_bulk(data)
