@@ -64,7 +64,7 @@ class ShopView:
         self.cart.clear()
         self.cart.cart.discount = None
         price = self.shop.prices.first().price  # FIXME: Selection should come from the forms.
-        data = [dict(**d, unit_price=price) for d in data]
+        data = [dict(**d, unit_price=price) for d in data if d]
         self.cart.add_bulk(data)
 
         # Apply quantity discount.
