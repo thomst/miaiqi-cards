@@ -6,9 +6,12 @@
 
         {% for form in shop.formset %}
             {% if forloop.first %}
-                <div class="headers">{% for field in form %}<div>{{ field.label }}</div>{% endfor %}</div>
+                <div class="row">
+                    {% for field in form %}<div>{{ field.label }}</div>{% endfor %}
+                    <div></div>
+                </div>
             {% endif %}
-            <div class="fields">
+            <div class="row form">
                 {% for field in form %}
                     <div>{{ field }}</div>
                 {% endfor %}
@@ -16,9 +19,9 @@
             </div>
         {% endfor %}
 
-        <div class="buttons">
-            <input type="button" value="Add" data-action="addForm">
-            <input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}" data-action="checkout">
+        <div class="row">
+            <div><input type="button" value="Add" data-action="addForm"></div>
+            <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}" data-action="checkout"></div>
         </div>
 
     </form>

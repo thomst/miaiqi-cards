@@ -1,67 +1,71 @@
-
-/* Style */
-
-div.shop :is(div, select, option, input) {
-    font-family: Albert Sans, sans serif;
-    font-size: 3vh;
-}
-
-div.shop :is(input[type="button"], input[type="submit"]) {
-    cursor: pointer;
-    background-color: aliceblue;
-}
-
-div.shop :is(.headers, .buttons) :is(div, input),
-div.shop div.fields div:nth-of-type(-n + 3) :is(input, select) {
-    padding: 3vh;
-    text-align: center;
-}
-
-/* Layout */
+/* Shop-Layout */
 
 div.shop {
+
     margin-top: 3vh;
     width: 100%;
-}
 
-div.shop :is(.headers, .fields, .buttons) {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
+    :is(div, select, option, input) {
+        font-family: Albert Sans, sans serif;
+        font-size: 3vh;
+    }
 
-div.shop :is(.headers, .fields) div:first-child,
-div.shop div.buttons input {
-    width: 50%;
-}
+    div.row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 
-div.shop :is(.headers, .fields) div:not(:first-child) {
-    width: 25%;
-}
+    div.row {
+        border-top: 2px solid #ccc;
+    }
 
-div.shop div.fields div:nth-of-type(-n + 3) :is(input, select) {
-    width: 100%;
-}
+    div.row ~ div.row {
+        border-top: 0;
+    }
 
-select, input {
-    border: 0;
-    background-color: transparent;
-}
+    div.row {
+        border-bottom: 2px solid #ccc;
+    }
 
-/* Border */
+    div.row > div:first-child {
+        border-left: 2px solid #ccc;
+    }
 
-div.shop :is(.headers, .fields, .buttons) {
-    border-bottom: 2px solid #ccc;
-}
+    div.row > div {
+        border-right: 2px solid #ccc;
+    }
 
-div.shop :is(.headers, .fields, .buttons) > :is(div, input) {
-    border-right: 2px solid #ccc;
-}
+    div.row:not(:has(div:nth-child(3))) div {
+        width: 50%;
+    }
 
-div.shop :is(.headers, .fields, .buttons) > :is(div:first-child, input:first-child) {
-    border-left: 2px solid #ccc;
-}
+    div.row:has(div:nth-child(3)) {
+        div:first-child {
+            width: 50%;
+        }
+        div:not(:first-child) {
+            width: 25%;
+        }
+    }
 
-div.shop div.headers {
-    border-top: 2px solid #ccc;
+    div.row :is(input, select) {
+        width: 100%;
+        border: 0;
+        background-color: transparent;
+    }
+
+    div.row div:not(:has(input, select)),
+    div.row :is(input, select) {
+        padding: 3vh;
+    }
+
+    div.row :is(input[type="button"], input[type="submit"]) {
+        cursor: pointer;
+        background-color: aliceblue;
+    }
+
+    div.row :is(div, input, select) {
+        text-align: center;
+    }
 }

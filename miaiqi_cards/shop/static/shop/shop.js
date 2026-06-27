@@ -59,7 +59,7 @@
 
         }
         updateFormCount () {
-            this.form.querySelectorAll('div.fields').forEach((div, index) => {
+            this.form.querySelectorAll('div.form').forEach((div, index) => {
                 div.querySelectorAll('[name^="form-"]').forEach(element => {
                     element.name = element.name.replace(/form-\d/, `form-${index}`);
                     element.id = element.id.replace(/form-\d/, `form-${index}`);
@@ -69,8 +69,8 @@
         addForm () {
             this.total++;
             this.totalInput.value = this.total;
-            const firstForm = this.form.querySelector('div:nth-child(1 of .fields)');
-            const lastForm = this.form.querySelector('div:nth-last-child(1 of .fields)');
+            const firstForm = this.form.querySelector('div:nth-child(1 of .form)');
+            const lastForm = this.form.querySelector('div:nth-last-child(1 of .form)');
             const newForm = firstForm.cloneNode(true);
             newForm.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
             lastForm.after(newForm);
@@ -111,7 +111,7 @@
     }
 
     function initButtons() {
-        const buttons = document.querySelectorAll('div.buttons > input[type="button"]');
+        const buttons = document.querySelectorAll('div.row input[data-action]');
         for (const button of buttons) {
             button.addEventListener('click', actions[button.dataset.action]);
         }
@@ -119,7 +119,7 @@
 
     function init () {
         initButtons();
-        const form = document.querySelector('div.shop form:has(div.fields)');
+        const form = document.querySelector('div.shop form:has(div.form)');
         if (form) formset = new Formset(form);
     }
 

@@ -1,27 +1,27 @@
 {% load cart_tags %}
 <div class="shop">
-    {% if shop.cart.is_empty %}
-        <p>Your cart is empty.</p>
-    {% else %}
-        <ul>
-        {% for item in shop.cart %}
-            <li>{{ item.quantity }} × {{ item.product }} — {{ item.total_price }}</li>
-        {% endfor %}
-        </ul>
-        {% if shop.cart.discount_amount %}
-            <p>Summary: {{ shop.cart.summary }}</p>
-            <p>Discount: {{ shop.cart.discount_amount }}</p>
-        {% endif %}
-        <p>Total: {{ shop.cart.total }}</p>
-    {% endif %}
-
     <form>
         {% csrf_token %}
-        {{ shop.email_form }}
 
-        <div class="buttons">
-            <input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}" data-action="order">
-            <input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}" data-action="confirmation">
+        {% for item in shop.cart %}
+            <div class="row">
+                <div>{{ item.product }}</div><div>{{ item.quantity }}</div><div>{{ item.total_price }} €</div>
+            </div>
+        {% endfor %}
+
+        {% if shop.cart.discount_amount %}
+            <div class="row"><div>Summary</div><div>{{ shop.cart.summary }}</div></div>
+            <div class="row"><div>Discount</div><div>- {{ shop.cart.discount_amount }}</div></div>
+        {% endif %}
+        <div class="row"><div>Total</div><div>{{ shop.cart.total }}</div></div>
+
+        <div class="row">
+            {% for field in shop.email_form %}<div>{{ field }}</div>{% endfor %}
+        </div>
+
+        <div class="row">
+            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}" data-action="order"></div>
+            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}" data-action="confirmation"></div>
         </div>
     </form>
 
