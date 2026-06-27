@@ -82,7 +82,7 @@ class ShopView:
 
     def get_checkout_html(self):
         self.state = self.CHECKOUT_STATE
-        if self.old_state == self.CHECKOUT_STATE:
+        if self.old_state in [self.CHECKOUT_STATE, self.CONFIRMATION_STATE]:
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         elif self.formset.is_valid():
             self.checkout_cart(self.formset.cleaned_data)
