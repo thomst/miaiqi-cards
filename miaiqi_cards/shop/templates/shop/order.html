@@ -13,7 +13,7 @@
             {% endif %}
             <div class="row form">
                 {% for field in form %}
-                    <div>{{ field }}</div>
+                    <div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>
                 {% endfor %}
                 <div><input class="remove-form" type="button" value="Delete"></div>
             </div>

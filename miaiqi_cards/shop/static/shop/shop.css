@@ -69,4 +69,8 @@ div.shop {
     div.row :is(div, input, select) {
         text-align: center;
     }
+
+    div.row > div.error {
+        border: 2px solid red;
+    }
 }

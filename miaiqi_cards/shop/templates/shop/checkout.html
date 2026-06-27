@@ -16,7 +16,7 @@
         <div class="row"><div>Total</div><div>{{ shop.cart.total }} €</div></div>
 
         <div class="row">
-            {% for field in shop.email_form %}<div>{{ field }}</div>{% endfor %}
+            {% for field in shop.email_form %}<div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>{% endfor %}
         </div>
 
         <div class="row">
