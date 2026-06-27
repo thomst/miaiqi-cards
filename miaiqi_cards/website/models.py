@@ -31,9 +31,9 @@ class WelcomeSection(SectionMixin, Section):
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255)
     postcards = models.ManyToManyField('postcards.Postcard')
-    title_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_title')
-    subtitle_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_subtitle')
-    postcard_ref = models.ForeignKey(Section, on_delete=models.CASCADE, related_name='welcome_postcard')
+    title_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_title')
+    subtitle_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_subtitle')
+    postcard_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_postcard')
 
 
 class TextSection(SectionMixin, Section):
