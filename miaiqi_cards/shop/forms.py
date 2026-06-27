@@ -3,7 +3,8 @@ from miaiqi_cards.postcards.models import Postcard
 
 
 class EmailForm(forms.Form):
-    email_address = forms.EmailField()
+    email_address = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Email Adresse'}))
+    repeated_email_address = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Nochmal ;-)'}))
 
 
 class CartItemForm(forms.Form):
