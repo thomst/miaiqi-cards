@@ -41,7 +41,7 @@ class ShopView:
         field = ModelChoiceField(self.shop.gallery.postcards.all(), required=True)
         form_class = type('CartItemForm', (forms.CartItemForm,), dict(product=field))
         extra = 1 if self.cart.is_empty() else 0
-        return formset_factory(form_class, extra=extra)
+        return formset_factory(form_class, extra=extra, min_num=1, validate_min=True)
 
     @cached_property
     def formset(self):
