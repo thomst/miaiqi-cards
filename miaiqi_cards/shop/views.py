@@ -29,13 +29,13 @@ class ShopView:
         self.request = request
         self.shop = get_object_or_404(models.Shop, pk=shop_id)
 
-    @cached_property
-    def cart(self):
-        return Cart(self.request)
-
     @property
     def state(self):
         return self.request.session.get('shop-state')
+
+    @cached_property
+    def cart(self):
+        return Cart(self.request)
 
     @cached_property
     def formset_class(self):
