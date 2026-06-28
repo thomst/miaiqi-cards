@@ -8,6 +8,16 @@ from . import models
 from . import forms
 
 
+def set_state(state):
+    def decorator(method):
+        def wrapper(self, *args, **kwargs):
+            # self.request.session['shop-state'] = state
+            self.state = state
+            return method(self, *args, **kwargs)
+        return wrapper
+    return decorator
+
+
 class ShopView:
     ORDER_STATE = 'order'
     CHECKOUT_STATE = 'checkout'
@@ -76,12 +86,12 @@ class ShopView:
             else:
                 break
 
+    @set_state(ORDER_STATE)
     def get_order_html(self):
-        self.state = self.ORDER_STATE
         return render_to_string('shop/order.html', dict(shop=self), self.request)
 
+    @set_state(CHECKOUT_STATE)
     def get_checkout_html(self):
-        self.state = self.CHECKOUT_STATE
         if self.old_state in [self.CHECKOUT_STATE, self.CONFIRMATION_STATE]:
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         elif self.formset.is_valid():
@@ -90,8 +100,8 @@ class ShopView:
         else:
             return self.get_order_html()
 
+    @set_state(CONFIRMATION_STATE)
     def get_confirmation_html(self):
-        self.state = self.CONFIRMATION_STATE
         if self.email_form.is_valid():
             # TODO: Send confirmation email.
             self.cart.checkout()
