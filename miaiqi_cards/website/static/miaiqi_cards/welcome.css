@@ -26,8 +26,9 @@ section.welcome-section :is(h1, h2, img) {
     width:auto;
 }
 
-section.welcome-section :is(h1, img) {
+section.welcome-section img {
     border-right: 2px solid var(--light-color);
+    border-left: 2px solid var(--light-color);
 }
 
 section.welcome-section h2 {
