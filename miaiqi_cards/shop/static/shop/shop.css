@@ -40,6 +40,10 @@ div.shop {
         width: 50%;
     }
 
+    div.row:not(:has(div:nth-child(2))) div {
+        width: 100%;
+    }
+
     div.row:has(div:nth-child(3)) {
         div:first-child {
             width: 50%;

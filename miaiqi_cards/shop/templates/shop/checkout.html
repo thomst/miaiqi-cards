@@ -3,25 +3,25 @@
     <form>
         {% csrf_token %}
 
-        {% for item in shop.cart %}
+        {% for item in cart %}
             <div class="row">
                 <div>{{ item.product }}</div><div>{{ item.quantity }} Stk.</div><div>{{ item.total_price }} €</div>
             </div>
         {% endfor %}
 
-        {% if shop.cart.discount_amount %}
-            <div class="row"><div>Summary</div><div>{{ shop.cart.summary }} €</div></div>
-            <div class="row"><div>Discount</div><div>- {{ shop.cart.discount_amount }} €</div></div>
+        {% if cart.discount_amount %}
+            <div class="row"><div>Summary</div><div>{{ cart.summary }} €</div></div>
+            <div class="row"><div>Discount</div><div>- {{ cart.discount_amount }} €</div></div>
         {% endif %}
-        <div class="row"><div>Total</div><div>{{ shop.cart.total }} €</div></div>
+        <div class="row"><div>Total</div><div>{{ cart.total }} €</div></div>
 
         <div class="row">
-            {% for field in shop.email_form %}<div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>{% endfor %}
+            {% for field in email_form %}<div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>{% endfor %}
         </div>
 
         <div class="row">
-            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}" data-action="order"></div>
-            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}" data-action="confirmation"></div>
+            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}?back" data-action="order"></div>
+            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}?buy" data-action="confirmation"></div>
         </div>
     </form>
 

@@ -1,3 +1,20 @@
-{% extends "shop/shop.html" %}
-{% block content %}
-{% endblock %}
+{% load cart_tags %}
+<div class="shop">
+
+    {% for item in cart %}
+        <div class="row">
+            <div>{{ item.product }}</div><div>{{ item.quantity }} Stk.</div><div>{{ item.total_price }} €</div>
+        </div>
+    {% endfor %}
+
+    {% if cart.discount_amount %}
+        <div class="row"><div>Summary</div><div>{{ cart.summary }} €</div></div>
+        <div class="row"><div>Discount</div><div>- {{ cart.discount_amount }} €</div></div>
+    {% endif %}
+    <div class="row"><div>Total</div><div>{{ cart.total }} €</div></div>
+
+    <div class="row">
+        <div><input type="button" value="New" data-url="{% url 'shop-order' shop.shop.id %}?new" data-action="order"></div>
+    </div>
+
+</div>

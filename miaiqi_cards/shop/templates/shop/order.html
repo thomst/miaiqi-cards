@@ -1,10 +1,10 @@
 <div class="shop">
-    {% if shop.formset.errors %}<div>{{ shop.formset.errors }}</div>{% endif %}
+    {% if formset.errors %}<div>{{ formset.errors }}</div>{% endif %}
     <form method="POST">
         {% csrf_token %}
-        {{ shop.formset.management_form }}
+        {{ formset.management_form }}
 
-        {% for form in shop.formset %}
+        {% for form in formset %}
             {% if forloop.first %}
                 <div class="row">
                     {% for field in form %}<div>{{ field.label }}</div>{% endfor %}
@@ -21,7 +21,7 @@
 
         <div class="row">
             <div><input type="button" value="Add" data-action="addForm"></div>
-            <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}" data-action="checkout"></div>
+            <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.shop.id %}?checkout" data-action="checkout"></div>
         </div>
 
     </form>
