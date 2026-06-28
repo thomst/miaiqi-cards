@@ -70,7 +70,7 @@ class ShopView:
         else:
             return forms.EmailForm()
 
-    def checkout_cart(self, data):
+    def setup_cart(self, data):
         self.cart.clear()
         self.cart.remove_discount()
         price = self.shop.prices.first().price  # FIXME: Selection should come from the forms.
@@ -95,7 +95,7 @@ class ShopView:
         if self.old_state in [self.CHECKOUT_STATE, self.CONFIRMATION_STATE]:
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         elif self.formset.is_valid():
-            self.checkout_cart(self.formset.cleaned_data)
+            self.setup_cart(self.formset.cleaned_data)
             return render_to_string('shop/checkout.html', dict(shop=self), self.request)
         else:
             return self.get_order_html()
