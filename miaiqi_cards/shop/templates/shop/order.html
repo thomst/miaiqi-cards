@@ -1,5 +1,4 @@
 <div class="shop">
-    {% if formset.errors %}<div>{{ formset.errors }}</div>{% endif %}
     <form method="POST">
         {% csrf_token %}
         {{ formset.management_form }}
