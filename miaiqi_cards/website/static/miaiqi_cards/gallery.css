@@ -1,6 +1,6 @@
 /* Layout */
 
-section.gallery-section :is(img.postcard-image, div.postcard-image) {
+section.gallery-section .postcard {
     height: auto;
     display: block;
     box-shadow: var(--light-color) 4px 4px 3px;
@@ -17,14 +17,13 @@ section.gallery-section > div {
     font-weight: 300;
 }
 
-section.gallery-section figure img {
+section.gallery-section .postcard {
     width: 22vw;
+    height: 22vw;
     margin-bottom: 10px;
 }
 
 section.gallery-section > div > div:last-child{
-    width: 22vw;
-    height: 22vw;
     display: flex;
     align-items: center;
     justify-content: center;

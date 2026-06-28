@@ -5,12 +5,10 @@
     {% for postcard in section.gallery.postcards.all %}
         <a href="{{ postcard.get_absolute_url }}?section_id={{ section.id }}">
             <figure>
-                <img class="postcard-image" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
+                <img class="postcard" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
                 <figcaption>{{ postcard.title }}</figcaption>
             </figure>
         </a>
-    {% empty %}
-        <p>No postcards available.</p>
     {% endfor %}
-    <div class="postcard-image">More are coming soon...</div>
+    <div class="postcard">More are coming soon...</div>
 </div>
