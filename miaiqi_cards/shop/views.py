@@ -37,13 +37,10 @@ class ShopView:
     def state(self):
         return self.request.session.get('shop-state')
 
-    # FIXME: Use a get_formset_class with extra argument.
-    @property
-    def formset_class(self):
+    def get_formset_class(self, extra=1):
         # FIXME: Update limit_choices_to on formfield instead of creating new field and form.
         field = ModelChoiceField(self.shop.gallery.postcards.all(), required=True)
         form_class = type('CartItemForm', (forms.CartItemForm,), dict(product=field))
-        extra = 1 if self.cart.is_empty() else 0
         return formset_factory(form_class, extra=extra, min_num=1, validate_min=True)
 
     def setup_cart(self, data):
@@ -64,23 +61,24 @@ class ShopView:
 
     @set_state(ORDER_STATE)
     def get_order_html(self):
+        formset_class = self.get_formset_class()
         if 'new' in self.request.GET:
             DjangoSessionAdapter(self.request).delete(CART_ID)
-            formset = self.formset_class()
+            formset = formset_class()
         elif 'checkout' in self.request.GET:
-            formset = self.formset_class(self.request.POST)
+            formset = formset_class(self.request.POST)
         elif not self.cart.is_empty():
             initial = [dict(product=i.product.pk, quantity=i.quantity) for i in self.cart]
-            formset = self.formset_class(initial=initial)
+            formset = self.get_formset_class(extra=0)(initial=initial)
         else:
-            formset = self.formset_class()
+            formset = formset_class()
         context = dict(shop=self, formset=formset)
         return render_to_string('shop/order.html', context, self.request)
 
     @set_state(CHECKOUT_STATE)
     def get_checkout_html(self):
         if 'checkout' in self.request.GET:
-            formset = self.formset_class(self.request.POST)
+            formset = self.get_formset_class()(self.request.POST)
             if formset.is_valid():
                 self.setup_cart(formset.cleaned_data)
                 email_form = forms.EmailForm()
