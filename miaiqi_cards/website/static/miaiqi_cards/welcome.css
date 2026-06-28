@@ -112,3 +112,40 @@ section.welcome-section div:has(+ h2) {
 section.welcome-section div:has(+ img) {
     background-color: var(--img-bg-color-trans);
 }
+
+@media screen and (max-width: 680px) {
+
+    section.welcome-section :is(h1, h2, img) {
+        width: 100vw;
+        height:auto;
+    }
+
+    section.welcome-section img {
+        border-left: 0;
+        border-right: 0;
+        border-top: 2px solid var(--light-color);
+        border-bottom: 2px solid var(--light-color);
+    }
+
+    section.welcome-section {
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    section.welcome-section h1 {
+        font-family: "Albert Sans", sans-serif;
+        font-size: 15vw;
+        font-weight: bold;
+        color: var(--strong-color);
+        writing-mode: horizontal-tb;
+        text-orientation: upright;
+    }
+
+    section.welcome-section h2 {
+        font-size: 9vw;
+    }
+
+    section.welcome-section > a:hover > div {
+        opacity: 0;
+    }
+}

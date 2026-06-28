@@ -20,6 +20,16 @@ footer {
     margin-bottom: 0;
 }
 
+@media screen and (max-width: 680px) {
+
+    footer {
+        display: flex;
+        flex-direction: column;
+        gap: 3vh;
+    }
+
+}
+
 /* Typography */
 
 h2 {

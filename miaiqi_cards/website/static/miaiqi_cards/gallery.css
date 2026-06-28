@@ -35,3 +35,21 @@ section.gallery-section {
     font-size: 3.5vh;
     color: var(--not-so-dark-color);
 }
+
+
+@media screen and (max-width: 680px) {
+
+    section.gallery-section > div {
+        flex-direction: column;
+        gap: 4vh;
+        margin-top: 5vh;
+        font-weight: 300;
+    }
+
+    section.gallery-section .postcard {
+        width: 80vw;
+        height: 80vw;
+        margin-bottom: 2vh;
+    }
+
+}
