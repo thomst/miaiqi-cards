@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.text import slugify
 from simple_page.models import Section, Page
 from ..postcards.models import Gallery
-from ..shop.models import Shop
+# from ..shop.models import Shop
 
 
 class MiaiqiCardsPage(Page):
@@ -45,12 +45,6 @@ class GallerySection(SectionMixin, Section):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     gallery = models.OneToOneField(Gallery, null=True, on_delete=models.SET_NULL)
-
-
-class ShopSection(SectionMixin, Section):
-    title = models.CharField(max_length=100)
-    body = models.TextField(blank=True)
-    shop = models.OneToOneField(Shop, null=True, on_delete=models.SET_NULL)
 
 
 class FooterSection(Section):

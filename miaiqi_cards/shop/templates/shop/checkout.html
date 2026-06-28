@@ -1,5 +1,8 @@
-{% load cart_tags %}
+{% load markdown %}
+
 <div class="shop">
+    {{ shop.checkout_text|markdown_to_html }}
+
     <form>
         {% csrf_token %}
 
@@ -20,8 +23,8 @@
         </div>
 
         <div class="row">
-            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.shop.id %}?back" data-action="order"></div>
-            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.shop.id %}?buy" data-action="confirmation"></div>
+            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.id %}?back" data-action="order"></div>
+            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.id %}?buy" data-action="confirmation"></div>
         </div>
     </form>
 

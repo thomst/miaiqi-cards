@@ -5,6 +5,13 @@ div.shop {
     margin-top: 3vh;
     width: 100%;
 
+    & > p {
+        font-family: Ysabeau, sans serif;
+        font-size: 3vh;
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+    }
+
     :is(div, select, option, input) {
         font-family: Albert Sans, sans serif;
         font-size: 3vh;

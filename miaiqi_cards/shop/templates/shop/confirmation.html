@@ -1,5 +1,7 @@
-{% load cart_tags %}
+{% load markdown %}
+
 <div class="shop">
+    {{ shop.confirmation_text|markdown_to_html }}
 
     {% for item in cart %}
         <div class="row">
@@ -14,7 +16,7 @@
     <div class="row"><div>Total</div><div>{{ cart.total }} €</div></div>
 
     <div class="row">
-        <div><input type="button" value="New" data-url="{% url 'shop-order' shop.shop.id %}?new" data-action="order"></div>
+        <div><input type="button" value="New" data-url="{% url 'shop-order' shop.id %}?new" data-action="order"></div>
     </div>
 
 </div>

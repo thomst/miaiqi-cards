@@ -1,5 +1,7 @@
 from django.db import models
+from simple_page.models import Section
 from cart.models import Discount, DiscountType
+from ..website.models import SectionMixin
 from ..postcards.models import Gallery
 
 
@@ -21,18 +23,18 @@ class QuantityDiscount(Discount):
         ordering = ['-min_cart_value']
 
 
-class Shop(models.Model):
-    name = models.CharField(max_length=100, blank=True)
+class ShopSection(SectionMixin, Section):
+    title = models.CharField(max_length=100)
+    order_text = models.TextField(blank=True)
+    checkout_text = models.TextField(blank=True)
+    confirmation_text = models.TextField(blank=True)
     gallery = models.OneToOneField(Gallery, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.name
 
 
 class Price(models.Model):
     size = models.DecimalField(max_digits=3, decimal_places=1)
     price = models.DecimalField(max_digits=3, decimal_places=2)
-    shop = models.ForeignKey(Shop, related_name='prices', null=True, on_delete=models.SET_NULL)
+    shop = models.ForeignKey(ShopSection, related_name='prices', null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f'{self.size} / {self.price}'

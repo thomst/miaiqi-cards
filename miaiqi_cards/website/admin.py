@@ -20,12 +20,6 @@ class GalleryAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
 
-@admin.register(models.ShopSection)
-class ShopAdmin(admin.ModelAdmin):
-    list_display = ['title']
-    search_fields = ['title']
-
-
 @admin.register(models.FooterSection)
 class FooterSectionAdmin(admin.ModelAdmin):
     list_display = ['name']

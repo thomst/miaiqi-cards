@@ -20,9 +20,9 @@ class PriceInline(admin.TabularInline):
     fields = ['size', 'price']
 
 
-@admin.register(models.Shop)
+@admin.register(models.ShopSection)
 class ShopAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    search_fields = ['name']
+    list_display = ['title']
+    search_fields = ['title']
     inlines = [PriceInline]
 

@@ -4,8 +4,6 @@ from django.utils.text import slugify
 from django.contrib.staticfiles.finders import find
 from simple_page import renderers
 from simple_page.models import Section
-from miaiqi_cards.shop.models import Shop
-from miaiqi_cards.shop.views import ShopView
 from . import models
 
 
@@ -48,16 +46,3 @@ class WelcomeRenderer(renderers.SectionRenderer):
 class GalleryRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['miaiqi_cards/gallery.css'])
-
-
-@renderers.register(models.ShopSection)
-class ShopRenderer(renderers.SectionRenderer):
-    class Media:
-        css = dict(all=['shop/shop.css'])
-        js = ['shop/shop.js']
-
-    def get_context(self):
-        context = super().get_context()
-        shop_view = ShopView(self.request, self.obj.shop.id)
-        context['shop_html'] = shop_view.html
-        return context
