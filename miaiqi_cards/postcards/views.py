@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from miaiqi_cards.website.models import GallerySection
+from .models import GallerySection
 from .models import Postcard
 
 
@@ -9,7 +9,7 @@ def postcard(request, postcard_id):
 
     if section_id := request.GET.get('section_id'):
         section = get_object_or_404(GallerySection, id=section_id)
-        postcards = list(section.gallery.postcards.all())
+        postcards = list(section.postcards.all())
         context['section'] = section
     else:
         postcards = list(Postcard.objects.all())

@@ -2,8 +2,6 @@ import re
 from django.db import models
 from django.utils.text import slugify
 from simple_page.models import Section, Page
-from ..postcards.models import Gallery
-# from ..shop.models import Shop
 
 
 class MiaiqiCardsPage(Page):
@@ -39,12 +37,6 @@ class WelcomeSection(SectionMixin, Section):
 class TextSection(SectionMixin, Section):
     title = models.CharField(max_length=255)
     body = models.TextField(blank=True)
-
-
-class GallerySection(SectionMixin, Section):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    gallery = models.OneToOneField(Gallery, null=True, on_delete=models.SET_NULL)
 
 
 class FooterSection(Section):

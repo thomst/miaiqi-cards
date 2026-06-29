@@ -40,9 +40,3 @@ class WelcomeRenderer(renderers.SectionRenderer):
         context['postcard_ref'] = get_child(self.obj.postcard_ref.pk)
         context['postcard'] = self.postcard
         return context
-
-
-@renderers.register(models.GallerySection)
-class GalleryRenderer(renderers.SectionRenderer):
-    class Media:
-        css = dict(all=['miaiqi_cards/gallery.css'])

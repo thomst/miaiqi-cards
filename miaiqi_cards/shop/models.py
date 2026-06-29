@@ -2,7 +2,7 @@ from django.db import models
 from simple_page.models import Section
 from cart.models import Discount, DiscountType
 from ..website.models import SectionMixin
-from ..postcards.models import Gallery
+from ..postcards.models import GallerySection
 
 
 class QuantityDiscountManager(models.Manager):
@@ -28,7 +28,7 @@ class ShopSection(SectionMixin, Section):
     order_text = models.TextField(blank=True)
     checkout_text = models.TextField(blank=True)
     confirmation_text = models.TextField(blank=True)
-    gallery = models.OneToOneField(Gallery, on_delete=models.CASCADE)
+    gallery = models.OneToOneField(GallerySection, on_delete=models.CASCADE)
 
 
 class Price(models.Model):

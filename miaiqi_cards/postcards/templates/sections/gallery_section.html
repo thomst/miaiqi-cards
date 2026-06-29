@@ -2,7 +2,7 @@
 
 <h2>Gallerie</h2>
 <div>
-    {% for postcard in section.gallery.postcards.all %}
+    {% for postcard in section.postcards.all %}
         <a href="{{ postcard.get_absolute_url }}?section_id={{ section.id }}">
             <figure>
                 <img class="postcard" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">

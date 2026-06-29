@@ -22,9 +22,9 @@ class PostcardsInline(ReorderItemsInline):
     fields = ['postcard']
 
 
-@admin.register(models.Gallery)
+@admin.register(models.GallerySection)
 class GalleryAdmin(admin.ModelAdmin):
-    list_display = ['name']
-    search_fields = ['name']
+    list_display = ['title']
+    search_fields = ['title']
     exclude = ['postcards']
     inlines = [PostcardsInline]
