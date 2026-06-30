@@ -50,3 +50,11 @@ section > p {
     font-size: 3vh;
     margin-top: 10px;
 }
+
+@media screen and (max-width: 680px) {
+
+    h2 {
+        font-size: 14vw;
+    }
+
+}
