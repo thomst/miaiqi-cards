@@ -40,7 +40,6 @@ section.gallery-section {
 @media screen and (max-width: 680px) {
 
     section.gallery-section > div {
-        flex-direction: column;
         gap: 4vh;
         margin-top: 5vh;
         font-weight: 300;

@@ -3,7 +3,6 @@ section.postcard-section {
     padding: 5vh 12vw;
     display: flex;
     flex-direction: column;
-    /* text-align: center; */
     align-items: center;
 }
 
@@ -16,15 +15,16 @@ h1 {
 div.postcard {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 3vw;
     align-items: center;
-    /* text-align: center; */
     margin-top: 3vw;
 
 }
 
 div.postcard img {
     max-height: 60vh;
+    max-width: 80vw;
     box-shadow: var(--light-color) 4px 4px 3px;
     border: 1px solid var(--light-color);
 }
@@ -34,8 +34,6 @@ div.postcard > div {
     font-weight: 300;
     font-size: 3vh;
     max-width: 60vh;
-    max-height: 60vh;
-
 }
 
 nav a {
