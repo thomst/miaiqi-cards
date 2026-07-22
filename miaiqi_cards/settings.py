@@ -142,10 +142,10 @@ STATIC_ROOT = BASE_DIR / 'miaiqi_cards/staticfiles/'
 
 COMPRESS_ROOT = STATIC_ROOT / 'compressed'
 COMPRESS_ENABLED = True
+# We do not minify CSS because it breaks the CSS for some reason.
 COMPRESS_FILTERS = {
     'css': [
         'compressor.filters.css_default.CssAbsoluteFilter',
-        'compressor.filters.cssmin.CSSCompressorFilter',
     ],
     'js': [
         'compressor.filters.jsmin.JSMinFilter',
