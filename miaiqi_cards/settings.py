@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'reorder_items_widget',
     'cart',
+    'compressor',
+    'reorder_items_widget',
     'simple_page',
     'miaiqi_cards.website',
     'miaiqi_cards.postcards',
@@ -70,6 +71,12 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 ]
 
 WSGI_APPLICATION = 'miaiqi_cards.wsgi.application'
@@ -132,3 +139,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 STATIC_ROOT = BASE_DIR / 'miaiqi_cards/staticfiles/'
+
+COMPRESS_ROOT = STATIC_ROOT / 'compressed'
+COMPRESS_ENABLED = True
+COMPRESS_FILTERS = {
+    'css': [
+        'compressor.filters.css_default.CssAbsoluteFilter',
+        'compressor.filters.cssmin.CSSCompressorFilter',
+    ],
+    'js': [
+        'compressor.filters.jsmin.JSMinFilter',
+    ],
+}

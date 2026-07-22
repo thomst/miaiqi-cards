@@ -1,4 +1,4 @@
-{% load static %}
+{% load static compress %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,10 +6,12 @@
     {% block head %}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{% static 'miaiqi_cards/base.css' %}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Cherry+Swash:wght@400;700&family=Ysabeau:ital,wght@0,1..1000;1,1..1000&display=swap" rel="stylesheet">
+        {% compress css inline %}
+            <link rel="stylesheet" href="{% static 'miaiqi_cards/base.css' %}">
+        {% endcompress %}
     {% endblock %}
 </head>
 <body>{% block content %}{% endblock %}</body>

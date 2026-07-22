@@ -1,10 +1,12 @@
 {% extends 'miaiqi_cards/base.html' %}
+{% load compress %}
 
 {% block head %}
 
     <title>miaiqi cards</title>
     {{ block.super }}
-    {{ media }}
+    {% compress css inline %}{{ media.css }}{% endcompress %}
+    {% compress js inline %}{{ media.js }}{% endcompress %}
 
 {% endblock %}
 
