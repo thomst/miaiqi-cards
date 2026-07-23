@@ -12,6 +12,16 @@ class MiaiqiCardsPageRenderer(renderers.PageRenderer):
     class Media:
         css = dict(all=['miaiqi_cards/miaiqi_cards.css'])
 
+    def get_welcome_postcard(self, context):
+        for section_data in context['main']['sections']:
+            if isinstance(section_data['obj'], models.WelcomeSection):
+                return section_data['renderer'].postcard
+
+    def get_context(self):
+        context = super().get_context()
+        context['welcome_postcard'] = self.get_welcome_postcard(context)
+        return context
+
 
 @renderers.register(models.WelcomeSection)
 class WelcomeRenderer(renderers.SectionRenderer):

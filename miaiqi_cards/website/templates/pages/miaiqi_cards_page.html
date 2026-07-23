@@ -2,9 +2,10 @@
 {% load compress %}
 
 {% block head %}
+    {{ block.super }}
 
     <title>miaiqi cards</title>
-    {{ block.super }}
+    <link rel="preload" href="{{ welcome_postcard.image.url }}" as="image" type="image/avif" fetchpriority="high">
     {% compress css inline %}{{ media.css }}{% endcompress %}
     {% compress js inline %}{{ media.js }}{% endcompress %}
 
