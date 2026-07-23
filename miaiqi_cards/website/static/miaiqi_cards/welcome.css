@@ -26,6 +26,11 @@ section.welcome-section :is(h1, h2, img) {
     width:auto;
 }
 
+section.welcome-section div:has(> img) {
+    height: 100vh;
+    width: 100vh;
+}
+
 section.welcome-section img {
     border-right: 2px solid var(--light-color);
     border-left: 2px solid var(--light-color);
@@ -66,7 +71,7 @@ section.welcome-section a {
     position: relative;
 }
 
-section.welcome-section > a > div {
+section.welcome-section > a > div:first-child {
     position: absolute;
     font-size: 8vh;
     font-family: "Albert Sans", sans-serif;
@@ -109,7 +114,7 @@ section.welcome-section div:has(+ h2) {
     background-color: var(--h2-bg-color-trans);
 }
 
-section.welcome-section div:has(+ img) {
+section.welcome-section div:has(+ div) {
     background-color: var(--img-bg-color-trans);
 }
 
@@ -118,6 +123,11 @@ section.welcome-section div:has(+ img) {
     section.welcome-section :is(h1, h2, img) {
         width: 100vw;
         height:auto;
+    }
+
+    section.welcome-section div:has(> img) {
+        height: 100vw;
+        width: 100vw;
     }
 
     section.welcome-section img {
