@@ -1,10 +1,13 @@
 {% extends 'miaiqi_cards/base.html' %}
-{% load static markdown %}
+{% load static markdown compress %}
 
 {% block head %}
-    <title>{{ postcard.title }}</title>
-    <link rel="stylesheet" href="{% static 'miaiqi_cards/postcard.css' %}">
     {{ block.super }}
+    <title>{{ postcard.title }}</title>
+    <link rel="preload" href="{{ postcard.image.url }}" as="image" type="image/avif" fetchpriority="high">
+    {% compress css inline %}
+        <link rel="stylesheet" href="{% static 'miaiqi_cards/postcard.css' %}">
+    {% endcompress %}
 {% endblock %}
 
 {% block content %}
