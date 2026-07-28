@@ -44,8 +44,9 @@ def upload_to(instance, filename, fieldname):
     new_filename = f"{instance.name}_{fieldname}_{hash}{ext}"
     return os.path.join(Image.UPLOAD_DIR, new_filename)
 
+
 # Value for upload_to must be serializable, so we define separate functions for
-# each field.
+# each field instead of using an UploadTo class with a __call__ method.
 def upload_original(*args): return upload_to(*args, 'original')
 def upload_large(*args): return upload_to(*args, 'large')
 def upload_medium(*args): return upload_to(*args, 'medium')
