@@ -138,7 +138,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-STATIC_ROOT = BASE_DIR / 'miaiqi_cards/staticfiles/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 COMPRESS_ROOT = STATIC_ROOT / 'compressed'
 COMPRESS_ENABLED = True
