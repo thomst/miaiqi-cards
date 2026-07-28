@@ -22,24 +22,14 @@ class Resizer:
     def __init__(self, original):
         self.original = original
 
-    def get_filename(self, size):
-        name, ext = os.path.splitext(self.original.name)
-        return f'{name}_{size}{ext}'
-
-    def get_content_type(self):
-        try:
-            return self.original.file.content_type
-        except AttributeError:
-            return mimetypes.guess_type(self.original.path)[0]
-
     def resize(self, size):
         img = PIL.Image.open(self.original)
         resized = img.resize(self.SIZES[size], PIL.Image.Resampling.LANCZOS)
-        output = BytesIO()
-        resized.save(output, format=img.format)
-        filename = self.get_filename(size)
-        output.seek(0)
-        return SimpleUploadedFile(filename, output.read(), self.get_content_type())
+        avif_data = BytesIO()
+        resized.save(avif_data, format='AVIF')
+        filename = f'{os.path.splitext(self.original.name)[0]}_{size}.avif'
+        avif_data.seek(0)
+        return SimpleUploadedFile(filename, avif_data.read(), 'image/avif')
 
 
 class OverwriteStorage(FileSystemStorage):
