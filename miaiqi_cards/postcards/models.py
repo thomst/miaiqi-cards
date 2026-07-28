@@ -13,7 +13,6 @@ from ..website.models import SectionMixin
 
 
 class Resizer:
-
     SIZES = dict(
         large=(1200, 1200),
         medium=(800, 800),
@@ -42,15 +41,6 @@ class Resizer:
         output.seek(0)
         return SimpleUploadedFile(filename, output.read(), self.get_content_type())
 
-    def get_large(self):
-        return self.resize('large')
-
-    def get_medium(self):
-        return self.resize('medium')
-
-    def get_small(self):
-        return self.resize('small')
-
 
 class OverwriteStorage(FileSystemStorage):
     def get_available_name(self, name, *args, **kwargs):
@@ -59,27 +49,18 @@ class OverwriteStorage(FileSystemStorage):
         return name
 
 
-def upload_to(instance, fieldname, filename):
+def upload_to(instance, filename, fieldname):
     ext = os.path.splitext(filename)[1]
     hash = hashlib.md5(getattr(instance, fieldname).read()).hexdigest()
     new_filename = f"{instance.name}_{fieldname}_{hash}{ext}"
     return os.path.join(Image.UPLOAD_DIR, new_filename)
 
-
-def upload_original(instance, filename):
-    return upload_to(instance, 'original', filename)
-
-
-def upload_large(instance, filename):
-    return upload_to(instance, 'large', filename)
-
-
-def upload_medium(instance, filename):
-    return upload_to(instance, 'medium', filename)
-
-
-def upload_small(instance, filename):
-    return upload_to(instance, 'small', filename)
+# Value for upload_to must be serializable, so we define separate functions for
+# each field.
+def upload_original(*args): return upload_to(*args, 'original')
+def upload_large(*args): return upload_to(*args, 'large')
+def upload_medium(*args): return upload_to(*args, 'medium')
+def upload_small(*args): return upload_to(*args, 'small')
 
 
 class Image(models.Model):
@@ -95,9 +76,9 @@ class Image(models.Model):
         if not self.name:
             self.name = os.path.splitext(self.original.name)[0]
         resizer = Resizer(self.original)
-        self.large = resizer.get_large()
-        self.medium = resizer.get_medium()
-        self.small = resizer.get_small()
+        self.large = resizer.resize('large')
+        self.medium = resizer.resize('medium')
+        self.small = resizer.resize('small')
         super().save(*args, **kwargs)
 
 
