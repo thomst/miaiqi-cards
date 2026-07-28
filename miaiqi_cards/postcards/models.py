@@ -1,7 +1,6 @@
 import os
 import hashlib
 import PIL
-import mimetypes
 from io import BytesIO
 from django.db import models
 from django.urls import reverse
