@@ -26,6 +26,7 @@ section.welcome-section :is(h1, h2, img) {
     width:auto;
 }
 
+/* TODO: We do not need a div container. Just set height and width on the img directly. */
 section.welcome-section div:has(> img) {
     height: 100vh;
     width: 100vh;
