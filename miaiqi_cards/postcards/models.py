@@ -71,6 +71,9 @@ class Image(models.Model):
         self.small = resizer.resize('small')
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 class Postcard(models.Model):
     title = models.CharField(max_length=200)
