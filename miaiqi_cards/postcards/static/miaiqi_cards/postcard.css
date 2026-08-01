@@ -19,7 +19,6 @@ div.postcard {
     gap: 3vw;
     align-items: center;
     margin-top: 3vw;
-
 }
 
 div.postcard img {
@@ -46,4 +45,12 @@ nav a {
 nav a.disabled {
     color: var(--light-color);
     pointer-events: none;
+}
+
+@media screen and (max-width: 680px) {
+
+    h1 {
+        font-size: 8vw;
+    }
+
 }
