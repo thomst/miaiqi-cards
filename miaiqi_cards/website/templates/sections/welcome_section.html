@@ -4,7 +4,14 @@
 </a>
 <a href="#{{ postcard_ref.css_id }}">
     <div>{{ postcard_ref.title }}</div>
-    <div><img src="{{ postcard.image.url }}" alt="{{ postcard.title }}" fetchpriority="high"></div>
+    <div>
+        <img
+            src="{{ postcard.image.large.url }}"
+            srcset="{{ postcard.image.srcset }}"
+            sizes="(width <= 680px) 100vw, 100vh"
+            alt="{{ postcard.title }}"
+            fetchpriority="high">
+    </div>
 </a>
 <a href="#{{ subtitle_ref.css_id }}">
     <div>{{ subtitle_ref.title }}</div>

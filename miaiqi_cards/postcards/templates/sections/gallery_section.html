@@ -5,7 +5,13 @@
     {% for postcard in section.postcards.all %}
         <a href="{{ postcard.get_absolute_url }}?section_id={{ section.id }}">
             <figure>
-                <img class="postcard" src="{{ postcard.image.url }}" alt="{{ postcard.title }}">
+                <img
+                    class="postcard"
+                    src="{{ postcard.image.medium.url }}"
+                    srcset="{{ postcard.image.srcset }}"
+                    sizes="(width <= 680px) 80vw, 22vw"
+                    fetchpriority="high"
+                    alt="{{ postcard.title }}">
                 <figcaption>{{ postcard.title }}</figcaption>
             </figure>
         </a>
