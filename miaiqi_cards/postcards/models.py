@@ -74,12 +74,16 @@ class Image(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def srcset(self):
+        return f'{self.large.url} {self.large.width}w, {self.medium.url} {self.medium.width}w, {self.small.url} {self.small.width}w'
+
 
 class Postcard(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(upload_to='postcards/')
+    image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, blank=True, related_name='postcard')
     is_public = models.BooleanField(default=True)
 
     def __str__(self):
