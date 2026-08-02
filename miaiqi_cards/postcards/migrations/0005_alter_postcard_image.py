@@ -11,9 +11,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.RemoveField(
             model_name='postcard',
             name='image',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='postcard', to='postcards.image'),
+        ),
+        migrations.AddField(
+            model_name='postcard',
+            name='image',
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='postcard', to='postcards.image'),
         ),
     ]

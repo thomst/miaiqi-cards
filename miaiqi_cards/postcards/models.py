@@ -83,7 +83,7 @@ class Postcard(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, blank=True, related_name='postcard')
+    image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, related_name='postcard')
     is_public = models.BooleanField(default=True)
 
     def __str__(self):
