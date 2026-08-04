@@ -1,5 +1,12 @@
 from django.contrib import admin
+from simple_page.admin import BasePageAdmin
 from . import models
+
+
+@admin.register(models.MiaiqiCardsPage)
+class MiaiqiCardsPageAdmin(BasePageAdmin):
+    list_display = ['title', 'slug']
+    search_fields = ['title', 'slug']
 
 
 @admin.register(models.WelcomeSection)

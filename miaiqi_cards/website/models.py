@@ -9,9 +9,7 @@ class MiaiqiCardsPage(Page):
         ('main', 'Main Region'),
         ('footer', 'Footer'),
     ]
-
-    class Meta:
-        proxy = True
+    description = models.TextField(blank=True)
 
 
 class SectionMixin:
