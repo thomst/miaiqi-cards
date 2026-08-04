@@ -2,6 +2,7 @@ import re
 from django.db import models
 from django.utils.text import slugify
 from simple_page.models import Section, Page
+from translated_fields import TranslatedFieldWithDefault
 
 
 class MiaiqiCardsPage(Page):
@@ -26,8 +27,8 @@ class SectionMixin:
 
 
 class WelcomeSection(SectionMixin, Section):
-    title = models.CharField(max_length=255)
-    subtitle = models.CharField(max_length=255)
+    title = TranslatedFieldWithDefault(models.CharField(max_length=255))
+    subtitle = TranslatedFieldWithDefault(models.CharField(max_length=255))
     postcards = models.ManyToManyField('postcards.Postcard')
     title_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_title')
     subtitle_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_subtitle')
@@ -35,13 +36,13 @@ class WelcomeSection(SectionMixin, Section):
 
 
 class TextSection(SectionMixin, Section):
-    title = models.CharField(max_length=255)
-    body = models.TextField(blank=True)
+    title = TranslatedFieldWithDefault(models.CharField(max_length=255))
+    body = TranslatedFieldWithDefault(models.TextField(blank=True))
 
 
 class FooterSection(Section):
-    name = models.CharField(max_length=100, blank=True)
-    body = models.TextField(blank=True)
+    name = TranslatedFieldWithDefault(models.CharField(max_length=100, blank=True))
+    body = TranslatedFieldWithDefault(models.TextField(blank=True))
 
     def __str__(self):
         return self.name

@@ -8,6 +8,7 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from reorder_items_widget import ReorderItemsField
 from simple_page.models import Section
+from translated_fields import TranslatedFieldWithDefault
 from ..website.models import SectionMixin
 
 
@@ -80,8 +81,8 @@ class Image(models.Model):
 
 
 class Postcard(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
+    title = TranslatedFieldWithDefault(models.CharField(max_length=200))
+    description = TranslatedFieldWithDefault(models.TextField(blank=True))
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, related_name='postcard')
     is_public = models.BooleanField(default=True)
@@ -97,8 +98,8 @@ class Postcard(models.Model):
 
 
 class GallerySection(SectionMixin, Section):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    title = TranslatedFieldWithDefault(models.CharField(max_length=100))
+    description = TranslatedFieldWithDefault(models.TextField(blank=True))
     postcards = models.ManyToManyField(
         'postcards.Postcard',
         through='GalleryPostcard',

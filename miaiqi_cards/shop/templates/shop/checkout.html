@@ -1,4 +1,4 @@
-{% load markdown %}
+{% load markdown i18n %}
 
 <div class="shop">
     {{ shop.checkout_text|markdown_to_html }}
@@ -8,23 +8,23 @@
 
         {% for item in cart %}
             <div class="row">
-                <div>{{ item.product }}</div><div>{{ item.quantity }} Stk.</div><div>{{ item.total_price }} €</div>
+                <div>{{ item.product }}</div><div>{{ item.quantity }} {% trans 'Stk.' %}</div><div>{{ item.total_price }} €</div>
             </div>
         {% endfor %}
 
         {% if cart.discount_amount %}
-            <div class="row"><div>Summary</div><div>{{ cart.summary }} €</div></div>
-            <div class="row"><div>Discount</div><div>- {{ cart.discount_amount }} €</div></div>
+            <div class="row"><div>{% trans 'Zwischensumme' %}</div><div>{{ cart.summary }} €</div></div>
+            <div class="row"><div>{% trans 'Rabatt' %}</div><div>- {{ cart.discount_amount }} €</div></div>
         {% endif %}
-        <div class="row"><div>Total</div><div>{{ cart.total }} €</div></div>
+        <div class="row"><div>{% trans 'Gesamt' %}</div><div>{{ cart.total }} €</div></div>
 
         <div class="row">
             {% for field in email_form %}<div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>{% endfor %}
         </div>
 
         <div class="row">
-            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.id %}?back" data-action="order"></div>
-            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.id %}?buy" data-action="confirmation"></div>
+            <div><input type="button" value="{% trans 'Zurück' %}" data-url="{% url 'shop-order' shop.id %}?back" data-action="order"></div>
+            <div><input type="button" value="{% trans 'Kaufen' %}" data-url="{% url 'shop-confirmation' shop.id %}?buy" data-action="confirmation"></div>
         </div>
     </form>
 

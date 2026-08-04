@@ -1,11 +1,11 @@
 {% extends 'miaiqi_cards/base.html' %}
-{% load compress %}
+{% load compress i18n %}
 
 {% block head %}
     {{ block.super }}
 
-    <title>miaiqi cards</title>
-    <meta name="description" content="Wunderschöne handgezeichnete Künstler-Postkarten. Inspiriert von der Schönheit der Natur." />
+    <title>{% trans "miaiqi cards" %}</title>
+    <meta name="description" content="{% trans "Wunderschöne handgezeichnete Künstler-Postkarten. Inspiriert von der Schönheit der Natur." %}" />
     <link
         rel="preload"
         href="{{ welcome_postcard.image.large.url }}"

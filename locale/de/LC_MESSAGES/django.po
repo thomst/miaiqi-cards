@@ -1,0 +1,59 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: miaiqi_cards\n"
+"POT-Creation-Date: 2026-08-03 00:00+0000\n"
+"PO-Revision-Date: 2026-08-03 00:00+0000\n"
+"Last-Translator: GitHub Copilot <noreply@example.com>\n"
+"Language-Team: German <de@example.com>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "miaiqi cards"
+msgstr "miaiqi cards"
+
+msgid "Wunderschöne handgezeichnete Künstler-Postkarten. Inspiriert von der Schönheit der Natur."
+msgstr "Wunderschöne handgezeichnete Künstler-Postkarten. Inspiriert von der Schönheit der Natur."
+
+msgid "◅ zurück"
+msgstr "◅ zurück"
+
+msgid "schließen"
+msgstr "schließen"
+
+msgid "weiter ▻"
+msgstr "weiter ▻"
+
+msgid "Bald gibt es mehr..."
+msgstr "Bald gibt es mehr..."
+
+msgid "Löschen"
+msgstr "Löschen"
+
+msgid "Hinzufügen"
+msgstr "Hinzufügen"
+
+msgid "Zur Kasse"
+msgstr "Zur Kasse"
+
+msgid "Stk."
+msgstr "Stk."
+
+msgid "Zwischensumme"
+msgstr "Zwischensumme"
+
+msgid "Rabatt"
+msgstr "Rabatt"
+
+msgid "Gesamt"
+msgstr "Gesamt"
+
+msgid "Zurück"
+msgstr "Zurück"
+
+msgid "Kaufen"
+msgstr "Kaufen"
+
+msgid "Neu"
+msgstr "Neu"

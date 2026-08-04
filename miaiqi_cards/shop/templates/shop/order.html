@@ -1,4 +1,4 @@
-{% load markdown %}
+{% load markdown i18n %}
 
 <div class="shop">
     {{ shop.order_text|markdown_to_html }}
@@ -18,13 +18,13 @@
                 {% for field in form %}
                     <div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>
                 {% endfor %}
-                <div><input class="remove-form" type="button" value="Delete"></div>
+                <div><input class="remove-form" type="button" value="{% trans 'Löschen' %}"></div>
             </div>
         {% endfor %}
 
         <div class="row">
-            <div><input type="button" value="Add" data-action="addForm"></div>
-            <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.id %}?checkout" data-action="checkout"></div>
+            <div><input type="button" value="{% trans 'Hinzufügen' %}" data-action="addForm"></div>
+            <div><input type="button" value="{% trans 'Zur Kasse' %}" data-url="{% url 'shop-checkout' shop.id %}?checkout" data-action="checkout"></div>
         </div>
 
     </form>

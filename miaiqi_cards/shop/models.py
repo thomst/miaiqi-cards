@@ -1,6 +1,7 @@
 from django.db import models
 from simple_page.models import Section
 from cart.models import Discount, DiscountType
+from translated_fields import TranslatedFieldWithDefault
 from ..website.models import SectionMixin
 from ..postcards.models import GallerySection
 
@@ -24,10 +25,10 @@ class QuantityDiscount(Discount):
 
 
 class ShopSection(SectionMixin, Section):
-    title = models.CharField(max_length=100)
-    order_text = models.TextField(blank=True)
-    checkout_text = models.TextField(blank=True)
-    confirmation_text = models.TextField(blank=True)
+    title = TranslatedFieldWithDefault(models.CharField(max_length=100))
+    order_text = TranslatedFieldWithDefault(models.TextField(blank=True))
+    checkout_text = TranslatedFieldWithDefault(models.TextField(blank=True))
+    confirmation_text = TranslatedFieldWithDefault(models.TextField(blank=True))
     gallery = models.OneToOneField(GallerySection, on_delete=models.CASCADE)
 
 

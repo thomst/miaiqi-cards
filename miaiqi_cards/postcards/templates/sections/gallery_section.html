@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 
 <h2>{{ section.title }}</h2>
 <div>
@@ -16,5 +16,5 @@
             </figure>
         </a>
     {% endfor %}
-    <div class="postcard">More are coming soon...</div>
+    <div class="postcard">{% trans 'Bald gibt es mehr...' %}</div>
 </div>
