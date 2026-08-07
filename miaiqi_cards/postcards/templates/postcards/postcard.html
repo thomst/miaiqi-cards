@@ -4,6 +4,9 @@
 {% block head %}
     {{ block.super }}
     <title>{{ postcard.title }}</title>
+    {% if page.description %}
+        <meta name="description" content="{{ page.description }}" />
+    {% endif %}
     <link
         rel="preload"
         href="{{ postcard.image.url }}"
