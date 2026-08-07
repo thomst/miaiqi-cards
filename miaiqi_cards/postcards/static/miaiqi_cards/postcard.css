@@ -22,8 +22,8 @@ div.postcard {
 }
 
 div.postcard img {
-    max-height: 60vh;
-    max-width: 80vw;
+    height: 60vh;
+    width: 60vh;
     box-shadow: var(--light-color) 4px 4px 3px;
     border: 1px solid var(--light-color);
 }
@@ -51,6 +51,11 @@ nav a.disabled {
 
     h1 {
         font-size: 8vw;
+    }
+
+    div.postcard img {
+        height: 80vw;
+        width: 80vw;
     }
 
 }
