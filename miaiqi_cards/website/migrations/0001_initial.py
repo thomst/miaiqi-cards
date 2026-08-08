@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(max_length=255)),
                 ('body', models.TextField(blank=True)),
             ],
-            bases=(miaiqi_cards.website.models.SectionMixin, 'simple_page.section'),
+            bases=('simple_page.section',),
         ),
         migrations.CreateModel(
             name='MiaiqiCardsPage',
@@ -53,7 +53,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True)),
                 ('gallery', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='postcards.gallery')),
             ],
-            bases=(miaiqi_cards.website.models.SectionMixin, 'simple_page.section'),
+            bases=('simple_page.section',),
         ),
         migrations.CreateModel(
             name='ShopSection',
@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
                 ('body', models.TextField(blank=True)),
                 ('shop', models.OneToOneField(null=True, on_delete=django.db.models.deletion.SET_NULL, to='shop.shop')),
             ],
-            bases=(miaiqi_cards.website.models.SectionMixin, 'simple_page.section'),
+            bases=('simple_page.section',),
         ),
         migrations.CreateModel(
             name='WelcomeSection',
@@ -76,6 +76,6 @@ class Migration(migrations.Migration):
                 ('subtitle_ref', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='welcome_subtitle', to='simple_page.section')),
                 ('title_ref', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='welcome_title', to='simple_page.section')),
             ],
-            bases=(miaiqi_cards.website.models.SectionMixin, 'simple_page.section'),
+            bases=('simple_page.section',),
         ),
     ]

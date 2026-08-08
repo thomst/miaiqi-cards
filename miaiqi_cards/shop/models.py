@@ -1,7 +1,6 @@
 from django.db import models
 from simple_page.models import Section
 from cart.models import Discount, DiscountType
-from ..website.models import SectionMixin
 from ..postcards.models import GallerySection
 
 
@@ -23,12 +22,15 @@ class QuantityDiscount(Discount):
         ordering = ['-min_cart_value']
 
 
-class ShopSection(SectionMixin, Section):
+class ShopSection(Section):
     title = models.CharField(max_length=100)
     order_text = models.TextField(blank=True)
     checkout_text = models.TextField(blank=True)
     confirmation_text = models.TextField(blank=True)
     gallery = models.OneToOneField(GallerySection, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
 
 class Price(models.Model):

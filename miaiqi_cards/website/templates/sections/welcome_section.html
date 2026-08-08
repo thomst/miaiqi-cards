@@ -1,3 +1,5 @@
+{% load sections %}
+
 {% partialdef head %}
     <link
         rel="preload"
@@ -9,12 +11,12 @@
         fetchpriority="high">
 {% endpartialdef %}
 
-<section id="{{ section.css_id }}" class="{{ section.css_class }}">
-    <a href="#{{ title_ref.css_id }}">
+<section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
+    <a href="#{{ title_ref|as_html_id }}">
         <div>{{ title_ref.title }}</div>
         <h1>{{ section.title }}</h1>
     </a>
-    <a href="#{{ postcard_ref.css_id }}">
+    <a href="#{{ postcard_ref|as_html_id }}">
         <div>{{ postcard_ref.title }}</div>
         <div>
             <img
@@ -25,7 +27,7 @@
                 fetchpriority="high">
         </div>
     </a>
-    <a href="#{{ subtitle_ref.css_id }}">
+    <a href="#{{ subtitle_ref|as_html_id }}">
         <div>{{ subtitle_ref.title }}</div>
         <h2>{{ section.subtitle }}</h2>
     </a>

@@ -1,6 +1,6 @@
-{% load markdown %}
+{% load markdown sections %}
 
-<section id="{{ section.css_id }}" class="{{ section.css_class }}">
+<section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
     {{ section.body|markdown_to_html }}
 </section>

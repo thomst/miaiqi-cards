@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('description', models.TextField(blank=True)),
                 ('postcards', models.ManyToManyField(related_name='galleries', through='postcards.GalleryPostcard', to='postcards.postcard')),
             ],
-            bases=(miaiqi_cards.website.models.SectionMixin, 'simple_page.section'),
+            bases=('simple_page.section',),
         ),
         migrations.AlterField(
             model_name='gallerypostcard',

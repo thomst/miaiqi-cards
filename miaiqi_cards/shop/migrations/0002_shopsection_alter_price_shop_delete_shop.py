@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('confirmation_text', models.TextField(blank=True)),
                 ('gallery', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='postcards.gallery')),
             ],
-            bases=(miaiqi_cards.website.models.SectionMixin, 'simple_page.section'),
+            bases=('simple_page.section',),
         ),
         migrations.AlterField(
             model_name='price',

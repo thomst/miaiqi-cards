@@ -1,7 +1,9 @@
+{% load sections %}
+
 <nav>
     <a href="{{ previous_postcard.get_absolute_url }}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
     {% if page %}
-        <a href="{{ page.get_absolute_url }}{% if section %}#{{ section.css_id }}{% endif %}">close</a> ·
+        <a href="{{ page.get_absolute_url }}{% if section %}#{{ section|as_html_id }}{% endif %}">close</a> ·
     {% endif %}
     <a href="{{ next_postcard.get_absolute_url }}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
 </nav>

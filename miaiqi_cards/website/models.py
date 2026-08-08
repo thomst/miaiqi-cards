@@ -13,18 +13,7 @@ class MiaiqiCardsPage(Page):
     description = models.TextField(blank=True)
 
 
-class SectionMixin:
-    def css_class(self):
-        return re.sub(r'(?<!^)(?=[A-Z])', '-', type(self).__name__).lower()
-
-    def css_id(self):
-        return f"{slugify(self.title)}-section"
-
-    def __str__(self):
-        return self.title
-
-
-class WelcomeSection(SectionMixin, Section):
+class WelcomeSection(Section):
     title = models.CharField(max_length=255)
     subtitle = models.CharField(max_length=255)
     postcards = models.ManyToManyField('postcards.Postcard')
@@ -32,10 +21,16 @@ class WelcomeSection(SectionMixin, Section):
     subtitle_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_subtitle')
     postcard_ref = models.ForeignKey(Section, null=True, on_delete=models.SET_NULL, related_name='welcome_postcard')
 
+    def __str__(self):
+        return self.title
 
-class TextSection(SectionMixin, Section):
+
+class TextSection(Section):
     title = models.CharField(max_length=255)
     body = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 class FooterSection(Section):

@@ -8,7 +8,6 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from reorder_items_widget import ReorderItemsField
 from simple_page.models import Section
-from ..website.models import SectionMixin
 
 
 class Resizer:
@@ -96,7 +95,7 @@ class Postcard(models.Model):
         db_table = 'website_postcard'
 
 
-class GallerySection(SectionMixin, Section):
+class GallerySection(Section):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     postcards = models.ManyToManyField(
@@ -104,6 +103,9 @@ class GallerySection(SectionMixin, Section):
         through='GalleryPostcard',
         related_name='galleries',
     )
+
+    def __str__(self):
+        return self.title
 
 
 class GalleryPostcard(models.Model):
