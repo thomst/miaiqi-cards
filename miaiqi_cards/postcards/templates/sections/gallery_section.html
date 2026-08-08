@@ -1,20 +1,22 @@
 {% load static %}
 
-<h2>{{ section.title }}</h2>
-<div>
-    {% for postcard in section.postcards.all %}
-        <a href="{{ postcard.get_absolute_url }}">
-            <figure>
-                <img
-                    class="postcard"
-                    src="{{ postcard.image.medium.url }}"
-                    srcset="{{ postcard.image.srcset }}"
-                    sizes="(width <= 680px) 80vw, 22vw"
-                    fetchpriority="high"
-                    alt="{{ postcard.title }}">
-                <figcaption>{{ postcard.title }}</figcaption>
-            </figure>
-        </a>
-    {% endfor %}
-    <div class="postcard">More are coming soon...</div>
-</div>
+<section id="{{ section.css_id }}" class="{{ section.css_class }}">
+    <h2>{{ section.title }}</h2>
+    <div>
+        {% for postcard in section.postcards.all %}
+            <a href="{{ postcard.get_absolute_url }}">
+                <figure>
+                    <img
+                        class="postcard"
+                        src="{{ postcard.image.medium.url }}"
+                        srcset="{{ postcard.image.srcset }}"
+                        sizes="(width <= 680px) 80vw, 22vw"
+                        fetchpriority="high"
+                        alt="{{ postcard.title }}">
+                    <figcaption>{{ postcard.title }}</figcaption>
+                </figure>
+            </a>
+        {% endfor %}
+        <div class="postcard">More are coming soon...</div>
+    </div>
+</section>

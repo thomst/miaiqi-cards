@@ -1,19 +1,32 @@
-<a href="#{{ title_ref.css_id }}">
-    <div>{{ title_ref.title }}</div>
-    <h1>{{ section.title }}</h1>
-</a>
-<a href="#{{ postcard_ref.css_id }}">
-    <div>{{ postcard_ref.title }}</div>
-    <div>
-        <img
-            src="{{ postcard.image.large.url }}"
-            srcset="{{ postcard.image.srcset }}"
-            sizes="(width <= 680px) 100vw, 100vh"
-            alt="{{ postcard.title }}"
-            fetchpriority="high">
-    </div>
-</a>
-<a href="#{{ subtitle_ref.css_id }}">
-    <div>{{ subtitle_ref.title }}</div>
-    <h2>{{ section.subtitle }}</h2>
-</a>
+{% partialdef head %}
+    <link
+        rel="preload"
+        href="{{ postcard.image.large.url }}"
+        imagesrcset="{{ postcard.image.srcset }}"
+        imagesizes="(width <= 680px) 100vw, 100vh"
+        as="image"
+        type="image/avif"
+        fetchpriority="high">
+{% endpartialdef %}
+
+<section id="{{ section.css_id }}" class="{{ section.css_class }}">
+    <a href="#{{ title_ref.css_id }}">
+        <div>{{ title_ref.title }}</div>
+        <h1>{{ section.title }}</h1>
+    </a>
+    <a href="#{{ postcard_ref.css_id }}">
+        <div>{{ postcard_ref.title }}</div>
+        <div>
+            <img
+                src="{{ postcard.image.large.url }}"
+                srcset="{{ postcard.image.srcset }}"
+                sizes="(width <= 680px) 100vw, 100vh"
+                alt="{{ postcard.title }}"
+                fetchpriority="high">
+        </div>
+    </a>
+    <a href="#{{ subtitle_ref.css_id }}">
+        <div>{{ subtitle_ref.title }}</div>
+        <h2>{{ section.subtitle }}</h2>
+    </a>
+</section>

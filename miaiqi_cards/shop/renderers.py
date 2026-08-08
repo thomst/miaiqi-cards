@@ -37,14 +37,14 @@ class ShopRenderer(renderers.SectionRenderer):
     @cached_property
     def formset_class(self):
         # FIXME: Update limit_choices_to on formfield instead of creating new field and form.
-        field = ModelChoiceField(self.obj.gallery.postcards.all(), required=True)
+        field = ModelChoiceField(self.section.gallery.postcards.all(), required=True)
         form_class = type('CartItemForm', (forms.CartItemForm,), dict(product=field))
         return formset_factory(form_class, extra=0, min_num=1, validate_min=True)
 
     def setup_cart(self, data):
         self.cart.clear()
         self.cart.remove_discount()
-        price = self.obj.prices.first().price  # FIXME: Selection should come from the forms.
+        price = self.section.prices.first().price  # FIXME: Selection should come from the forms.
         data = [dict(**d, unit_price=price) for d in data if d]
         self.cart.add_bulk(data)
 
@@ -68,7 +68,7 @@ class ShopRenderer(renderers.SectionRenderer):
             formset = self.formset_class(initial=initial)
         else:
             formset = self.formset_class()
-        context = dict(shop=self.obj, formset=formset)
+        context = dict(shop=self.section, formset=formset)
         return render_to_string('shop/order.html', context, self.request)
 
     @set_state(CHECKOUT_STATE)
@@ -78,17 +78,17 @@ class ShopRenderer(renderers.SectionRenderer):
             if formset.is_valid():
                 self.setup_cart(formset.cleaned_data)
                 email_form = forms.EmailForm()
-                context = dict(shop=self.obj, cart=self.cart, email_form=email_form)
+                context = dict(shop=self.section, cart=self.cart, email_form=email_form)
                 return render_to_string('shop/checkout.html', context, self.request)
             else:
                 return self.get_order_html()
         elif 'buy' in self.request.GET:
             email_form = forms.EmailForm(self.request.POST)
-            context = dict(shop=self.obj, cart=self.cart, email_form=email_form)
+            context = dict(shop=self.section, cart=self.cart, email_form=email_form)
             return render_to_string('shop/checkout.html', context, self.request)
         else:
             email_form = forms.EmailForm()
-            context = dict(shop=self.obj, cart=self.cart, email_form=email_form)
+            context = dict(shop=self.section, cart=self.cart, email_form=email_form)
             return render_to_string('shop/checkout.html', context, self.request)
 
     @set_state(CONFIRMATION_STATE)
@@ -98,7 +98,7 @@ class ShopRenderer(renderers.SectionRenderer):
             if email_form.is_valid():
                 # TODO: Send confirmation email.
                 self.cart.checkout()
-                context = dict(shop=self.obj, cart=self.cart)
+                context = dict(shop=self.section, cart=self.cart)
                 return render_to_string('shop/confirmation.html', context, self.request)
             else:
                 return self.get_checkout_html()

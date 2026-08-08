@@ -12,21 +12,12 @@ class MiaiqiCardsPageRenderer(renderers.PageRenderer):
     class Media:
         css = dict(all=['miaiqi_cards/miaiqi_cards.css'])
 
-    def get_welcome_postcard(self, context):
-        for section_data in context['main']['sections']:
-            if isinstance(section_data['obj'], models.WelcomeSection):
-                return section_data['renderer'].postcard
-
-    def get_context(self):
-        context = super().get_context()
-        context['welcome_postcard'] = self.get_welcome_postcard(context)
-        return context
-
 
 @renderers.register(models.WelcomeSection)
 class WelcomeRenderer(renderers.SectionRenderer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        random.seed(hash(self.request))
         self.postcard = random.choice(self.obj.postcards.all())
 
     def get_css_file(self):
@@ -41,6 +32,13 @@ class WelcomeRenderer(renderers.SectionRenderer):
         if css_file := self.get_css_file():
             css['all'].append(css_file)
         return forms.Media(css=css)
+
+    def get_template_name(self):
+        template_name = super().get_template_name()
+        if self.region == 'head':
+            return f'{template_name}#head'
+        else:
+            return template_name
 
     def get_context(self):
         context = super().get_context()

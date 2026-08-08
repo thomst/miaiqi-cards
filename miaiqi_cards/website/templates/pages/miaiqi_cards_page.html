@@ -6,14 +6,9 @@
 
     <title>miaiqi cards</title>
     <meta name="description" content="{{ page.description }}" />
-    <link
-        rel="preload"
-        href="{{ welcome_postcard.image.large.url }}"
-        imagesrcset="{{ welcome_postcard.image.srcset }}"
-        imagesizes="(width <= 680px) 100vw, 100vh"
-        as="image"
-        type="image/avif"
-        fetchpriority="high">
+    {% for section in regions.head.sections %}
+        {% include section %}
+    {% endfor %}
     {% compress css inline %}{{ media.css }}{% endcompress %}
     {% compress js inline %}{{ media.js }}{% endcompress %}
 
@@ -22,23 +17,15 @@
 {% block content %}
 
     <main>
-
         {% for section in regions.main.sections %}
-            <section id="{{ section.obj.css_id }}" class="{{ section.obj.css_class }}">
-                {{ section.html }}
-            </section>
+            {% include section %}
         {% endfor %}
-
     </main>
 
     <footer>
-
         {% for section in regions.footer.sections %}
-            <div>
-                {{ section.html }}
-            </div>
+            {% include section %}
         {% endfor %}
-
     </footer>
 
 {% endblock %}
