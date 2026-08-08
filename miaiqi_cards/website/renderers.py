@@ -18,7 +18,7 @@ class WelcomeRenderer(renderers.SectionRenderer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         random.seed(hash(self.request))
-        self.postcard = random.choice(self.obj.postcards.all())
+        self.postcard = random.choice(self.section.postcards.all())
 
     def get_css_file(self):
         # Is there an extra css file for that postcard?
@@ -43,8 +43,8 @@ class WelcomeRenderer(renderers.SectionRenderer):
     def get_context(self):
         context = super().get_context()
         get_child = lambda pk: Section.objects.get_subclass(pk=pk)
-        context['title_ref'] = get_child(self.obj.title_ref.pk)
-        context['subtitle_ref'] = get_child(self.obj.subtitle_ref.pk)
-        context['postcard_ref'] = get_child(self.obj.postcard_ref.pk)
+        context['title_ref'] = get_child(self.section.title_ref.pk)
+        context['subtitle_ref'] = get_child(self.section.subtitle_ref.pk)
+        context['postcard_ref'] = get_child(self.section.postcard_ref.pk)
         context['postcard'] = self.postcard
         return context
