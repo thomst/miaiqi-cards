@@ -1,9 +1,0 @@
-section.welcome-section {
-    --strong-color: crimson;
-    --h1-bg-color: lightpink;
-    --h1-bg-color-trans: rgba(255, 182, 193, 0.6);
-    --h2-bg-color: lightcyan;
-    --h2-bg-color-trans: rgba(224, 255, 255, 0.6);
-    --img-bg-color: lightgoldenrodyellow;
-    --img-bg-color-trans: rgba(250, 250, 210, 0.6);
-}

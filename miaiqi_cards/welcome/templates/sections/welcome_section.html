@@ -3,12 +3,21 @@
 {% partialdef head %}
     <link
         rel="preload"
-        href="{{ postcard.image.large.url }}"
-        imagesrcset="{{ postcard.image.srcset }}"
+        href="{{ theme.postcard.image.large.url }}"
+        imagesrcset="{{ theme.postcard.image.srcset }}"
         imagesizes="(width <= 680px) 100vw, 100vh"
         as="image"
         type="image/avif"
         fetchpriority="high">
+
+    <style type='text/css'>
+        section.welcome-section {
+            --h1-color: {{ theme.h1_color }};
+            --h1-bg-color: {{ theme.h1_bg_color }};
+            --h2-bg-color: {{ theme.h2_bg_color }};
+            --img-bg-color: {{ theme.img_bg_color }};
+        }
+    </style>
 {% endpartialdef %}
 
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
@@ -18,14 +27,12 @@
     </a>
     <a href="#{{ postcard_ref|as_html_id }}">
         <div>{{ postcard_ref.title }}</div>
-        <div>
-            <img
-                src="{{ postcard.image.large.url }}"
-                srcset="{{ postcard.image.srcset }}"
-                sizes="(width <= 680px) 100vw, 100vh"
-                alt="{{ postcard.title }}"
-                fetchpriority="high">
-        </div>
+        <img
+            src="{{ theme.postcard.image.large.url }}"
+            srcset="{{ theme.postcard.image.srcset }}"
+            sizes="(width <= 680px) 100vw, 100vh"
+            alt="{{ theme.postcard.title }}"
+            fetchpriority="high">
     </a>
     <a href="#{{ subtitle_ref|as_html_id }}">
         <div>{{ subtitle_ref.title }}</div>

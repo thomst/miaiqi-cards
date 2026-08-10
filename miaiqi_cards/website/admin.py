@@ -9,12 +9,6 @@ class MiaiqiCardsPageAdmin(BasePageAdmin):
     search_fields = ['title', 'slug']
 
 
-@admin.register(models.WelcomeSection)
-class WelcomeSection(admin.ModelAdmin):
-    list_display = ['title']
-    search_fields = ['title']
-
-
 @admin.register(models.TextSection)
 class TextSectionAdmin(admin.ModelAdmin):
     list_display = ['title']

@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cart',
     'compressor',
+    'colorfield',
     'reorder_items_widget',
     'simple_page',
     'miaiqi_cards.website',
+    'miaiqi_cards.welcome',
     'miaiqi_cards.postcards',
     'miaiqi_cards.shop',
 ]
