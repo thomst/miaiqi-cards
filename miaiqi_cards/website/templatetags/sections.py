@@ -7,7 +7,7 @@ register = template.Library()
 
 @register.filter
 def as_html_id(section):
-    return f"{slugify(section.title)}-section"
+    return f"{slugify(section.title)}"
 
 
 @register.filter
