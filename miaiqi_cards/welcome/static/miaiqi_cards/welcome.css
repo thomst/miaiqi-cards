@@ -1,14 +1,4 @@
 
-/* Default color-scheme. Overwritten by postcard specific css files. */
-/* section.welcome-section {
-    --h1-color: crimson;
-    --h1-bg-color: lightpink;
-    --h1-bg-color-trans: rgba(255, 182, 193, 0.6);
-    --h2-bg-color: lightcyan;
-    --h2-bg-color-trans: rgba(224, 255, 255, 0.6);
-    --img-bg-color: lightgoldenrodyellow;
-    --img-bg-color-trans: rgba(250, 250, 210, 0.6);
-} */
 section.welcome-section {
     --h1-bg-color-trans: rgb(from var(--h1-bg-color)r g b / .6);
     --h2-bg-color-trans: rgb(from var(--h2-bg-color)r g b / .6);
@@ -26,13 +16,12 @@ section.welcome-section {
     position: fixed;
 }
 
-section.welcome-section :is(h1, h2, img) {
+section.welcome-section :is(h1, h2) {
     height: 100vh;
     width:auto;
 }
 
-/* TODO: We do not need a div container. Just set height and width on the img directly. */
-section.welcome-section div:has(> img) {
+section.welcome-section img {
     height: 100vh;
     width: 100vh;
 }
@@ -100,6 +89,8 @@ section.welcome-section div:has(+ h2) {
 
 section.welcome-section div:has(+ img) {
     background-color: var(--img-bg-color-trans);
+    border-right: 2px solid var(--light-color);
+    border-left: 2px solid var(--light-color);
 }
 
 section.welcome-section > a:hover > div {
