@@ -18,7 +18,7 @@ section.welcome-section {
 
 section.welcome-section :is(h1, h2) {
     height: 100vh;
-    width:auto;
+    width: auto;
 }
 
 section.welcome-section img {
