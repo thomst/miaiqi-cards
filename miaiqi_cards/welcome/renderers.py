@@ -28,8 +28,8 @@ class WelcomeRenderer(renderers.SectionRenderer):
         else:
             return template_name
 
-    def get_context(self):
-        context = super().get_context()
+    def get_context_data(self, **context):
+        context = super().get_context_data(**context)
         get_subclass = lambda pk: Section.objects.get_subclass(pk=pk)
         context['title_ref'] = get_subclass(self.section.title_ref.pk)
         context['subtitle_ref'] = get_subclass(self.section.subtitle_ref.pk)

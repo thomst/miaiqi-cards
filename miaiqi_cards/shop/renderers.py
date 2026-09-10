@@ -114,7 +114,7 @@ class ShopRenderer(renderers.SectionRenderer):
         elif self.state == self.CONFIRMATION_STATE:
             return self.get_confirmation_html()
 
-    def get_context(self):
-        context = super().get_context()
+    def get_context_data(self, **context):
+        context = super().get_context_data(**context)
         context['shop_html'] = self.get_html()
         return context
