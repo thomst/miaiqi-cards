@@ -26,11 +26,6 @@ section.welcome-section img {
     width: 100vh;
 }
 
-section.welcome-section img {
-    border-right: 2px solid var(--light-color);
-    border-left: 2px solid var(--light-color);
-}
-
 section.welcome-section h2 {
     display: flex;
     align-items: center;
@@ -66,6 +61,10 @@ section.welcome-section a {
     position: relative;
 }
 
+section.welcome-section > a:not(:last-child) {
+    border-right: 2px solid var(--light-color);
+}
+
 section.welcome-section > a > div:first-child {
     position: absolute;
     font-size: 8vh;
@@ -89,8 +88,8 @@ section.welcome-section div:has(+ h2) {
 
 section.welcome-section div:has(+ img) {
     background-color: var(--img-bg-color-trans);
-    border-right: 2px solid var(--light-color);
-    border-left: 2px solid var(--light-color);
+    /* border-right: 2px solid var(--light-color);
+    border-left: 2px solid var(--light-color); */
 }
 
 section.welcome-section > a:hover > div {
@@ -102,18 +101,15 @@ section.welcome-section :is(a:hover) {
     transition: background-color 500ms linear;
 }
 
-section.welcome-section a:hover > h1 {
-    transition: background-color 500ms linear;
+section.welcome-section a:hover:has(> h1) {
     background-color: var(--h1-bg-color);
 }
 
-section.welcome-section a:hover > h2 {
-    transition: background-color 500ms linear;
+section.welcome-section a:hover:has(> h2) {
     background-color: var(--h2-bg-color);
 }
 
-section.welcome-section a:hover > img {
-    transition: background-color 500ms linear;
+section.welcome-section a:hover:has(> img) {
     background-color: var(--img-bg-color);
 }
 
@@ -129,16 +125,28 @@ section.welcome-section a:hover > img {
         width: 100vw;
     }
 
-    section.welcome-section img {
-        border-left: 0;
+    section.welcome-section a:not(:last-child) {
         border-right: 0;
-        border-top: 2px solid var(--light-color);
         border-bottom: 2px solid var(--light-color);
     }
 
     section.welcome-section {
         flex-direction: column;
-        justify-content: space-evenly;
+        justify-content: flex-start;
+    }
+
+    section.welcome-section > a:first-child {
+        flex: 0 1 auto;
+        padding: 2vh 0;
+    }
+
+    section.welcome-section > a:last-child {
+        flex: 1 0 auto;
+        padding: 2vh 0;
+    }
+
+    section.welcome-section > a:nth-child(2) {
+        flex: 0 0 auto;
     }
 
     section.welcome-section h1 {
