@@ -1,4 +1,3 @@
-import random
 from simple_page import renderers
 from simple_page.models import Section
 from django.shortcuts import get_object_or_404
@@ -11,15 +10,32 @@ class WelcomeRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['miaiqi_cards/welcome.css'])
 
+    def update_theme_id(self, theme):
+        theme_ids = list(self.section.themes.values_list('id', flat=True))
+        index = theme_ids.index(theme.id)
+        next_index = (index + 1) % len(theme_ids)
+        self.request.session['theme'] = theme_ids[next_index]
+
     def get_theme(self):
         if 'theme' in self.request.GET:
-            return get_object_or_404(
+            theme = get_object_or_404(
                 self.section.themes.all(),
                 id=self.request.GET['theme']
                 )
+        elif 'theme' in self.request.session:
+            theme = get_object_or_404(
+                self.section.themes.all(),
+                id=self.request.session['theme']
+                )
         else:
-            random.seed(hash(self.request))
-            return random.choice(self.section.themes.all())
+            theme = self.section.themes.first()
+
+        # Update the theme id in sessions once per request by skipping the head
+        # region, which is rendered first.
+        if not self.region == 'head':
+            self.update_theme_id(theme)
+
+        return theme
 
     def get_template_name(self):
         template_name = super().get_template_name()
