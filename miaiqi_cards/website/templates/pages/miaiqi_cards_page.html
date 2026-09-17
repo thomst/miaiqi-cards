@@ -4,7 +4,7 @@
 {% block head %}
     {{ block.super }}
 
-    <title>miaiqi cards</title>
+    <title>{{ page.title }}</title>
     <meta name="description" content="{{ page.description }}" />
     {% for section in regions.head.sections %}
         {% include section %}
