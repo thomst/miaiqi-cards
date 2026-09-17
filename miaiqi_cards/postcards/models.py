@@ -7,7 +7,15 @@ from django.urls import reverse
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import SimpleUploadedFile
 from reorder_items_widget import ReorderItemsField
-from simple_page.models import Section
+from simple_page.models import Page, Section
+
+
+class PostcardPage(Page):
+    REGIONS = [
+        ('main', 'Main Region'),
+        ('footer', 'Footer'),
+    ]
+    description = models.TextField(blank=True)
 
 
 class Resizer:

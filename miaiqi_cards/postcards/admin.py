@@ -1,8 +1,15 @@
+from reorder_items_widget import ReorderItemsInline
+from simple_page.admin import BasePageAdmin
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
-from reorder_items_widget import ReorderItemsInline
 from . import models
+
+
+@admin.register(models.PostcardPage)
+class PostcardPageAdmin(BasePageAdmin):
+    list_display = ['title', 'slug']
+    search_fields = ['title', 'slug']
 
 
 @admin.register(models.Image)
