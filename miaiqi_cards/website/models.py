@@ -4,7 +4,6 @@ from simple_page.models import Section, Page
 
 class MiaiqiCardsPage(Page):
     REGIONS = [
-        ('head', 'Document Head'),
         ('main', 'Main Region'),
         ('footer', 'Footer'),
     ]

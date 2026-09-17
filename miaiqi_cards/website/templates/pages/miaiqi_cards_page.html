@@ -6,9 +6,7 @@
 
     <title>{{ page.title }}</title>
     <meta name="description" content="{{ page.description }}" />
-    {% for section in regions.head.sections %}
-        {% include section %}
-    {% endfor %}
+    {{ extra_head }}
     {% compress css inline %}{{ media.css }}{% endcompress %}
     {% compress js inline %}{{ media.js }}{% endcompress %}
 
