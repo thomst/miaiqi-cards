@@ -10,7 +10,7 @@
                         class="postcard"
                         src="{{ postcard.image.medium.url }}"
                         srcset="{{ postcard.image.srcset }}"
-                        sizes="(width <= 680px) 80vw, 22vw"
+                        sizes="(max-width: 680px) 80vw, 22vw"
                         fetchpriority="high"
                         alt="{{ postcard.title }}">
                     <figcaption>{{ postcard.title }}</figcaption>

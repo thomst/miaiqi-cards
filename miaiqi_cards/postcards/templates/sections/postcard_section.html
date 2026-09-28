@@ -5,7 +5,7 @@
         rel="preload"
         href="{{ postcard.image.url }}"
         imagesrcset="{{ postcard.image.srcset }}"
-        imagesizes="(width <= 680px) 80vw, 60vh"
+        imagesizes="(max-width: 680px) 80vw, 60vh"
         as="image"
         type="image/avif"
         fetchpriority="high">
@@ -20,7 +20,7 @@
             class="postcard-image"
             src="{{ postcard.image.large.url }}"
             srcset="{{ postcard.image.srcset }}"
-            sizes="(width <= 680px) 80vw, 60vh"
+            sizes="(max-width: 680px) 80vw, 60vh"
             fetchpriority="high"
             alt="{{ postcard.title }}">
 
