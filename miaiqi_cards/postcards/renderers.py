@@ -1,4 +1,5 @@
 from simple_page import renderers
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from . import models
 
@@ -20,10 +21,14 @@ class PostcardRenderer(renderers.SectionRenderer):
     def get_context_data(self):
         context = super().get_context_data()
         postcards = self.section.postcards.all()
+
         if postcard_id := self.params.get('postcard_id'):
             postcard = get_object_or_404(postcards, id=postcard_id)
+        elif postcard := postcards.first():
+            pass
         else:
-            postcard = postcards.first()
+            raise Http404
+
         index = [p.pk for p in postcards].index(postcard.id)
         context['postcard'] = postcard
         context['previous_postcard'] = [None, *postcards, None][index]
