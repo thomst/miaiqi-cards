@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from simple_page.models import Section, Page
 
 
@@ -8,6 +9,9 @@ class MiaiqiCardsPage(Page):
         ('footer', 'Footer'),
     ]
     description = models.TextField(blank=True)
+
+    def get_absolute_url(self):
+        return reverse('page')
 
 
 class TextSection(Section):

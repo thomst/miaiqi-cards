@@ -17,6 +17,9 @@ class PostcardPage(Page):
     ]
     description = models.TextField(blank=True)
 
+    def get_absolute_url(self):
+        return reverse('first_postcard', kwargs=dict(slug=self.slug))
+
 
 class Resizer:
     SIZES = dict(
