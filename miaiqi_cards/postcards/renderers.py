@@ -20,7 +20,10 @@ class PostcardRenderer(renderers.SectionRenderer):
     def get_context_data(self):
         context = super().get_context_data()
         postcards = self.section.postcards.all()
-        postcard = get_object_or_404(postcards, id=self.params['postcard_id'])
+        if postcard_id := self.params.get('postcard_id'):
+            postcard = get_object_or_404(postcards, id=postcard_id)
+        else:
+            postcard = postcards.first()
         index = [p.pk for p in postcards].index(postcard.id)
         context['postcard'] = postcard
         context['previous_postcard'] = [None, *postcards, None][index]

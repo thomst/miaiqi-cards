@@ -97,7 +97,8 @@ class Postcard(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('postcard', kwargs=dict(postcard_id=self.pk))
+        page = PostcardPage.objects.first()
+        return reverse('postcard', kwargs=dict(slug=page.slug, postcard_id=self.id))
 
     class Meta:
         db_table = 'website_postcard'
