@@ -113,7 +113,6 @@ class Postcard(models.Model):
 
     class Meta:
         ordering = ['gallerypostcard__index']
-        db_table = 'website_postcard'
 
 
 class GalleryPostcard(models.Model):
