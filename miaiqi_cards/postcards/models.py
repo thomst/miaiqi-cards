@@ -74,7 +74,9 @@ class Image(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.name:
-            self.name = os.path.splitext(self.original.name)[0]
+            name = os.path.splitext(self.original.name)[0]
+            name = name.replace('_', ' ').replace('-', ' ')
+            self.name = name.capitalize()
         resizer = Resizer(self.original)
         self.large = resizer.resize('large')
         self.medium = resizer.resize('medium')
