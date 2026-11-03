@@ -98,6 +98,12 @@ class Postcard(models.Model):
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, related_name='postcard')
     is_public = models.BooleanField(default=True)
 
+    def save(self, *args, **kwargs):
+        if not self.title:
+            title = self.image.name.replace('_', ' ').replace('-', ' ')
+            self.title = title.capitalize()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
