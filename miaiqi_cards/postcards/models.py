@@ -90,7 +90,7 @@ class Image(models.Model):
 
 
 class Postcard(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, blank=True, unique=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, related_name='postcard')
