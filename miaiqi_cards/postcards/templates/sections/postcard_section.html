@@ -30,9 +30,9 @@
     </div>
 
     <nav>
-        <a href="{{ previous_postcard.get_absolute_url }}"{% if not previous_postcard %} class="disabled"{% endif %}>◅ last</a> ·
+        <a {% if previous_postcard %}href="{% url 'postcard' gallery_slug=section.slug postcard_id=previous_postcard.pk %}"{% else %}class="disabled"{% endif %}>◅ last</a> ·
         <a href="{% url 'page' %}{% if section %}#{{ section|as_html_id }}{% endif %}">close</a> ·
-        <a href="{{ next_postcard.get_absolute_url }}"{% if not next_postcard %} class="disabled"{% endif %}>next ▻</a>
+        <a {% if next_postcard %}href="{% url 'postcard' gallery_slug=section.slug postcard_id=next_postcard.pk %}"{% else %}class="disabled"{% endif %}>next ▻</a>
     </nav>
 
 </section>
