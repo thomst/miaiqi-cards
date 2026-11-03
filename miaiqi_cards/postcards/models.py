@@ -126,6 +126,7 @@ class GalleryPostcard(models.Model):
 
 class GallerySection(Section):
     title = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     postcards = models.ManyToManyField(
         Postcard,

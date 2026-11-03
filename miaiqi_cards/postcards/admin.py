@@ -40,5 +40,6 @@ class PostcardsInline(ReorderItemsInline):
 class GalleryAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
+    prepopulated_fields = {"slug": ("title",)}
     exclude = ['postcards']
     inlines = [PostcardsInline]
