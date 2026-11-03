@@ -112,6 +112,7 @@ class Postcard(models.Model):
         return reverse('postcard', kwargs=dict(slug=page.slug, postcard_id=self.id))
 
     class Meta:
+        ordering = ['gallerypostcard__index']
         db_table = 'website_postcard'
 
 
