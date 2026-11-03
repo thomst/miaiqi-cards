@@ -115,23 +115,23 @@ class Postcard(models.Model):
         db_table = 'website_postcard'
 
 
-class GallerySection(Section):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    postcards = models.ManyToManyField(
-        'postcards.Postcard',
-        through='GalleryPostcard',
-        related_name='galleries',
-    )
-
-    def __str__(self):
-        return self.title
-
-
 class GalleryPostcard(models.Model):
-    gallery = models.ForeignKey(GallerySection, on_delete=models.CASCADE)
+    gallery = models.ForeignKey('GallerySection', on_delete=models.CASCADE)
     postcard = models.ForeignKey(Postcard, on_delete=models.CASCADE)
     index = ReorderItemsField()
 
     class Meta:
         unique_together = ('gallery', 'postcard')
+
+
+class GallerySection(Section):
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    postcards = models.ManyToManyField(
+        Postcard,
+        through=GalleryPostcard,
+        related_name='galleries',
+    )
+
+    def __str__(self):
+        return self.title
