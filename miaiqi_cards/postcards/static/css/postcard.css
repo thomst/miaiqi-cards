@@ -1,62 +1,57 @@
 
 section.postcard-section {
-    height: 100vh;
+    min-height: 100vh;
     padding: 5vh 12vw;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-h1 {
-    font-size: 8vh;
-    font-family: "Cherry Swash", cursive;
-    font-weight: normal;
-}
-
-div.postcard {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 3vw;
-    align-items: center;
-    margin-top: 3vw;
-}
-
-div.postcard img {
-    height: 60vh;
-    width: 60vh;
-    box-shadow: var(--light-color) 4px 4px 3px;
-    border: 1px solid var(--light-color);
-}
-
-div.postcard > div {
-    font-family: Ysabeau, sans serif;
-    font-weight: 300;
-    font-size: 3vh;
-    max-width: 60vh;
-}
-
-nav a {
-    font-family: "Albert Sans", sans serif;
-    display: inline-block;
-    margin-top: 3vw;
-    font-size: 3vh;
-}
-
-nav a.disabled {
-    color: var(--light-color);
-    pointer-events: none;
-}
-
-@media screen and (max-width: 680px) {
 
     h1 {
-        font-size: 8vw;
+        font-size: 8vh;
+        font-family: "Cherry Swash", cursive;
+        font-weight: normal;
+
+        @media screen and (max-width: 680px) {
+            font-size: 8vw;
+        }
     }
 
-    div.postcard img {
-        height: 80vw;
-        width: 80vw;
+    div.postcard {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3vw;
+        align-items: center;
+        margin-top: 3vw;
+
+        img {
+            height: 60vh;
+            width: 60vh;
+            box-shadow: var(--light-color) 4px 4px 3px;
+            border: 1px solid var(--light-color);
+
+            @media screen and (max-width: 680px) {
+                height: 80vw;
+                width: 80vw;
+            }
+        }
+
+        > div {
+            font-family: Ysabeau, sans serif;
+            font-weight: 300;
+            font-size: 3vh;
+            max-width: 60vh;
+        }
     }
 
+    nav a {
+        font-family: "Albert Sans", sans serif;
+        display: inline-block;
+        margin-top: 3vw;
+        font-size: 3vh;
+
+        &.disabled {
+            color: var(--light-color);
+            pointer-events: none;
+        }
+    }
 }

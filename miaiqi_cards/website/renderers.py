@@ -7,5 +7,6 @@ class MiaiqiCardsPageRenderer(renderers.PageRenderer):
     class Media:
         css = dict(all=[
             'css/miaiqi_cards.css',
+            'css/sections.css',
             'css/footer.css',
             ])

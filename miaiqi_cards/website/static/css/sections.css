@@ -1,0 +1,29 @@
+
+section {
+    border-top: solid 1px var(--light-color);
+    border-bottom: solid 1px var(--light-color);
+    background-color: var(--background-cover-color);
+    padding: 5vh 12vw 20vh 12vw;
+    position: relative;
+    top: 100vh;
+
+    > p {
+        font-family: Ysabeau, sans serif;
+        font-size: 3vh;
+        margin-top: 10px;
+    }
+
+    h2 {
+        font-family: "Cherry Swash", cursive;
+        font-weight: normal;
+        color: var(--dark-color);
+        font-size: 10.5vh;
+        line-height: 110%;
+    }
+
+    @media screen and (max-width: 680px) {
+        > h2 {
+            font-size: 14vw;
+        }
+    }
+}

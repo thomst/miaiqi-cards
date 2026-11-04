@@ -9,14 +9,10 @@ footer {
     background-color: var(--dark-color);
     border-top: solid 1px var(--light-color);
     padding: 5vh 12vw;
-}
 
-@media screen and (max-width: 680px) {
-
-    footer {
+    @media screen and (max-width: 680px) {
         display: flex;
         flex-direction: column;
         gap: 3vh;
     }
-
 }
