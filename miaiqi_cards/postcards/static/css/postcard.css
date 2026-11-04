@@ -60,25 +60,3 @@ nav a.disabled {
     }
 
 }
-
-footer {
-    border-top: solid 1px var(--light-color);
-    border-bottom: solid 1px var(--light-color);
-    color: var(--light-color);
-    background-color: var(--dark-color);
-    padding: 5vh 12vw;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 0;
-}
-
-@media screen and (max-width: 680px) {
-
-    footer {
-        display: flex;
-        flex-direction: column;
-        gap: 3vh;
-    }
-
-}

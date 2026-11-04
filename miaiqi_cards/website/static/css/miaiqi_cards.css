@@ -1,6 +1,6 @@
 /* Layout */
 
-section:not(.welcome-section), footer {
+section:not(.welcome-section) {
     border-top: solid 1px var(--light-color);
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
@@ -13,23 +13,6 @@ section:not(.welcome-section) {
     padding-bottom: 20vh;
 }
 
-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 0;
-}
-
-@media screen and (max-width: 680px) {
-
-    footer {
-        display: flex;
-        flex-direction: column;
-        gap: 3vh;
-    }
-
-}
-
 /* Typography */
 
 h2 {
@@ -40,15 +23,15 @@ h2 {
     line-height: 110%;
 }
 
-footer {
-    color: var(--light-color);
-    background-color: var(--dark-color);
-}
-
 section > p {
     font-family: Ysabeau, sans serif;
     font-size: 3vh;
     margin-top: 10px;
+}
+
+footer {
+    position: relative;
+    top: 100vh;
 }
 
 @media screen and (max-width: 680px) {

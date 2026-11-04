@@ -1,0 +1,22 @@
+
+
+footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0;
+    color: var(--light-color);
+    background-color: var(--dark-color);
+    border-top: solid 1px var(--light-color);
+    padding: 5vh 12vw;
+}
+
+@media screen and (max-width: 680px) {
+
+    footer {
+        display: flex;
+        flex-direction: column;
+        gap: 3vh;
+    }
+
+}

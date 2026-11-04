@@ -23,8 +23,8 @@ class ShopRenderer(renderers.SectionRenderer):
     CONFIRMATION_STATE = 'confirmation'
 
     class Media:
-        css = dict(all=['shop/shop.css'])
-        js = ['shop/shop.js']
+        css = dict(all=['css/shop.css'])
+        js = ['js/shop.js']
 
     @property
     def state(self):

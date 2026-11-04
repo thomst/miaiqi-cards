@@ -19,7 +19,7 @@ def save_theme_to_session(get_theme):
 class WelcomeRenderer(renderers.SectionRenderer):
 
     class Media:
-        css = dict(all=['miaiqi_cards/welcome.css'])
+        css = dict(all=['css/welcome.css'])
 
     @save_theme_to_session
     def get_theme(self):
