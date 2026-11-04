@@ -1,17 +1,9 @@
 from django.db import models
 from django.urls import reverse
+from miaiqi_cards.postcards.models import GallerySection
+from miaiqi_cards.shop.models import ShopSection
+from miaiqi_cards.welcome.models import WelcomeSection
 from simple_page.models import Section, Page
-
-
-class MiaiqiCardsPage(Page):
-    REGIONS = [
-        ('main', 'Main Region'),
-        ('footer', 'Footer'),
-    ]
-    description = models.TextField(blank=True)
-
-    def get_absolute_url(self):
-        return reverse('page')
 
 
 class TextSection(Section):
@@ -28,3 +20,18 @@ class FooterSection(Section):
 
     def __str__(self):
         return self.name
+
+
+class MiaiqiCardsPage(Page):
+    REGIONS = [
+        ('main', 'Main Region'),
+        ('footer', 'Footer'),
+    ]
+    REGION_SECTIONS = {
+        'main': [WelcomeSection, TextSection, GallerySection, ShopSection],
+        'footer': [FooterSection],
+    }
+    description = models.TextField(blank=True)
+
+    def get_absolute_url(self):
+        return reverse('page')
