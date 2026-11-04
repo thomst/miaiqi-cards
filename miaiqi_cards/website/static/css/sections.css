@@ -4,8 +4,6 @@ section {
     border-bottom: solid 1px var(--light-color);
     background-color: var(--background-cover-color);
     padding: 5vh 12vw 20vh 12vw;
-    position: relative;
-    top: 100vh;
 
     > p {
         font-family: Ysabeau, sans serif;

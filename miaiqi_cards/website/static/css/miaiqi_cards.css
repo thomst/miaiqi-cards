@@ -1,5 +1,5 @@
 
-footer {
+section, footer {
     position: relative;
     top: 100vh;
 }
