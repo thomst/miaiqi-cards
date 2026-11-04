@@ -22,12 +22,12 @@ class PostcardPageRenderer(renderers.PageRenderer):
         return models.GallerySection.objects.filter(slug=slug)
 
     def get_footer_sections(self):
-        return MiaiqiCardsPage.objects.first().footer
+        return self.page.homepage.footer
 
     def get_context_data(self):
         context = super().get_context_data()
         self.page.title = context['regions']['main']['sections'][0].postcard.title
-        self.page.description = self.page.description
+        self.page.description = self.page.homepage.description
         return context
 
 

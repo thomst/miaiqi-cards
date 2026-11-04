@@ -10,12 +10,15 @@ from reorder_items_widget import ReorderItemsField
 from simple_page.models import Page, Section
 
 
-class PostcardPage(Page):
+class PostcardPage:
     REGIONS = [
         ('main', 'Main Region'),
         ('footer', 'Footer'),
     ]
-    description = models.TextField(blank=True)
+    def __init__(self):
+        self.title = None
+        self.description = None
+        self.homepage = Page.objects.first().resolved_obj
 
 
 class Resizer:
