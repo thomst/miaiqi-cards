@@ -7,11 +7,7 @@ from miaiqi_cards.website.models import MiaiqiCardsPage
 from . import models
 
 
-@renderers.register(models.PostcardPage)
-class PostcardPageRenderer(renderers.PageRenderer):
-    class Media:
-        css = dict(all=['css/footer.css'])
-
+class PostcardsPageMixin:
     def get_template_name(self):
         return 'pages/miaiqi_cards_page.html'
 
@@ -22,10 +18,31 @@ class PostcardPageRenderer(renderers.PageRenderer):
     def get_footer_sections(self):
         return self.page.homepage.footer
 
+
+@renderers.register(models.GalleryPage)
+class GalleryPageRenderer(PostcardsPageMixin, renderers.PageRenderer):
+    class Media:
+        css = dict(all=[
+            'css/sections.css',
+            'css/footer.css',
+            ])
+
     def get_context_data(self):
         context = super().get_context_data()
-        self.page.title = context['regions']['main']['sections'][0].postcard.title
         self.page.description = self.page.homepage.description
+        self.page.title = context['regions']['main']['sections'][0].section.title
+        return context
+
+
+@renderers.register(models.PostcardPage)
+class PostcardPageRenderer(PostcardsPageMixin, renderers.PageRenderer):
+    class Media:
+        css = dict(all=['css/footer.css'])
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        self.page.description = self.page.homepage.description
+        self.page.title = context['regions']['main']['sections'][0].postcard.title
         return context
 
 
@@ -33,6 +50,16 @@ class PostcardPageRenderer(renderers.PageRenderer):
 class GalleryRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/gallery.css'])
+
+
+@renderers.register(models.GallerySection, page_type=models.GalleryPage)
+class GalleryRenderer(renderers.SectionRenderer):
+    class Media:
+        css = dict(all=['css/gallery.css'])
+
+    @cached_property
+    def postcards(self):
+        return self.section.postcards.all()
 
 
 @renderers.register(models.GallerySection, page_type=models.PostcardPage)

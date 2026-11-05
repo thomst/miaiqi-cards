@@ -10,7 +10,7 @@ from reorder_items_widget import ReorderItemsField
 from simple_page.models import Page, Section
 
 
-class PostcardPage:
+class GalleryPage:
     REGIONS = [
         ('main', 'Main Region'),
         ('footer', 'Footer'),
@@ -19,6 +19,10 @@ class PostcardPage:
         self.title = None
         self.description = None
         self.homepage = Page.objects.first().resolved_obj
+
+
+class PostcardPage(GalleryPage):
+    pass
 
 
 class Resizer:
@@ -136,3 +140,25 @@ class GallerySection(Section):
 
     def __str__(self):
         return self.title
+
+
+# class GalleryPostcardSet(models.Model):
+#     set_gallery = models.ForeignKey('SetGallerySection', on_delete=models.CASCADE)
+#     postcard_set = models.ForeignKey(GallerySection, on_delete=models.CASCADE)
+#     index = ReorderItemsField()
+
+#     class Meta:
+#         unique_together = ('set_gallery', 'postcard_set')
+
+
+# class SetGallerySection(Section):
+#     title = models.CharField(max_length=100)
+#     description = models.TextField(blank=True)
+#     postcard_sets = models.ManyToManyField(
+#         GallerySection,
+#         through=GalleryPostcardSet,
+#         related_name='set_galleries',
+#     )
+
+#     def __str__(self):
+#         return self.title
