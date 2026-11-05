@@ -29,7 +29,9 @@ class Command(ImagePathsMixin, BaseCommand):
         )
 
     def handle(self, *args, **options):
-        use_default = not any([options[o] for o in ['all', 'existing', 'missing', 'leftover']])
+        use_default = not any(
+            options[option] for option in ['all', 'existing', 'missing', 'leftover']
+        )
 
         if options['all'] or use_default:
             if self.existing_files:
@@ -61,4 +63,3 @@ class Command(ImagePathsMixin, BaseCommand):
         if options['existing']:
             for path in self.existing_files:
                 self.stdout.write(path)
-            return

@@ -5,12 +5,6 @@ from django.utils.html import format_html
 from . import models
 
 
-@admin.register(models.Image)
-class ImageAdmin(admin.ModelAdmin):
-    list_display = ['name', 'original', 'large', 'medium', 'small']
-    exclude = ['large', 'medium', 'small']
-
-
 @admin.register(models.Postcard)
 class PostcardAdmin(admin.ModelAdmin):
     list_display = ['title', 'created_at', 'is_public', 'view_link']

@@ -1,4 +1,5 @@
 import os
+
 from django.core.management.base import BaseCommand
 from ..utils import ImagePathsMixin
 
@@ -31,7 +32,7 @@ class Command(BaseCommand, ImagePathsMixin):
                 self.stdout.write(f'Not found (skipped): {path}')
             except PermissionError:
                 self.stdout.write(f'Permission denied (skipped): {path}')
-            except Exception as e:
-                self.stdout.write(f'Error deleting {path}: {e}')
+            except Exception as error:
+                self.stdout.write(f'Error deleting {path}: {error}')
 
         self.stdout.write(f'Done. {deleted} files deleted.')

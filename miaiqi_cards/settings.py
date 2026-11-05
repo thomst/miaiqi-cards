@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'simple_page',
     'miaiqi_cards.website',
     'miaiqi_cards.welcome',
+    'miaiqi_cards.responsive_image',
     'miaiqi_cards.postcards',
     'miaiqi_cards.shop',
 ]

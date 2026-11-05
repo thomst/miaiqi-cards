@@ -1,11 +1,11 @@
 import os
+
 from django.utils.functional import cached_property
 from miaiqi_cards.settings import MEDIA_ROOT
-from ..models import Image
+from miaiqi_cards.responsive_image.models import Image
 
 
 class ImagePathsMixin:
-
     IMAGE_FIELDS = [
         'original',
         'large',
@@ -16,8 +16,7 @@ class ImagePathsMixin:
     @cached_property
     def db_files(self):
         files = []
-        images = Image.objects.all()
-        for image in images:
+        for image in Image.objects.all():
             for field_name in self.IMAGE_FIELDS:
                 file_field = getattr(image, field_name)
                 files.append(file_field.path)
@@ -34,24 +33,12 @@ class ImagePathsMixin:
 
     @cached_property
     def missing_files(self):
-        missing = []
-        for path in self.db_files:
-            if not os.path.exists(path):
-                missing.append(path)
-        return missing
+        return [path for path in self.db_files if not os.path.exists(path)]
 
     @cached_property
     def existing_files(self):
-        existing = []
-        for path in self.db_files:
-            if os.path.exists(path):
-                existing.append(path)
-        return existing
+        return [path for path in self.db_files if os.path.exists(path)]
 
     @cached_property
     def leftover_files(self):
-        leftover = []
-        for path in self.stored_files:
-            if path not in self.db_files:
-                leftover.append(path)
-        return leftover
+        return [path for path in self.stored_files if path not in self.db_files]
