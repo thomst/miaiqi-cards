@@ -4,6 +4,6 @@ from django.views.defaults import page_not_found
 
 
 urlpatterns = [
-    path('', page_view, name='page', kwargs={'slug': 'home'}),
+    path('', page_view, name='page'),
     path('favicon.ico/', page_not_found, {'exception': Exception('Favicon not found')}),
 ]
