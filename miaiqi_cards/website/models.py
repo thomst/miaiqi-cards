@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from miaiqi_cards.postcards.models import GallerySection
+from miaiqi_cards.postcards.models import GallerySection, SetGallerySection
 from miaiqi_cards.shop.models import ShopSection
 from miaiqi_cards.welcome.models import WelcomeSection
 from simple_page.models import Section, Page
@@ -28,7 +28,13 @@ class MiaiqiCardsPage(Page):
         ('footer', 'Footer'),
     ]
     REGION_SECTIONS = {
-        'main': [WelcomeSection, TextSection, GallerySection, ShopSection],
+        'main': [
+            WelcomeSection,
+            TextSection,
+            GallerySection,
+            SetGallerySection,
+            ShopSection
+        ],
         'footer': [FooterSection],
     }
     description = models.TextField(blank=True)

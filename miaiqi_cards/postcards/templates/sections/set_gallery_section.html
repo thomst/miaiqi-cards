@@ -1,0 +1,27 @@
+{% load sections %}
+
+<section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
+    <h2>{{ section.title }}</h2>
+    <div>
+        {% for set in section.postcard_sets.all %}
+            <div class="postcard-set">
+                <a href="{% url 'gallery' set.slug %}">
+                    <div class="postcard-stack" style="--count: {{ set.postcards.count }};">
+                        {% for postcard in set.postcards.all %}
+                            <figure>
+                                <img
+                                    class="postcard"
+                                    src="{{ postcard.image.medium.url }}"
+                                    srcset="{{ postcard.image.srcset }}"
+                                    sizes="(max-width: 680px) 80vw, 22vw"
+                                    fetchpriority="high"
+                                    alt="{{ postcard.title }}">
+                            </figure>
+                        {% endfor %}
+                    </div>
+                    <h3>{{ set.title }}</h3>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</section>

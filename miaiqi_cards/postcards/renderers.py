@@ -90,3 +90,9 @@ class PostcardRenderer(renderers.SectionRenderer):
         context['previous_postcard'] = [None, *self.postcards, None][index]
         context['next_postcard'] = [None, *self.postcards, None][index + 2]
         return context
+
+
+@renderers.register(models.SetGallerySection, page_type=MiaiqiCardsPage)
+class SetGalleryRenderer(renderers.SectionRenderer):
+    class Media:
+        css = dict(all=['css/set_gallery.css'])

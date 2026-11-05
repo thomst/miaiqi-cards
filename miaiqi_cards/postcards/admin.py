@@ -30,3 +30,18 @@ class GalleryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
     exclude = ['postcards']
     inlines = [PostcardsInline]
+
+
+class PostcardSetsInline(ReorderItemsInline):
+    model = models.GalleryPostcardSet
+    extra = 1
+    fields = ['postcard_set']
+
+
+@admin.register(models.SetGallerySection)
+class SetGalleryAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+    exclude = ['postcard_sets']
+    inlines = [PostcardSetsInline]
+

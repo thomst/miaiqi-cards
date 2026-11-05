@@ -17,6 +17,8 @@
                 </figure>
             </a>
         {% endfor %}
-        <div class="postcard">More are coming soon...</div>
+        {% if page.is_root_node %}
+            <div class="postcard">More are coming soon...</div>
+        {% endif %}
     </div>
 </section>
