@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from reorder_items_widget import ReorderItemsField
 from simple_page.models import Page, Section
+from miaiqi_cards.responsive_image.models import Image
 
 
 class GalleryPage:
