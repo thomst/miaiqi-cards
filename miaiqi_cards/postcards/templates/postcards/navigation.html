@@ -1,0 +1,8 @@
+
+{% load sections %}
+
+<nav>
+    <a {% if navigation.previous_url %}href="{{ navigation.previous_url }}"{% else %}class="disabled"{% endif %}>◅ last</a> ·
+    <a href="{{ navigation.back_url }}">close</a> ·
+    <a {% if navigation.next_url %}href="{{ navigation.next_url }}"{% else %}class="disabled"{% endif %}>next ▻</a>
+</nav>
