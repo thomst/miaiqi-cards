@@ -1,10 +1,10 @@
-{% load sections static markdown compress %}
+{% load sections static markdown navigation%}
 
 {% partialdef head %}
     <link
         rel="preload"
-        href="{{ postcard.image.url }}"
-        imagesrcset="{{ postcard.image.srcset }}"
+        href="{{ section.image.url }}"
+        imagesrcset="{{ section.image.srcset }}"
         imagesizes="(max-width: 680px) 80vw, 60vh"
         as="image"
         type="image/avif"
@@ -14,25 +14,21 @@
 
 <section class="postcard-section">
 
-    <h1>{{ postcard.title }}</h1>
+    <h1>{{ section.title }}</h1>
     <div class="postcard">
         <img
             class="postcard-image"
-            src="{{ postcard.image.large.url }}"
-            srcset="{{ postcard.image.srcset }}"
+            src="{{ section.image.large.url }}"
+            srcset="{{ section.image.srcset }}"
             sizes="(max-width: 680px) 80vw, 60vh"
             fetchpriority="high"
-            alt="{{ postcard.title }}">
+            alt="{{ section.title }}">
 
-        {% if postcard.description %}
-            <div>{{ postcard.description|markdown_to_html }}</div>
+        {% if section.description %}
+            <div>{{ section.description|markdown_to_html }}</div>
         {% endif %}
     </div>
 
-    <nav>
-        <a {% if previous_postcard %}href="{% url 'postcard' gallery_slug=section.slug postcard_id=previous_postcard.pk %}"{% else %}class="disabled"{% endif %}>◅ last</a> ·
-        <a href="{% url 'page' %}{% if section %}#{{ section|as_html_id }}{% endif %}">close</a> ·
-        <a {% if next_postcard %}href="{% url 'postcard' gallery_slug=section.slug postcard_id=next_postcard.pk %}"{% else %}class="disabled"{% endif %}>next ▻</a>
-    </nav>
+    {% navigation url_params %}
 
 </section>

@@ -1,10 +1,10 @@
-{% load sections %}
+{% load sections navigation %}
 
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
     <div>
         {% for postcard in section.postcards.all %}
-            <a href="{% url 'postcard' gallery_slug=section.slug postcard_id=postcard.pk %}">
+            <a href="{% postcard_url section postcard url_params %}">
                 <figure>
                     <img
                         class="postcard"
@@ -17,8 +17,14 @@
                 </figure>
             </a>
         {% endfor %}
+
         {% if page.is_root_node %}
             <div class="postcard">More are coming soon...</div>
         {% endif %}
+
     </div>
+
+    {% if not page.is_root_node %}
+        {% navigation url_params %}
+    {% endif %}
 </section>
