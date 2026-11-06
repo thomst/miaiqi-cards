@@ -1,49 +1,9 @@
 from functools import cached_property
 
 from simple_page import renderers
-from django.http import Http404
 from django.shortcuts import get_object_or_404
 from miaiqi_cards.website.models import MiaiqiCardsPage
 from . import models
-
-
-class PostcardsPageMixin:
-    def get_template_name(self):
-        return 'pages/miaiqi_cards_page.html'
-
-    def get_main_sections(self):
-        slug = self.params.get('gallery_slug')
-        return models.GallerySection.objects.filter(slug=slug)
-
-    def get_footer_sections(self):
-        return self.page.homepage.footer
-
-
-@renderers.register(models.GalleryPage)
-class GalleryPageRenderer(PostcardsPageMixin, renderers.PageRenderer):
-    class Media:
-        css = dict(all=[
-            'css/sections.css',
-            'css/footer.css',
-            ])
-
-    def get_context_data(self):
-        context = super().get_context_data()
-        self.page.description = self.page.homepage.description
-        self.page.title = context['regions']['main']['sections'][0].section.title
-        return context
-
-
-@renderers.register(models.PostcardPage)
-class PostcardPageRenderer(PostcardsPageMixin, renderers.PageRenderer):
-    class Media:
-        css = dict(all=['css/footer.css'])
-
-    def get_context_data(self):
-        context = super().get_context_data()
-        self.page.description = self.page.homepage.description
-        self.page.title = context['regions']['main']['sections'][0].postcard.title
-        return context
 
 
 @renderers.register(models.GallerySection, page_type=MiaiqiCardsPage)
@@ -52,17 +12,51 @@ class GalleryRenderer(renderers.SectionRenderer):
         css = dict(all=['css/gallery.css'])
 
 
-@renderers.register(models.GallerySection, page_type=models.GalleryPage)
-class GalleryRenderer(renderers.SectionRenderer):
+@renderers.register(models.SetGallerySection, page_type=MiaiqiCardsPage)
+class SetGalleryRenderer(renderers.SectionRenderer):
     class Media:
-        css = dict(all=['css/gallery.css'])
+        css = dict(all=['css/set_gallery.css'])
+
+
+class PageMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.page.title = self.main_section.title
+        self.page.description = self.page.homepage.description
+
+    def get_template_name(self):
+        return 'pages/miaiqi_cards_page.html'
+
+    def get_main_sections(self):
+        return [self.main_section]
+
+    def get_footer_sections(self):
+        return self.page.homepage.footer
+
+
+@renderers.register(models.GalleryPage)
+class GalleryPageRenderer(PageMixin, renderers.PageRenderer):
+    class Media:
+        css = dict(all=['css/sections.css', 'css/footer.css'])
 
     @cached_property
-    def postcards(self):
-        return self.section.postcards.all()
+    def main_section(self):
+        slug = self.params.get('gallery_slug')
+        return get_object_or_404(models.GallerySection.objects.all(), slug=slug)
 
 
-@renderers.register(models.GallerySection, page_type=models.PostcardPage)
+@renderers.register(models.PostcardPage)
+class PostcardPageRenderer(PageMixin, renderers.PageRenderer):
+    class Media:
+        css = dict(all=['css/footer.css'])
+
+    @cached_property
+    def main_section(self):
+        postcard_id = self.params.get('postcard_id')
+        return get_object_or_404(models.Postcard.objects.all(), id=postcard_id)
+
+
+@renderers.register(models.Postcard, page_type=models.PostcardPage)
 class PostcardRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/postcard.css'])
@@ -70,29 +64,18 @@ class PostcardRenderer(renderers.SectionRenderer):
     def get_template_name(self):
         return 'sections/postcard_section.html'
 
-    @cached_property
-    def postcards(self):
-        return self.section.postcards.all()
-
-    @cached_property
-    def postcard(self):
-        if postcard_id := self.params.get('postcard_id'):
-            return get_object_or_404(self.postcards, id=postcard_id)
-        elif postcard := self.postcards.first():
-            return postcard
-        else:
-            raise Http404
-
     def get_context_data(self):
         context = super().get_context_data()
-        index = [p.pk for p in self.postcards].index(self.postcard.id)
-        context['postcard'] = self.postcard
-        context['previous_postcard'] = [None, *self.postcards, None][index]
-        context['next_postcard'] = [None, *self.postcards, None][index + 2]
+        context['url_params'] = self.params
         return context
 
 
-@renderers.register(models.SetGallerySection, page_type=MiaiqiCardsPage)
-class SetGalleryRenderer(renderers.SectionRenderer):
+@renderers.register(models.GallerySection, page_type=models.GalleryPage)
+class PostcardSetsRenderer(renderers.SectionRenderer):
     class Media:
-        css = dict(all=['css/set_gallery.css'])
+        css = dict(all=['css/gallery.css'])
+
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['url_params'] = self.params
+        return context
