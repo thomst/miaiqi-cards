@@ -36,52 +36,46 @@ class NavigationMixin:
     def next(self):
         return [None, *self.items, None][self.index + 2]
 
+    def get_url(self, item):
+        if item:
+            kwargs = self.params.copy()
+            kwargs[self.item_key] = getattr(item, 'slug', None) or getattr(item, 'id')
+            return reverse(self.url_name, kwargs=kwargs)
+        else:
+            return None
+
+    @property
+    def previous_url(self):
+        return self.get_url(self.previous)
+
+    @property
+    def next_url(self):
+        return self.get_url(self.next)
+
 
 class PostcardNavigation(NavigationMixin):
     def __init__(self, params):
         self.params = params
         self.item = self.postcard
         self.items = self.gallery.postcards.all()
+        self.item_key = 'postcard_id'
+        self.url_name = 'postcard'
 
     @property
     def back_url(self):
         return f"{reverse('page')}#{self.gallery.slug}"
 
-    @property
-    def previous_url(self):
-        if self.previous:
-            kwargs = self.params.copy()
-            kwargs['postcard_id'] = self.previous.id
-            return reverse('postcard', kwargs=kwargs)
-
-    @property
-    def next_url(self):
-        if self.next:
-            kwargs = self.params.copy()
-            kwargs['postcard_id'] = self.next.id
-            return reverse('postcard', kwargs=kwargs)
-
 
 class SetPostcardNavigation(PostcardNavigation):
+    def __init__(self, params):
+        super().__init__(params)
+        self.url_name = 'set_postcard'
+
     @property
     def back_url(self):
         kwargs = self.params
         del kwargs['postcard_id']
         return reverse('gallery', kwargs=kwargs)
-
-    @property
-    def previous_url(self):
-        if self.previous:
-            kwargs = self.params.copy()
-            kwargs['postcard_id'] = self.previous.id
-            return reverse('set_postcard', kwargs=kwargs)
-
-    @property
-    def next_url(self):
-        if self.next:
-            kwargs = self.params.copy()
-            kwargs['postcard_id'] = self.next.id
-            return reverse('set_postcard', kwargs=kwargs)
 
 
 class GalleryNavigation(NavigationMixin):
@@ -89,24 +83,12 @@ class GalleryNavigation(NavigationMixin):
         self.params = params
         self.item = self.gallery
         self.items = self.sets.postcard_sets.all()
+        self.item_key = 'gallery_slug'
+        self.url_name = 'gallery'
 
     @property
     def back_url(self):
         return f"{reverse('page')}#{self.sets.slug}"
-
-    @property
-    def previous_url(self):
-        if self.previous:
-            kwargs = self.params.copy()
-            kwargs['gallery_slug'] = self.previous.slug
-            return reverse('gallery', kwargs=kwargs)
-
-    @property
-    def next_url(self):
-        if self.next:
-            kwargs = self.params.copy()
-            kwargs['gallery_slug'] = self.next.slug
-            return reverse('gallery', kwargs=kwargs)
 
 
 @register.inclusion_tag('postcards/navigation.html')
