@@ -78,6 +78,7 @@ class GalleryPostcardSet(models.Model):
 
 class SetGallerySection(Section):
     title = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     postcard_sets = models.ManyToManyField(
         GallerySection,
