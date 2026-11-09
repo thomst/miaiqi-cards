@@ -1,4 +1,4 @@
-{% load sections %}
+{% load sections sets %}
 
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
@@ -6,17 +6,19 @@
         {% for gallery in section.galleries.all %}
             <div class="postcard-set">
                 <a href="{% url 'gallery' section.slug gallery.slug %}">
-                    <div class="postcard-stack" style="--count: {{ gallery.postcards.count }};">
-                        {% for postcard in gallery.postcards.all %}
-                            <figure>
-                                <img
-                                    class="postcard"
-                                    src="{{ postcard.image.medium.url }}"
-                                    srcset="{{ postcard.image.srcset }}"
-                                    sizes="(max-width: 680px) 80vw, 22vw"
-                                    fetchpriority="high"
-                                    alt="{{ postcard.title }}">
-                            </figure>
+                    {% postcards_grid gallery.postcards.all as postcards %}
+                    <div class="postcard-stack" style="--count: {{ postcards|length }};">
+                        {% for postcard in postcards %}
+                            {% if postcard %}
+                                <figure>
+                                    <img
+                                        class="postcard"
+                                        src="{{ postcard.image.small.url }}"
+                                        alt="{{ postcard.title }}">
+                                </figure>
+                            {% else %}
+                                <figure class="postcard-placeholder"></figure>
+                            {% endif %}
                         {% endfor %}
                     </div>
                     <h3>{{ gallery.title }}</h3>
