@@ -11,8 +11,9 @@ class PostcardAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
     def view_link(self, obj):
-        page = models.PostcardPage.objects.first()
-        url = reverse('postcard', kwargs=dict(slug=page.slug, postcard_id=obj.pk))
+        gallery = models.GallerySection.objects.first()
+        kwargs = dict(gallery_slug=gallery.slug, postcard_id=obj.pk)
+        url = reverse('postcard', kwargs=kwargs)
         return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">Show</a>', url)
     view_link.short_description = 'Show'
 

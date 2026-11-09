@@ -38,7 +38,7 @@ class Postcard(models.Model):
 
     def get_absolute_url(self):
         gallery = GallerySection.objects.first()
-        return reverse('postcard', kwargs=dict(slug=gallery.slug, postcard_id=self.id))
+        return reverse('postcard', kwargs=dict(gallery_slug=gallery.slug, postcard_id=self.id))
 
     class Meta:
         ordering = ['gallerypostcard__index']
