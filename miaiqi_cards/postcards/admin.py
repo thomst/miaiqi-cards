@@ -35,7 +35,7 @@ class GalleryAdmin(admin.ModelAdmin):
 class SetsGalleryInline(ReorderItemsInline):
     model = models.SetsGallery
     extra = 1
-    fields = ['postcard_set']
+    fields = ['gallery']
 
 
 @admin.register(models.SetsSection)
@@ -43,6 +43,6 @@ class SetsAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
     prepopulated_fields = {"slug": ("title",)}
-    exclude = ['postcard_sets']
+    exclude = ['galleries']
     inlines = [SetsGalleryInline]
 

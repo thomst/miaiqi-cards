@@ -68,12 +68,12 @@ class GallerySection(Section):
 
 
 class SetsGallery(models.Model):
-    set_gallery = models.ForeignKey('SetsSection', on_delete=models.CASCADE)
+    sets = models.ForeignKey('SetsSection', on_delete=models.CASCADE)
     gallery = models.ForeignKey(GallerySection, on_delete=models.CASCADE)
     index = ReorderItemsField()
 
     class Meta:
-        unique_together = ('set_gallery', 'gallery')
+        unique_together = ('sets', 'gallery')
 
 
 class SetsSection(Section):
@@ -83,7 +83,7 @@ class SetsSection(Section):
     galleries = models.ManyToManyField(
         GallerySection,
         through=SetsGallery,
-        related_name='sets',
+        related_name='sets_sections',
     )
 
     def __str__(self):

@@ -3,7 +3,7 @@
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
     <div>
-        {% for gallery in section.postcard_sets.all %}
+        {% for gallery in section.galleries.all %}
             <div class="postcard-set">
                 <a href="{% url 'gallery' section.slug gallery.slug %}">
                     <div class="postcard-stack" style="--count: {{ gallery.postcards.count }};">
