@@ -36,14 +36,6 @@ class NavigationMixin:
     def next(self):
         return [None, *self.items, None][self.index + 2]
 
-    def get_url(self, item):
-        if item:
-            kwargs = self.params.copy()
-            kwargs[self.item_key] = getattr(item, 'slug', None) or getattr(item, 'id')
-            return reverse(self.url_name, kwargs=kwargs)
-        else:
-            return None
-
     @property
     def previous_url(self):
         return self.get_url(self.previous)
@@ -51,6 +43,14 @@ class NavigationMixin:
     @property
     def next_url(self):
         return self.get_url(self.next)
+
+    def get_url(self, item):
+        if item:
+            kwargs = self.params.copy()
+            kwargs[self.item_key] = getattr(item, 'slug', None) or getattr(item, 'id')
+            return reverse(self.url_name, kwargs=kwargs)
+        else:
+            return None
 
 
 class PostcardNavigation(NavigationMixin):
