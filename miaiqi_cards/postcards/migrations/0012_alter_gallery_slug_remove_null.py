@@ -10,10 +10,9 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='gallerysection',
             name='slug',
-            field=models.SlugField(default='', unique=True),
-            preserve_default=False,
+            field=models.SlugField(unique=True),
         ),
     ]
