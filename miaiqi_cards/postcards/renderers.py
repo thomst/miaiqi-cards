@@ -15,7 +15,7 @@ class GalleryRenderer(renderers.SectionRenderer):
 @renderers.register(models.SetsSection, page_type=MiaiqiCardsPage)
 class SetGalleryRenderer(renderers.SectionRenderer):
     class Media:
-        css = dict(all=['css/set_gallery.css'])
+        css = dict(all=['css/sets.css'])
 
 
 class PageMixin:
