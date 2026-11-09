@@ -2,7 +2,7 @@ from django.forms import formset_factory, ModelChoiceField
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from simple_page import renderers
-from cart.cart import Cart, InvalidDiscountError
+from cart.cart import Cart
 from . import models
 from . import forms
 
@@ -43,19 +43,9 @@ class ShopRenderer(renderers.SectionRenderer):
 
     def setup_cart(self, data):
         self.cart.clear()
-        self.cart.remove_discount()
         price = self.section.prices.first().price  # FIXME: Selection should come from the forms.
         data = [dict(**d, unit_price=price) for d in data if d]
         self.cart.add_bulk(data)
-
-        # Apply quantity discount.
-        for discount in models.QuantityDiscount.objects.all():
-            try:
-                self.cart.apply_discount(discount.code)
-            except InvalidDiscountError:
-                pass
-            else:
-                break
 
     @set_state(ORDER_STATE)
     def get_order_html(self):

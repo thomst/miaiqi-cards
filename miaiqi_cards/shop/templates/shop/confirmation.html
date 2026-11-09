@@ -9,10 +9,6 @@
         </div>
     {% endfor %}
 
-    {% if cart.discount_amount %}
-        <div class="row"><div>Summary</div><div>{{ cart.summary }} €</div></div>
-        <div class="row"><div>Discount</div><div>- {{ cart.discount_amount }} €</div></div>
-    {% endif %}
     <div class="row"><div>Total</div><div>{{ cart.total }} €</div></div>
 
     <div class="row">

@@ -1,25 +1,6 @@
 from django.db import models
 from simple_page.models import Section
-from cart.models import Discount, DiscountType
 from ..postcards.models import GallerySection
-
-
-class QuantityDiscountManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(code__startswith=QuantityDiscount.CODE_PREFIX)
-
-
-class QuantityDiscount(Discount):
-    CODE_PREFIX = "QD"
-
-    def save(self, *args, **kwargs):
-        self.discount_type = DiscountType.PERCENT
-        self.code = f'{self.CODE_PREFIX}-{self.value}-{self.min_cart_value}'
-        return super().save(*args, **kwargs)
-
-    class Meta:
-        proxy = True
-        ordering = ['-min_cart_value']
 
 
 class ShopSection(Section):
