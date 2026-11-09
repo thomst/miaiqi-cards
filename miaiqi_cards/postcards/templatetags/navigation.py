@@ -82,7 +82,7 @@ class GalleryNavigation(NavigationMixin):
     def __init__(self, params):
         self.params = params
         self.item = self.gallery
-        self.items = self.sets.postcard_sets.all()
+        self.items = self.sets.galleries.all()
         self.item_key = 'gallery_slug'
         self.url_name = 'gallery'
 
