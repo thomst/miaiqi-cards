@@ -67,23 +67,23 @@ class GallerySection(Section):
         return self.title
 
 
-class GalleryPostcardSet(models.Model):
-    set_gallery = models.ForeignKey('SetGallerySection', on_delete=models.CASCADE)
-    postcard_set = models.ForeignKey(GallerySection, on_delete=models.CASCADE)
+class SetsGallery(models.Model):
+    set_gallery = models.ForeignKey('SetsSection', on_delete=models.CASCADE)
+    gallery = models.ForeignKey(GallerySection, on_delete=models.CASCADE)
     index = ReorderItemsField()
 
     class Meta:
-        unique_together = ('set_gallery', 'postcard_set')
+        unique_together = ('set_gallery', 'gallery')
 
 
-class SetGallerySection(Section):
+class SetsSection(Section):
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
-    postcard_sets = models.ManyToManyField(
+    galleries = models.ManyToManyField(
         GallerySection,
-        through=GalleryPostcardSet,
-        related_name='set_galleries',
+        through=SetsGallery,
+        related_name='sets',
     )
 
     def __str__(self):

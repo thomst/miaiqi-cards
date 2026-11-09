@@ -12,7 +12,7 @@ class NavigationMixin:
     @cached_property
     def sets(self):
         slug = self.params.get('sets_slug')
-        return get_object_or_404(models.SetGallerySection.objects.all(), slug=slug)
+        return get_object_or_404(models.SetsSection.objects.all(), slug=slug)
 
     @cached_property
     def gallery(self):

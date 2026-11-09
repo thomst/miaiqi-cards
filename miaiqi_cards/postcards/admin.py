@@ -32,17 +32,17 @@ class GalleryAdmin(admin.ModelAdmin):
     inlines = [PostcardsInline]
 
 
-class PostcardSetsInline(ReorderItemsInline):
-    model = models.GalleryPostcardSet
+class SetsGalleryInline(ReorderItemsInline):
+    model = models.SetsGallery
     extra = 1
     fields = ['postcard_set']
 
 
-@admin.register(models.SetGallerySection)
-class SetGalleryAdmin(admin.ModelAdmin):
+@admin.register(models.SetsSection)
+class SetsAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
     prepopulated_fields = {"slug": ("title",)}
     exclude = ['postcard_sets']
-    inlines = [PostcardSetsInline]
+    inlines = [SetsGalleryInline]
 

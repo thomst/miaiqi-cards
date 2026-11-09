@@ -12,7 +12,7 @@ class GalleryRenderer(renderers.SectionRenderer):
         css = dict(all=['css/gallery.css'])
 
 
-@renderers.register(models.SetGallerySection, page_type=MiaiqiCardsPage)
+@renderers.register(models.SetsSection, page_type=MiaiqiCardsPage)
 class SetGalleryRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/set_gallery.css'])
