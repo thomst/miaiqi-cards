@@ -5,7 +5,7 @@ from simple_page.models import Page, Section
 from miaiqi_cards.responsive_image.models import Image
 
 
-class GalleryPage:
+class PostcardSetPage:
     REGIONS = [
         ('main', 'Main Region'),
         ('footer', 'Footer'),
@@ -16,7 +16,7 @@ class GalleryPage:
         self.homepage = Page.objects.first().resolved_obj
 
 
-class PostcardPage(GalleryPage):
+class PostcardPage(PostcardSetPage):
     pass
 
 
@@ -38,53 +38,58 @@ class Postcard(models.Model):
 
     def get_absolute_url(self):
         gallery = GallerySection.objects.first()
-        return reverse('postcard', kwargs=dict(gallery_slug=gallery.slug, postcard_id=self.id))
+        kwargs = dict(gallery_slug=gallery.slug, postcard_id=self.id)
+        return reverse('postcard', kwargs=kwargs)
 
     class Meta:
-        ordering = ['gallerypostcard__index']
+        ordering = ['postcardsetpostcard__index']
 
 
-class GalleryPostcard(models.Model):
-    gallery = models.ForeignKey('GallerySection', on_delete=models.CASCADE)
+class PostcardSetPostcard(models.Model):
+    postcard_set = models.ForeignKey('PostcardSet', on_delete=models.CASCADE)
     postcard = models.ForeignKey(Postcard, on_delete=models.CASCADE)
     index = ReorderItemsField()
 
     class Meta:
-        unique_together = ('gallery', 'postcard')
+        unique_together = ('postcard_set', 'postcard')
 
 
-class GallerySection(Section):
+class PostcardSet(models.Model):
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
     postcards = models.ManyToManyField(
         Postcard,
-        through=GalleryPostcard,
-        related_name='galleries',
+        through=PostcardSetPostcard,
+        related_name='postcard_sets',
     )
 
     def __str__(self):
         return self.title
 
 
-class SetsGallery(models.Model):
-    sets = models.ForeignKey('SetsSection', on_delete=models.CASCADE)
-    gallery = models.ForeignKey(GallerySection, on_delete=models.CASCADE)
-    index = ReorderItemsField()
+class GallerySection(Section):
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
 
-    class Meta:
-        unique_together = ('sets', 'gallery')
+    @property
+    def postcards(self):
+        return Postcard.objects.all()
+
+    def __str__(self):
+        return self.title
 
 
 class SetsSection(Section):
     title = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
-    galleries = models.ManyToManyField(
-        GallerySection,
-        through=SetsGallery,
-        related_name='sets_sections',
-    )
+
+
+    @property
+    def postcard_sets(self):
+        return PostcardSet.objects.all()
 
     def __str__(self):
         return self.title

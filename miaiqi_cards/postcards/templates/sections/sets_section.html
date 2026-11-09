@@ -3,10 +3,10 @@
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
     <div>
-        {% for gallery in section.galleries.all %}
+        {% for postcard_set in section.postcard_sets.all %}
             <div class="postcard-set">
-                <a href="{% url 'gallery' section.slug gallery.slug %}">
-                    {% postcards_grid gallery.postcards.all as postcards %}
+                <a href="{% url 'postcard_set' section.slug postcard_set.slug %}">
+                    {% postcards_grid postcard_set.postcards.all as postcards %}
                     <div class="postcard-stack" style="--count: {{ postcards|length }};">
                         {% for postcard in postcards %}
                             {% if postcard %}
@@ -21,7 +21,7 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <h3>{{ gallery.title }}</h3>
+                    <h3>{{ postcard_set.title }}</h3>
                 </a>
             </div>
         {% endfor %}

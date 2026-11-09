@@ -1,6 +1,6 @@
 /* Layout */
 
-section.gallery-section {
+section.gallery-section, section.postcard-set {
     font-size: 3.5vh;
     color: var(--not-so-dark-color);
 

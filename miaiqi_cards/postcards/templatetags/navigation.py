@@ -10,9 +10,14 @@ register = template.Library()
 
 class NavigationMixin:
     @cached_property
-    def sets(self):
-        slug = self.params.get('sets_slug')
+    def sets_section(self):
+        slug = self.params.get('sets_section_slug')
         return get_object_or_404(models.SetsSection.objects.all(), slug=slug)
+
+    @cached_property
+    def postcard_set(self):
+        slug = self.params.get('set_slug')
+        return get_object_or_404(models.PostcardSet.objects.all(), slug=slug)
 
     @cached_property
     def gallery(self):
@@ -22,11 +27,11 @@ class NavigationMixin:
     @cached_property
     def postcard(self):
         id = self.params.get('postcard_id')
-        return get_object_or_404(self.gallery.postcards.all(), id=id)
+        return get_object_or_404(models.Postcard.objects.all(), id=id)
 
     @property
     def index(self):
-        return [i.id for i in self.items].index(self.item.id)
+        return [i.pk for i in self.items].index(self.item.pk)
 
     @property
     def previous(self):
@@ -68,35 +73,38 @@ class PostcardNavigation(NavigationMixin):
 
 class SetPostcardNavigation(PostcardNavigation):
     def __init__(self, params):
-        super().__init__(params)
+        self.params = params
+        self.item = self.postcard
+        self.items = self.postcard_set.postcards.all()
+        self.item_key = 'postcard_id'
         self.url_name = 'set_postcard'
 
     @property
     def back_url(self):
         kwargs = self.params
         del kwargs['postcard_id']
-        return reverse('gallery', kwargs=kwargs)
+        return reverse('postcard_set', kwargs=kwargs)
 
 
-class GalleryNavigation(NavigationMixin):
+class PostcardSetNavigation(NavigationMixin):
     def __init__(self, params):
         self.params = params
-        self.item = self.gallery
-        self.items = self.sets.galleries.all()
-        self.item_key = 'gallery_slug'
-        self.url_name = 'gallery'
+        self.item = self.postcard_set
+        self.items = self.sets_section.postcard_sets.all()
+        self.item_key = 'set_slug'
+        self.url_name = 'postcard_set'
 
     @property
     def back_url(self):
-        return f"{reverse('page')}#{self.sets.slug}"
+        return f"{reverse('page')}#{self.sets_section.slug}"
 
 
 @register.inclusion_tag('postcards/navigation.html')
 def navigation(url_params):
-    if 'sets_slug' in url_params and 'postcard_id' in url_params:
+    if 'sets_section_slug' in url_params and 'postcard_id' in url_params:
         navigation = SetPostcardNavigation(url_params)
-    elif 'sets_slug' in url_params:
-        navigation = GalleryNavigation(url_params)
+    elif 'sets_section_slug' in url_params:
+        navigation = PostcardSetNavigation(url_params)
     else:
         navigation = PostcardNavigation(url_params)
     return dict(navigation=navigation)

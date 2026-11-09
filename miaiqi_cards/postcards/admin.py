@@ -11,39 +11,36 @@ class PostcardAdmin(admin.ModelAdmin):
     search_fields = ['title']
 
     def view_link(self, obj):
-        gallery = models.GallerySection.objects.first()
-        kwargs = dict(gallery_slug=gallery.slug, postcard_id=obj.pk)
-        url = reverse('postcard', kwargs=kwargs)
+        url = obj.get_absolute_url()
         return format_html('<a href="{}" target="_blank" rel="noopener noreferrer">Show</a>', url)
     view_link.short_description = 'Show'
 
 
-class PostcardsInline(ReorderItemsInline):
-    model = models.GalleryPostcard
+class PostcardSetPostcardInline(ReorderItemsInline):
+    model = models.PostcardSetPostcard
     extra = 1
-    fields = ['postcard']
+    fields = ['postcard', 'index']
+    fk_name = 'postcard_set'
 
 
-@admin.register(models.GallerySection)
-class GalleryAdmin(admin.ModelAdmin):
+@admin.register(models.PostcardSet)
+class PostcardSetAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
     prepopulated_fields = {"slug": ("title",)}
     exclude = ['postcards']
-    inlines = [PostcardsInline]
+    inlines = [PostcardSetPostcardInline]
 
 
-class SetsGalleryInline(ReorderItemsInline):
-    model = models.SetsGallery
-    extra = 1
-    fields = ['gallery']
-
-
-@admin.register(models.SetsSection)
-class SetsAdmin(admin.ModelAdmin):
+@admin.register(models.GallerySection)
+class GallerySectionAdmin(admin.ModelAdmin):
     list_display = ['title']
     search_fields = ['title']
     prepopulated_fields = {"slug": ("title",)}
-    exclude = ['galleries']
-    inlines = [SetsGalleryInline]
 
+
+@admin.register(models.SetsSection)
+class SetsSectionAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = ['title']
+    prepopulated_fields = {"slug": ("title",)}

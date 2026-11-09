@@ -11,9 +11,12 @@ class GalleryRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/gallery.css'])
 
+    def get_template_name(self):
+        return 'sections/postcard_set.html'
+
 
 @renderers.register(models.SetsSection, page_type=MiaiqiCardsPage)
-class SetGalleryRenderer(renderers.SectionRenderer):
+class SetsSectionRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/sets.css'])
 
@@ -34,15 +37,15 @@ class PageMixin:
         return self.page.homepage.footer
 
 
-@renderers.register(models.GalleryPage)
-class GalleryPageRenderer(PageMixin, renderers.PageRenderer):
+@renderers.register(models.PostcardSetPage)
+class PostcardSetPageRenderer(PageMixin, renderers.PageRenderer):
     class Media:
         css = dict(all=['css/sections.css', 'css/footer.css'])
 
     @cached_property
     def main_section(self):
-        slug = self.params.get('gallery_slug')
-        return get_object_or_404(models.GallerySection.objects.all(), slug=slug)
+        slug = self.params.get('set_slug')
+        return get_object_or_404(models.PostcardSet.objects.all(), slug=slug)
 
 
 @renderers.register(models.PostcardPage)
@@ -61,17 +64,14 @@ class PostcardRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/postcard.css'])
 
-    def get_template_name(self):
-        return 'sections/postcard_section.html'
-
     def get_context_data(self):
         context = super().get_context_data()
         context['url_params'] = self.params
         return context
 
 
-@renderers.register(models.GallerySection, page_type=models.GalleryPage)
-class PostcardSetsRenderer(renderers.SectionRenderer):
+@renderers.register(models.PostcardSet, page_type=models.PostcardSetPage)
+class PostcardSetRenderer(renderers.SectionRenderer):
     class Media:
         css = dict(all=['css/gallery.css'])
 
