@@ -36,15 +36,11 @@ class ShopRenderer(renderers.SectionRenderer):
 
     @cached_property
     def formset_class(self):
-        # FIXME: Update limit_choices_to on formfield instead of creating new field and form.
-        field = ModelChoiceField(self.section.gallery.postcards.all(), required=True)
-        form_class = type('CartItemForm', (forms.CartItemForm,), dict(product=field))
-        return formset_factory(form_class, extra=0, min_num=1, validate_min=True)
+        return formset_factory(forms.CartItemForm, extra=0, min_num=1, validate_min=True)
 
     def setup_cart(self, data):
         self.cart.clear()
-        price = self.section.prices.first().price  # FIXME: Selection should come from the forms.
-        data = [dict(**d, unit_price=price) for d in data if d]
+        data = [dict(**d, unit_price=d['product'].price) for d in data if d]
         self.cart.add_bulk(data)
 
     @set_state(ORDER_STATE)

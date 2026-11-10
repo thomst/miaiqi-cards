@@ -6,17 +6,17 @@ from .models import ShopSection
 
 def order_view(request, shop_id):
     shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, request)
+    renderer = ShopRenderer(shop, None, None, request)
     return HttpResponse(renderer.get_order_html())
 
 
 def checkout_view(request, shop_id):
     shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, request)
+    renderer = ShopRenderer(shop, None, None, request)
     return HttpResponse(renderer.get_checkout_html())
 
 
 def confirmation_view(request, shop_id):
     shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, request)
+    renderer = ShopRenderer(shop, None, None, request)
     return HttpResponse(renderer.get_confirmation_html())
