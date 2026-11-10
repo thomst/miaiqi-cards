@@ -1,11 +1,20 @@
 from django.test import TestCase
 from django.db import IntegrityError, transaction
 from django.contrib.contenttypes.models import ContentType
+from .forms import CartItemForm
 from miaiqi_cards.postcards.models import Postcard, PostcardSet
 from .models import Product
 
 
 class ProductTest(TestCase):
+    def test_grouped_product_choices_are_lazy(self):
+        field = CartItemForm.base_fields['product']
+
+        choices = field.choices
+
+        self.assertIsNone(field.queryset._result_cache)
+        self.assertEqual(list(choices), [('', '---------')])
+
     def product_for(self, instance):
         return Product.objects.get(
             content_type=ContentType.objects.get_for_model(instance),
