@@ -18,7 +18,7 @@
                 {% for field in form %}
                     <div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>
                 {% endfor %}
-                <div><input class="remove-form" type="button" value="Delete"></div>
+                <div><input class="remove-form" type="button" value="Delete" data-url="{% url 'remove-product' shop.id %}" data-action="removeForm"></div>
             </div>
         {% endfor %}
 

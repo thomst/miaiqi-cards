@@ -2,10 +2,12 @@
     "use strict";
 
     function updateShop(html) {
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = html.trim();
-        document.querySelector('div.shop').replaceWith(wrapper.firstChild);
-        init();
+        if (html) {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html.trim();
+            document.querySelector('div.shop').replaceWith(wrapper.firstChild);
+            init();
+        }
     }
 
     function ajaxCall(event, data) {
@@ -31,13 +33,13 @@
         ajaxCall(event, ajaxData)
     }
 
-    function postRequest(event) {
+    function postRequest(event, data) {
         const form = document.querySelector('div.shop > form');
         const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
         const ajaxData = {
             method: "POST",
             credentials: 'same-origin',
-            body: new FormData(form),
+            body: data ? new URLSearchParams(data) : new FormData(form),
             headers: {'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrftoken}
         }
         ajaxCall(event, ajaxData)
@@ -50,7 +52,6 @@
             this.form = form;
             this.totalInput = form.querySelector('input[id$="-TOTAL_FORMS"]');
             this.total = parseInt(this.totalInput.value);
-            this.initRemoveButtons();
         }
         initRemoveButtons () {
             this.form.querySelectorAll("input.remove-form").forEach(element => {
@@ -78,6 +79,7 @@
             this.initRemoveButtons();
         }
         removeForm (event) {
+            const productId = event.target.parentNode.parentNode.querySelector('select').value;
             if (this.total == 1) {
                 const form = event.target.parentNode.parentNode;
                 form.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
@@ -88,6 +90,7 @@
                 event.target.parentNode.parentNode.remove();
                 this.updateFormCount();
             }
+            return productId;
         }
     }
 
@@ -97,7 +100,8 @@
             formset.addForm();
         },
         removeForm: function(event) {
-            formset.removeForm(event);
+            const productId = formset.removeForm(event);
+            if (productId) postRequest(event, {product: productId});
         },
         checkout: function(event) {
             postRequest(event);

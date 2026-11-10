@@ -1,9 +1,10 @@
 from django.urls import path
-from .views import order_view, checkout_view, confirmation_view
+from . import views
 
 
 urlpatterns = [
-    path('shop/<int:shop_id>/order/', order_view, name='shop-order'),
-    path('shop/<int:shop_id>/checkout/', checkout_view, name='shop-checkout'),
-    path('shop/<int:shop_id>/confirmation/', confirmation_view, name='shop-confirmation'),
+    path('shop/<int:shop_id>/remove-product/', views.remove_product, name='remove-product'),
+    path('shop/<int:shop_id>/order/', views.order_view, name='shop-order'),
+    path('shop/<int:shop_id>/checkout/', views.checkout_view, name='shop-checkout'),
+    path('shop/<int:shop_id>/confirmation/', views.confirmation_view, name='shop-confirmation'),
 ]
