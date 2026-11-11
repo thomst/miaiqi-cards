@@ -3,7 +3,7 @@
 <div class="shop">
     {{ shop.order_text|markdown_to_html }}
 
-    <form method="POST">
+    <form method="POST" data-url="{% url 'update-cart' shop.id %}">
         {% csrf_token %}
         {{ formset.management_form }}
 
@@ -18,7 +18,7 @@
                 {% for field in form %}
                     <div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>
                 {% endfor %}
-                <div><input class="remove-form" type="button" value="Delete" data-url="{% url 'remove-product' shop.id %}" data-action="removeForm"></div>
+                <div><input class="remove-form" type="button" value="Delete"></div>
             </div>
         {% endfor %}
 

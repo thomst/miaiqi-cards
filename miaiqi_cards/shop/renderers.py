@@ -43,6 +43,15 @@ class ShopRenderer(renderers.SectionRenderer):
         data = [dict(**d, unit_price=d['product'].price) for d in data if d]
         self.cart.add_bulk(data)
 
+    def update_cart(self):
+        formset = self.formset_class(self.request.POST)
+        data = list()
+        print(formset.forms)
+        for form in formset.forms:
+            if form.is_valid():
+                data.append(form.cleaned_data)
+        self.setup_cart(data)
+
     @set_state(ORDER_STATE)
     def get_order_html(self):
         if 'new' in self.request.GET:
