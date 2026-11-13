@@ -23,7 +23,7 @@ class PostcardSetPostcardInline(ReorderItemsInline):
 
 
 @admin.register(models.PostcardSet)
-class PostcardSetAdmin(admin.ModelAdmin):
+class PostcardSetAdmin(ReorderItemsModelAdmin):
     list_display = ['title']
     search_fields = ['title']
     prepopulated_fields = {"slug": ("title",)}
