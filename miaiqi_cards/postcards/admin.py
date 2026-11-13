@@ -1,12 +1,11 @@
-from reorder_items_widget import ReorderItemsInline
+from reorder_items_widget import ReorderItemsInline, ReorderItemsModelAdmin
 from django.contrib import admin
-from django.urls import reverse
 from django.utils.html import format_html
 from . import models
 
 
 @admin.register(models.Postcard)
-class PostcardAdmin(admin.ModelAdmin):
+class PostcardAdmin(ReorderItemsModelAdmin):
     list_display = ['title', 'created_at', 'is_public', 'view_link']
     search_fields = ['title']
 

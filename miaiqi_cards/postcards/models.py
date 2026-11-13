@@ -26,6 +26,7 @@ class Postcard(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.OneToOneField(Image, on_delete=models.SET_NULL, null=True, related_name='postcard')
     is_public = models.BooleanField(default=True)
+    index = ReorderItemsField()
 
     def save(self, *args, **kwargs):
         if not self.title:
@@ -42,7 +43,7 @@ class Postcard(models.Model):
         return reverse('postcard', kwargs=kwargs)
 
     class Meta:
-        ordering = ['postcardsetpostcard__index']
+        ordering = ['index']
 
 
 class PostcardSetPostcard(models.Model):
