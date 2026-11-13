@@ -1,7 +1,10 @@
-{% load sections navigation %}
+{% load markdown sections navigation %}
 
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
+    {% if section.description %}
+        <p>{{ section.description|markdown_to_html }}</p>
+    {% endif %}
     <div>
         {% for postcard in section.postcards.all %}
             <a href="{% postcard_url section postcard url_params %}">
