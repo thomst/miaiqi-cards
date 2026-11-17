@@ -157,19 +157,19 @@ COMPRESS_FILTERS = {
     ],
 }
 
+# Email
+# Django's standard settings for the SMTP account used to send mails.
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'localhost')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', '1') == '1'
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', '0') == '1'
+
 # Contact form
-# The contact messages are sent to CONTACT_RECIPIENT using the satellite
-# account configured by the CONTACT_EMAIL_* settings. They are independent of
-# django's default EMAIL_* settings.
+# The contact messages are sent to this address.
 CONTACT_RECIPIENT = os.environ.get('CONTACT_RECIPIENT', '')
-CONTACT_EMAIL_BACKEND = os.environ.get(
-    'CONTACT_EMAIL_BACKEND',
-    'django.core.mail.backends.console.EmailBackend' if DEBUG
-    else 'django.core.mail.backends.smtp.EmailBackend',
-)
-CONTACT_EMAIL_HOST = os.environ.get('CONTACT_EMAIL_HOST', 'localhost')
-CONTACT_EMAIL_PORT = int(os.environ.get('CONTACT_EMAIL_PORT', 587))
-CONTACT_EMAIL_HOST_USER = os.environ.get('CONTACT_EMAIL_HOST_USER', '')
-CONTACT_EMAIL_HOST_PASSWORD = os.environ.get('CONTACT_EMAIL_HOST_PASSWORD', '')
-CONTACT_EMAIL_USE_TLS = os.environ.get('CONTACT_EMAIL_USE_TLS', '1') == '1'
-CONTACT_EMAIL_USE_SSL = os.environ.get('CONTACT_EMAIL_USE_SSL', '0') == '1'

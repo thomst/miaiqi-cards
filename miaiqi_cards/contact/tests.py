@@ -11,7 +11,7 @@ DATA = dict(email_address='visitor@example.com', subject='Hello', body='A messag
 
 @override_settings(
     CONTACT_RECIPIENT='owner@example.com',
-    CONTACT_EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
 )
 class ContactTests(TestCase):
     def setUp(self):
@@ -42,9 +42,9 @@ class ContactTests(TestCase):
         self.assertContains(response, 'class="error"')
 
     @override_settings(
-        CONTACT_EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend',
-        CONTACT_EMAIL_HOST='127.0.0.1',
-        CONTACT_EMAIL_PORT=1,
+        EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend',
+        EMAIL_HOST='127.0.0.1',
+        EMAIL_PORT=1,
     )
     def test_send_failure_shows_error(self):
         with self.assertLogs('miaiqi_cards.contact.renderers', level='ERROR'):
