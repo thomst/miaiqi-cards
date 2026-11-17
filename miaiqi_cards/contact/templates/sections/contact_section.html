@@ -1,0 +1,6 @@
+{% load sections %}
+
+<section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
+    <h2>{{ section.title }}</h2>
+    {{ contact_html }}
+</section>

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'miaiqi_cards.responsive_image',
     'miaiqi_cards.postcards',
     'miaiqi_cards.shop',
+    'miaiqi_cards.contact',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +156,20 @@ COMPRESS_FILTERS = {
         'compressor.filters.jsmin.JSMinFilter',
     ],
 }
+
+# Contact form
+# The contact messages are sent to CONTACT_RECIPIENT using the satellite
+# account configured by the CONTACT_EMAIL_* settings. They are independent of
+# django's default EMAIL_* settings.
+CONTACT_RECIPIENT = os.environ.get('CONTACT_RECIPIENT', '')
+CONTACT_EMAIL_BACKEND = os.environ.get(
+    'CONTACT_EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend' if DEBUG
+    else 'django.core.mail.backends.smtp.EmailBackend',
+)
+CONTACT_EMAIL_HOST = os.environ.get('CONTACT_EMAIL_HOST', 'localhost')
+CONTACT_EMAIL_PORT = int(os.environ.get('CONTACT_EMAIL_PORT', 587))
+CONTACT_EMAIL_HOST_USER = os.environ.get('CONTACT_EMAIL_HOST_USER', '')
+CONTACT_EMAIL_HOST_PASSWORD = os.environ.get('CONTACT_EMAIL_HOST_PASSWORD', '')
+CONTACT_EMAIL_USE_TLS = os.environ.get('CONTACT_EMAIL_USE_TLS', '1') == '1'
+CONTACT_EMAIL_USE_SSL = os.environ.get('CONTACT_EMAIL_USE_SSL', '0') == '1'

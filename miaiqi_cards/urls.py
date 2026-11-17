@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('miaiqi_cards.website.urls')),
     path('', include('miaiqi_cards.postcards.urls')),
     path('', include('miaiqi_cards.shop.urls')),
+    path('', include('miaiqi_cards.contact.urls')),
 ]
 
 if settings.DEBUG:

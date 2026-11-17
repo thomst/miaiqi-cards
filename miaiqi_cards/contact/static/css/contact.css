@@ -1,0 +1,71 @@
+/* Contact-Layout, same look as the shop's order form */
+
+div.contact {
+
+    margin-top: 3vh;
+    width: 100%;
+
+    & > p {
+        font-family: Ysabeau, sans serif;
+        font-size: 3vh;
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+    }
+
+    :is(div, input, textarea) {
+        font-family: Albert Sans, sans serif;
+        font-size: 3vh;
+    }
+
+    div.row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border-top: 2px solid #ccc;
+        border-bottom: 2px solid #ccc;
+    }
+
+    div.row ~ div.row {
+        border-top: 0;
+    }
+
+    div.row > div {
+        width: 100%;
+        border-right: 2px solid #ccc;
+    }
+
+    div.row > div:first-child {
+        border-left: 2px solid #ccc;
+    }
+
+    div.row :is(input, textarea) {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background-color: transparent;
+    }
+
+    div.row div:not(:has(input, textarea)),
+    div.row :is(input, textarea) {
+        padding: 3vh;
+    }
+
+    div.row textarea {
+        display: block;
+        resize: vertical;
+        text-align: left;
+    }
+
+    div.row :is(input[type="button"], input[type="submit"]) {
+        cursor: pointer;
+        background-color: aliceblue;
+    }
+
+    div.row :is(div, input) {
+        text-align: center;
+    }
+
+    div.row > div.error {
+        border: 2px solid red;
+    }
+}

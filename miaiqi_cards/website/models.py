@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from miaiqi_cards.postcards.models import GallerySection, SetsSection
+from miaiqi_cards.contact.models import ContactSection
 from miaiqi_cards.shop.models import ShopSection
 from miaiqi_cards.welcome.models import WelcomeSection
 from simple_page.models import Section, Page
@@ -33,7 +34,8 @@ class MiaiqiCardsPage(Page):
             TextSection,
             GallerySection,
             SetsSection,
-            ShopSection
+            ShopSection,
+            ContactSection,
         ],
         'footer': [FooterSection],
     }
