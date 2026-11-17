@@ -4,6 +4,6 @@
     {{ contact.confirmation_text|markdown_to_html }}
 
     <div class="row">
-        <div><input type="button" value="New" data-url="{% url 'contact-form' contact.id %}" data-action="new"></div>
+        <div><input type="button" value="New message" data-url="{% url 'contact-form' contact.id %}" data-action="new"></div>
     </div>
 </div>

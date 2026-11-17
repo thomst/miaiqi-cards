@@ -3,7 +3,7 @@ from django import forms
 
 class ContactForm(forms.Form):
     email_address = forms.EmailField(
-        widget=forms.TextInput(attrs={'placeholder': 'Email Adresse'}),
+        widget=forms.TextInput(attrs={'placeholder': 'Deine Email Adresse'}),
         )
     subject = forms.CharField(
         max_length=200,
