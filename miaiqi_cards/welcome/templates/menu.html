@@ -1,0 +1,7 @@
+{% load sections %}
+
+<ul class="menu">
+    {% for section, menu_class in menu %}
+        <a class="{{ menu_class }}" href="#{{ section|as_html_id }}"><li>{{ section.title }}</li></a>
+    {% endfor %}
+</ul>

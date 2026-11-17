@@ -37,10 +37,6 @@ class WelcomeRenderer(renderers.SectionRenderer):
             return self.section.themes.first()
 
     def get_context_data(self):
-        get_subclass = lambda s: Section.objects.get_subclass(pk=s.pk)
         context = super().get_context_data()
         context['theme'] = self.get_theme()
-        context['title_ref'] = get_subclass(self.section.title_ref)
-        context['subtitle_ref'] = get_subclass(self.section.subtitle_ref)
-        context['postcard_ref'] = get_subclass(self.section.postcard_ref)
         return context
