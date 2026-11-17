@@ -5,16 +5,16 @@ from .models import ContactSection
 from .renderers import ContactRenderer
 
 
-def get_renderer(request, contact_id):
-    contact = get_object_or_404(ContactSection, pk=contact_id)
+def get_renderer(request, section_id):
+    contact = get_object_or_404(ContactSection, pk=section_id)
     return ContactRenderer(contact, None, None, request)
 
 
 @require_http_methods(['GET'])
-def form_view(request, contact_id):
-    return HttpResponse(get_renderer(request, contact_id).get_form_html())
+def form_view(request, section_id):
+    return HttpResponse(get_renderer(request, section_id).get_form_html())
 
 
 @require_POST
-def submit_view(request, contact_id):
-    return HttpResponse(get_renderer(request, contact_id).submit())
+def submit_view(request, section_id):
+    return HttpResponse(get_renderer(request, section_id).submit())
