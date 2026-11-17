@@ -11,3 +11,4 @@ media/
 /.vscode/
 /my.cnf
 /backups/
+/email-env.sh
