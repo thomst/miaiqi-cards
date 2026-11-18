@@ -17,7 +17,7 @@
 
             // Set event handler on inputs and selects.
             row.querySelectorAll('input:not(.remove-form), select').forEach((el) => {
-                el.addEventListener('change', (event) => this.shop.updateCart(event));
+                el.addEventListener('change', (event) => this.shop.post(event));
             });
         }
 
@@ -57,7 +57,7 @@
 
     class Shop {
         // Actions available for the buttons via their data-action attribute.
-        static ACTIONS = ['addForm', 'checkout', 'order', 'confirmation'];
+        static ACTIONS = ['addForm', 'removeForm', 'get', 'post'];
 
         constructor () {
             this.formset = null;
@@ -72,7 +72,7 @@
             // Init the buttons.
             const buttons = document.querySelectorAll('div.shop div.row input[data-action]');
             for (const button of buttons) {
-                const action = button.dataset.action;
+                const action = button.dataset.action || 'post';
                 if (!Shop.ACTIONS.includes(action)) continue;
                 button.addEventListener('click', (event) => this[action](event));
             }
@@ -80,34 +80,16 @@
 
         // Actions
 
-        updateCart (event) {
-            this.#post(event);
-        }
-
         addForm () {
             this.formset.addForm();
         }
 
         removeForm (event) {
             this.formset.removeForm(event);
-            this.#post(event);
+            this.post(event);
         }
 
-        checkout (event) {
-            this.#post(event);
-        }
-
-        order (event) {
-            this.#get(event);
-        }
-
-        confirmation (event) {
-            this.#post(event);
-        }
-
-        // Internals
-
-        #get (event) {
+        get (event) {
             this.#ajaxCall(event, {
                 method: "GET",
                 credentials: 'same-origin',
@@ -115,7 +97,7 @@
             });
         }
 
-        #post (event) {
+        post (event) {
             const form = document.querySelector('div.shop > form');
             const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
             this.#ajaxCall(event, {
@@ -125,6 +107,8 @@
                 headers: {'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrftoken}
             });
         }
+
+        // Internals
 
         #ajaxCall (event, data) {
             event.preventDefault();
