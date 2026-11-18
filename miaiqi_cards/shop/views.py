@@ -19,6 +19,7 @@ def update_cart(request, shop_id):
 def order_view(request, shop_id):
     section = get_object_or_404(ShopSection, pk=shop_id)
     shop = ShopRenderer(section, request)
+    shop.confirmation_cart = None
     return HttpResponse(shop.get_order_html())
 
 
@@ -44,6 +45,7 @@ def confirmation_view(request, shop_id):
     if email_form.is_valid():
         # TODO: Send confirmation email.
         shop.cart.checkout()
+        shop.confirmation_cart = shop.cart
         return HttpResponse(shop.get_confirmation_html())
     else:
         return HttpResponse(shop.get_checkout_html(email_form))

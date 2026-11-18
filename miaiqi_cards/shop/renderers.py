@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from simple_page import renderers
 from cart.cart import Cart
+from cart.models import Cart as CartModel
 from . import models
 from . import forms
 
@@ -21,6 +22,7 @@ class ShopRenderer(renderers.SectionRenderer):
     ORDER_STATE = 'order'
     CHECKOUT_STATE = 'checkout'
     CONFIRMATION_STATE = 'confirmation'
+    CONFIRMATION_CART_SESSION_KEY = 'shop-confirmation-cart-id'
 
     class Media:
         css = dict(all=['css/shop.css'])
@@ -29,6 +31,25 @@ class ShopRenderer(renderers.SectionRenderer):
     @property
     def state(self):
         return self.request.session.get('shop-state')
+
+    @property
+    def confirmation_cart(self):
+        cart_id = self.request.session.get(self.CONFIRMATION_CART_SESSION_KEY)
+        try:
+            checked_out_cart = CartModel.objects.get(pk=cart_id, checked_out=True)
+        except CartModel.DoesNotExist:
+            return None
+        else:
+            cart = Cart(self.request)
+            cart.cart = checked_out_cart
+            return cart
+
+    @confirmation_cart.setter
+    def confirmation_cart(self, cart):
+        if cart is None:
+            self.request.session.pop(self.CONFIRMATION_CART_SESSION_KEY, None)
+        else:
+            self.request.session[self.CONFIRMATION_CART_SESSION_KEY] = cart.cart.pk
 
     @cached_property
     def cart(self):
@@ -78,7 +99,10 @@ class ShopRenderer(renderers.SectionRenderer):
 
     @set_state(CONFIRMATION_STATE)
     def get_confirmation_html(self):
-        context = dict(shop=self.section, cart=self.cart)
+        cart = self.confirmation_cart
+        if cart is None:
+            cart = self.cart
+        context = dict(shop=self.section, cart=cart)
         return render_to_string('shop/confirmation.html', context, self.request)
 
     def get_html(self):
