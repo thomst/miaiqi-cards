@@ -46,63 +46,43 @@ class ShopRenderer(renderers.SectionRenderer):
     def update_cart(self):
         formset = self.formset_class(self.request.POST)
         data = list()
-        print(formset.forms)
         for form in formset.forms:
             if form.is_valid():
                 data.append(form.cleaned_data)
         self.setup_cart(data)
 
+    def update_product(self, product_id, quantity):
+        if self.cart.has_product(product_id) and not quantity:
+            self.cart.remove_product(product_id)
+        elif self.cart.has_product(product_id) and quantity:
+            self.cart.update_product(product_id, quantity)
+        elif not self.cart.has_product(product_id) and quantity:
+            self.cart.add_product(product_id, quantity)
+
     @set_state(ORDER_STATE)
-    def get_order_html(self):
-        if 'new' in self.request.GET:
-            formset = self.formset_class()
-        elif 'checkout' in self.request.GET:
-            formset = self.formset_class(self.request.POST)
-        elif not self.cart.is_empty():
+    def get_order_html(self, formset=None):
+        if not formset and not self.cart.is_empty():
             initial = [dict(product=i.product.pk, quantity=i.quantity) for i in self.cart]
             formset = self.formset_class(initial=initial)
         else:
-            formset = self.formset_class()
+            formset = formset or self.formset_class()
+
         context = dict(shop=self.section, formset=formset)
         return render_to_string('shop/order.html', context, self.request)
 
     @set_state(CHECKOUT_STATE)
-    def get_checkout_html(self):
-        if 'checkout' in self.request.GET:
-            formset = self.formset_class(self.request.POST)
-            if formset.is_valid():
-                self.setup_cart(formset.cleaned_data)
-                email_form = forms.EmailForm()
-                context = dict(shop=self.section, cart=self.cart, email_form=email_form)
-                return render_to_string('shop/checkout.html', context, self.request)
-            else:
-                return self.get_order_html()
-        elif 'buy' in self.request.GET:
-            email_form = forms.EmailForm(self.request.POST)
-            context = dict(shop=self.section, cart=self.cart, email_form=email_form)
-            return render_to_string('shop/checkout.html', context, self.request)
-        else:
-            email_form = forms.EmailForm()
-            context = dict(shop=self.section, cart=self.cart, email_form=email_form)
-            return render_to_string('shop/checkout.html', context, self.request)
+    def get_checkout_html(self, email_form=None):
+        email_form = email_form or forms.EmailForm()
+        context = dict(shop=self.section, cart=self.cart, email_form=email_form)
+        return render_to_string('shop/checkout.html', context, self.request)
 
     @set_state(CONFIRMATION_STATE)
     def get_confirmation_html(self):
-        if 'buy' in self.request.GET:
-            email_form = forms.EmailForm(self.request.POST)
-            if email_form.is_valid():
-                # TODO: Send confirmation email.
-                self.cart.checkout()
-                context = dict(shop=self.section, cart=self.cart)
-                return render_to_string('shop/confirmation.html', context, self.request)
-            else:
-                return self.get_checkout_html()
-        else:
-            return self.get_order_html()
-
+        context = dict(shop=self.section, cart=self.cart)
+        return render_to_string('shop/confirmation.html', context, self.request)
 
     def get_html(self):
-        if self.state == self.ORDER_STATE or not self.state:
+        if not self.state or self.state == self.ORDER_STATE:
             return self.get_order_html()
         if self.state == self.CHECKOUT_STATE:
             return self.get_checkout_html()
