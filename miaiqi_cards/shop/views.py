@@ -8,44 +8,42 @@ from . import forms
 
 @require_POST
 def update_cart(request, shop_id):
-    shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, None, None, request)
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
 
-    renderer.update_cart()
+    shop.update_cart()
     return HttpResponse(status=204)
 
 
 @require_GET
 def order_view(request, shop_id):
-    shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, None, None, request)
-    return HttpResponse(renderer.get_order_html())
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
+    return HttpResponse(shop.get_order_html())
 
 
 @require_POST
 def checkout_view(request, shop_id):
-    shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, None, None, request)
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
 
-    formset = renderer.formset_class(request.POST)
+    formset = shop.formset_class(request.POST)
     if formset.is_valid():
-        renderer.setup_cart(formset.cleaned_data)
-        return HttpResponse(renderer.get_checkout_html())
+        shop.setup_cart(formset.cleaned_data)
+        return HttpResponse(shop.get_checkout_html())
     else:
-        return HttpResponse(renderer.get_order_html(formset))
+        return HttpResponse(shop.get_order_html(formset))
 
 
 @require_POST
 def confirmation_view(request, shop_id):
-    shop = get_object_or_404(ShopSection, pk=shop_id)
-    renderer = ShopRenderer(shop, None, None, request)
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
 
     email_form = forms.EmailForm(request.POST)
     if email_form.is_valid():
         # TODO: Send confirmation email.
-        renderer.cart.checkout()
-        return HttpResponse(renderer.get_confirmation_html())
+        shop.cart.checkout()
+        return HttpResponse(shop.get_confirmation_html())
     else:
-        return HttpResponse(renderer.get_checkout_html(email_form))
-
-
+        return HttpResponse(shop.get_checkout_html(email_form))
