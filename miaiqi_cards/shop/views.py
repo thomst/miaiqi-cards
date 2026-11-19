@@ -32,10 +32,17 @@ def update_product(request, shop_id, product_id):
 
 
 @require_GET
-def order_view(request, shop_id):
+def description_view(request, shop_id):
     section = get_object_or_404(ShopSection, pk=shop_id)
     shop = ShopRenderer(section, request)
     shop.confirmation_cart = None
+    return HttpResponse(shop.get_description_html())
+
+
+@require_GET
+def order_view(request, shop_id):
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
     return HttpResponse(shop.get_order_html())
 
 

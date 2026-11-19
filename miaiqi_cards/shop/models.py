@@ -8,6 +8,7 @@ from miaiqi_cards.postcards.models import Postcard, PostcardSet
 
 class ShopSection(Section):
     title = models.CharField(max_length=100)
+    description_text = models.TextField()
     order_text = models.TextField(blank=True)
     checkout_text = models.TextField(blank=True)
     confirmation_text = models.TextField(blank=True)

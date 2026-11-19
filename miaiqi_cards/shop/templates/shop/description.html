@@ -1,0 +1,10 @@
+{% load markdown %}
+
+<div class="shop">
+    {{ shop.description_text|markdown_to_html }}
+
+    <div class="row">
+        <div><input type="button" value="To the shop" data-url="{% url 'shop-order' shop.id %}" data-method="get"></div>
+    </div>
+
+</div>

@@ -20,6 +20,7 @@ def set_state(state):
 
 @renderers.register(models.ShopSection)
 class ShopRenderer(renderers.SectionRenderer):
+    DESCRIPTION_STATE = 'description'
     ORDER_STATE = 'order'
     CHECKOUT_STATE = 'checkout'
     CONFIRMATION_STATE = 'confirmation'
@@ -84,6 +85,11 @@ class ShopRenderer(renderers.SectionRenderer):
         elif quantity:
             self.cart.add(product, unit_price=product.price, quantity=quantity)
 
+    @set_state(DESCRIPTION_STATE)
+    def get_description_html(self):
+        context = dict(shop=self.section)
+        return render_to_string('shop/description.html', context, self.request)
+
     @set_state(ORDER_STATE)
     def get_order_html(self, formset=None):
         if not formset and not self.cart.is_empty():
@@ -110,7 +116,9 @@ class ShopRenderer(renderers.SectionRenderer):
         return render_to_string('shop/confirmation.html', context, self.request)
 
     def get_html(self):
-        if not self.state or self.state == self.ORDER_STATE:
+        if not self.state or self.state == self.DESCRIPTION_STATE:
+            return self.get_description_html()
+        if self.state == self.ORDER_STATE:
             return self.get_order_html()
         if self.state == self.CHECKOUT_STATE:
             return self.get_checkout_html()
