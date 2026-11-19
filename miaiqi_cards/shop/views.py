@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST, require_GET
 from django.shortcuts import get_object_or_404
 from .renderers import ShopRenderer
@@ -13,6 +13,22 @@ def update_cart(request, shop_id):
 
     shop.update_cart()
     return HttpResponse(status=204)
+
+
+@require_GET
+def update_product(request, shop_id, product_id):
+    try:
+        quantity = int(request.GET['quantity'])
+    except (KeyError, ValueError):
+        return HttpResponseBadRequest('A numeric quantity is required.')
+    if quantity < 0:
+        return HttpResponseBadRequest('The quantity must not be negative.')
+
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
+
+    shop.update_product(product_id, quantity)
+    return HttpResponse(shop.get_order_html())
 
 
 @require_GET
