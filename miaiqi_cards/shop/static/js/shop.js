@@ -13,7 +13,9 @@
         }
         initEventHandlers(row) {
             // Set event handler on remove button.
-            row.querySelector("input.remove-form").addEventListener('click', (event) => this.shop.removeForm(event));
+            row.querySelector("input.remove-form").addEventListener(
+                'click', (event) => this.shop.removeForm(event)
+            );
 
             // Set event handler on inputs and selects.
             row.querySelectorAll('input:not(.remove-form), select').forEach((el) => {
@@ -57,11 +59,14 @@
 
     class Shop {
         // Actions available for the buttons via their data-action attribute.
-        static ACTIONS = ['addForm', 'removeForm', 'get', 'post'];
+        static ACTIONS = ['addForm', 'get', 'post'];
 
         constructor () {
             this.formset = null;
-            document.addEventListener('DOMContentLoaded', () => this.init());
+            document.addEventListener('DOMContentLoaded', () => {
+                this.init();
+                this.initProductWidgets();
+            });
         }
 
         init () {
@@ -78,6 +83,15 @@
             }
         }
 
+        // The product widgets live outside of the shop div, so they are not replaced
+        // by #update and must be initialized only once.
+        initProductWidgets () {
+            const buttons = document.querySelectorAll('.product-widget button');
+            for (const button of buttons) {
+                button.addEventListener('click', (event) => this.updateProduct(event));
+            }
+        }
+
         // Actions
 
         addForm () {
@@ -85,55 +99,78 @@
         }
 
         removeForm (event) {
+            const url = this.#getUrl(event);
             this.formset.removeForm(event);
-            this.post(event);
+            this.post(event, url);
         }
 
-        get (event) {
-            this.#ajaxCall(event, {
-                method: "GET",
-                credentials: 'same-origin',
-                headers: {'X-Requested-With': 'XMLHttpRequest'}
+        updateProduct (event) {
+            // The data-delta of the button changes the quantity of the product. The
+            // new quantity is passed as get parameter to the update_product view
+            // given by the data-url of the widget.
+            const button = event.currentTarget;
+            const input = button.closest('.product-widget').querySelector('input');
+            const quantity = Math.max((parseInt(input.value) || 0) + parseInt(button.dataset.delta), 0);
+            const url = this.#getUrl(event) + '?quantity=' + quantity;
+            this.get(event, url).then((success) => {
+                if (success) input.value = quantity;
             });
         }
 
-        post (event) {
+        get (event, url = null) {
+            return this.#ajaxCall(event, {
+                method: "GET",
+                credentials: 'same-origin',
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            }, url);
+        }
+
+        post (event, url = null) {
             const form = document.querySelector('div.shop > form');
             const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
-            this.#ajaxCall(event, {
+            return this.#ajaxCall(event, {
                 method: "POST",
                 credentials: 'same-origin',
                 body: new FormData(form),
                 headers: {'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrftoken}
-            });
+            }, url);
         }
 
         // Internals
 
-        #ajaxCall (event, data) {
+        #getUrl (event) {
+            // Take the url from the closest parent element with a data-url
+            // attribute.
+            return event.target.closest('[data-url]')?.dataset.url;
+        }
+
+        // Returns a promise resolving to true on success and to false on failure.
+        #ajaxCall (event, data, url = null) {
             event.preventDefault();
 
-            // Either take the url dataset of the target element or use the default
-            // url set on the form element.
-            const formUrl = document.querySelector('div.shop form')?.dataset.url;
-            const url = event.target.dataset.url || formUrl;
-            fetch(url, data)
-            .then(function(response) {
+            url = url || this.#getUrl(event);
+            return fetch(url, data)
+            .then((response) => {
                 if (!response.ok) throw new Error(response.text());
                 return response.text();
             })
-            .then((html) => this.#update(html))
-            .catch(function() {
+            .then((html) => {
+                this.#update(html);
+                return true;
+            })
+            .catch(() => {
                 alert('Error reloading the formset.');
+                return false;
             });
         }
 
         #update (html) {
             // If we got html we replace the whole shop div and reinitialize it.
-            if (html) {
+            const shop = document.querySelector('div.shop');
+            if (html && shop) {
                 const wrapper = document.createElement('div');
                 wrapper.innerHTML = html.trim();
-                document.querySelector('div.shop').replaceWith(wrapper.firstChild);
+                shop.replaceWith(wrapper.firstChild);
                 this.init();
             }
         }
