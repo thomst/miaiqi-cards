@@ -91,7 +91,6 @@ class SetsSection(Section):
     slug = models.SlugField(unique=True)
     description = models.TextField(blank=True)
 
-
     @property
     def postcard_sets(self):
         return PostcardSet.objects.all()
