@@ -16,6 +16,15 @@ class ShopSection(Section):
         return self.title
 
 
+class ProductManager(models.Manager):
+    def get_from_content(self, content):
+        """Return the product of a postcard or postcard set."""
+        return self.get(
+            content_type=ContentType.objects.get_for_model(content),
+            object_id=content.pk,
+        )
+
+
 class Product(models.Model):
     POSTCARD_PRICE = Decimal("2.20")
     SET_DISCOUNT = POSTCARD_PRICE / 6
@@ -30,6 +39,8 @@ class Product(models.Model):
     )
     object_id = models.PositiveBigIntegerField()
     content = GenericForeignKey('content_type', 'object_id')
+
+    objects = ProductManager()
 
     @property
     def price(self):
