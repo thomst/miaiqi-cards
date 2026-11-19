@@ -41,5 +41,19 @@ class MiaiqiCardsPage(Page):
     }
     description = models.TextField(blank=True)
 
+    def get_section(self, section_class):
+        for section in self.sections.select_subclasses():
+            if isinstance(section, section_class):
+                return section
+        return None
+
+    @property
+    def shop_section(self):
+        return self.get_section(ShopSection)
+
+    @property
+    def contact_section(self):
+        return self.get_section(ContactSection)
+
     def get_absolute_url(self):
         return reverse('page')
