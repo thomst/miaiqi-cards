@@ -19,8 +19,8 @@
         </div>
 
         <div class="row">
-            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.id %}" data-action="get"></div>
-            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.id %}" data-action="post"></div>
+            <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.id %}" data-method="get"></div>
+            <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.id %}"></div>
         </div>
     </form>
 

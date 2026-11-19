@@ -1,180 +1,155 @@
 (function() {
     "use strict";
 
-    class Formset {
-        constructor (form, shop) {
-            this.form = form;
-            this.shop = shop;
-            this.totalInput = form.querySelector('input[id$="-TOTAL_FORMS"]');
-            this.total = parseInt(this.totalInput.value);
-            this.form.querySelectorAll('div.form').forEach((el => {
-                this.initEventHandlers(el);
-            }))
-        }
-        initEventHandlers(row) {
-            // Set event handler on remove button.
-            row.querySelector("input.remove-form").addEventListener(
-                'click', (event) => this.shop.removeForm(event)
-            );
+    const showError = () => alert('Error reloading the shop.');
 
-            // Set event handler on inputs and selects.
-            row.querySelectorAll('input:not(.remove-form), select').forEach((el) => {
-                el.addEventListener('change', (event) => this.shop.post(event));
+
+    // Requests to the shop views. They return a promise resolving to the response text.
+    class Ajax {
+        static get (url) {
+            return Ajax.#request(url, {method: "GET"});
+        }
+
+        static post (url, form) {
+            const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+            return Ajax.#request(url, {
+                method: "POST",
+                body: new FormData(form),
+                headers: {'X-CSRFToken': csrftoken}
             });
         }
 
-        updateFormCount () {
-            this.form.querySelectorAll('div.form').forEach((div, index) => {
-                div.querySelectorAll('[name^="form-"]').forEach(element => {
-                    element.name = element.name.replace(/form-\d/, `form-${index}`);
-                    element.id = element.id.replace(/form-\d/, `form-${index}`);
-                });
+        static #request (url, options) {
+            options.credentials = 'same-origin';
+            options.headers = {'X-Requested-With': 'XMLHttpRequest', ...options.headers};
+            return fetch(url, options).then((response) => {
+                if (!response.ok) throw new Error(response.statusText);
+                return response.text();
             });
-        }
-        addForm () {
-            this.total++;
-            this.totalInput.value = this.total;
-            const firstForm = this.form.querySelector('div:nth-child(1 of .form)');
-            const lastForm = this.form.querySelector('div:nth-last-child(1 of .form)');
-            const newForm = firstForm.cloneNode(true);
-            newForm.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
-            this.initEventHandlers(newForm);
-            lastForm.after(newForm);
-            this.updateFormCount();
-        }
-        removeForm (event) {
-            if (this.total == 1) {
-                const form = event.target.parentNode.parentNode;
-                form.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
-                form.querySelector('input[name^="form-"]').value = '';
-            } else {
-                this.total--;
-                this.totalInput.value = this.total;
-                event.target.parentNode.parentNode.remove();
-                this.updateFormCount();
-            }
         }
     }
 
 
-    class Shop {
-        // Actions available for the buttons via their data-action attribute.
-        static ACTIONS = ['addForm', 'get', 'post'];
+    // Everything that belongs to the order form. The handlers are delegated to the
+    // document, so they survive the replacement of the shop html.
+    class Formset {
+        static FORM = 'div.shop form:has(div.form)';
 
         constructor () {
-            this.formset = null;
-            document.addEventListener('DOMContentLoaded', () => {
-                this.init();
-                this.initProductWidgets();
+            document.addEventListener('click', (event) => this.#onClick(event));
+            document.addEventListener('change', (event) => this.#onChange(event));
+        }
+
+        addForm (form) {
+            const rows = form.querySelectorAll('div.form');
+            const newRow = rows[0].cloneNode(true);
+            newRow.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
+            rows[rows.length - 1].after(newRow);
+            this.#updateFormCount(form);
+        }
+
+        removeForm (form, row) {
+            if (form.querySelectorAll('div.form').length == 1) {
+                row.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
+            } else {
+                row.remove();
+                this.#updateFormCount(form);
+            }
+            this.save(form);
+        }
+
+        // The cart is saved on the server without reloading the shop.
+        save (form) {
+            Ajax.post(form.dataset.url, form).catch(showError);
+        }
+
+        #updateFormCount (form) {
+            const rows = form.querySelectorAll('div.form');
+            form.querySelector('input[id$="-TOTAL_FORMS"]').value = rows.length;
+            rows.forEach((row, index) => {
+                row.querySelectorAll('[name^="form-"]').forEach(element => {
+                    element.name = element.name.replace(/form-\d+/, `form-${index}`);
+                    element.id = element.id.replace(/form-\d+/, `form-${index}`);
+                });
             });
         }
 
-        init () {
-            // Init the formset.
-            const form = document.querySelector('div.shop form:has(div.form)');
-            this.formset = form ? new Formset(form, this) : null;
-
-            // Init the buttons.
-            const buttons = document.querySelectorAll('div.shop div.row input[data-action]');
-            for (const button of buttons) {
-                const action = button.dataset.action || 'post';
-                if (!Shop.ACTIONS.includes(action)) continue;
-                button.addEventListener('click', (event) => this[action](event));
+        #onClick (event) {
+            const button = event.target.closest(`${Formset.FORM} input[type="button"]`);
+            if (!button) return;
+            const form = button.closest('form');
+            if (button.classList.contains('add-form')) {
+                this.addForm(form);
+            } else if (button.classList.contains('remove-form')) {
+                this.removeForm(form, button.closest('div.form'));
             }
         }
 
-        // The product widgets live outside of the shop div, so they are not replaced
-        // by #update and must be initialized only once.
-        initProductWidgets () {
-            const buttons = document.querySelectorAll('.product-widget button');
-            for (const button of buttons) {
-                button.addEventListener('click', (event) => this.updateProduct(event));
-            }
+        #onChange (event) {
+            const row = event.target.closest(`${Formset.FORM} div.form`);
+            if (row) this.save(row.closest('form'));
         }
+    }
 
-        // Actions
 
-        addForm () {
-            this.formset.addForm();
-        }
-
-        removeForm (event) {
-            const url = this.#getUrl(event);
-            this.formset.removeForm(event);
-            this.post(event, url);
-        }
-
-        updateProduct (event) {
-            // The data-delta of the button changes the quantity of the product. The
-            // new quantity is passed as get parameter to the update_product view
-            // given by the data-url of the widget.
-            const button = event.currentTarget;
-            const input = button.closest('.product-widget').querySelector('input');
-            const quantity = Math.max((parseInt(input.value) || 0) + parseInt(button.dataset.delta), 0);
-            const url = this.#getUrl(event) + '?quantity=' + quantity;
-            this.get(event, url).then((success) => {
-                if (success) input.value = quantity;
+    // Replaces the shop html and loads the next step of the shop by its buttons.
+    class Shop {
+        constructor () {
+            document.addEventListener('click', (event) => {
+                const button = event.target.closest('div.shop input[data-url]');
+                if (button) this.load(button);
             });
         }
 
-        get (event, url = null) {
-            return this.#ajaxCall(event, {
-                method: "GET",
-                credentials: 'same-origin',
-                headers: {'X-Requested-With': 'XMLHttpRequest'}
-            }, url);
+        // The button's data-url is requested by get if its data-method is "get" and
+        // otherwise by post of the surrounding form.
+        load (button) {
+            const url = button.dataset.url;
+            const request = button.dataset.method === 'get'
+                ? Ajax.get(url)
+                : Ajax.post(url, button.closest('form'));
+            return request.then((html) => this.update(html)).catch(showError);
         }
 
-        post (event, url = null) {
-            const form = document.querySelector('div.shop > form');
-            const csrftoken = form.querySelector('[name=csrfmiddlewaretoken]').value;
-            return this.#ajaxCall(event, {
-                method: "POST",
-                credentials: 'same-origin',
-                body: new FormData(form),
-                headers: {'X-Requested-With': 'XMLHttpRequest', 'X-CSRFToken': csrftoken}
-            }, url);
-        }
-
-        // Internals
-
-        #getUrl (event) {
-            // Take the url from the closest parent element with a data-url
-            // attribute.
-            return event.target.closest('[data-url]')?.dataset.url;
-        }
-
-        // Returns a promise resolving to true on success and to false on failure.
-        #ajaxCall (event, data, url = null) {
-            event.preventDefault();
-
-            url = url || this.#getUrl(event);
-            return fetch(url, data)
-            .then((response) => {
-                if (!response.ok) throw new Error(response.text());
-                return response.text();
-            })
-            .then((html) => {
-                this.#update(html);
-                return true;
-            })
-            .catch(() => {
-                alert('Error reloading the formset.');
-                return false;
-            });
-        }
-
-        #update (html) {
-            // If we got html we replace the whole shop div and reinitialize it.
+        update (html) {
+            // Replace the whole shop div.
             const shop = document.querySelector('div.shop');
             if (html && shop) {
                 const wrapper = document.createElement('div');
                 wrapper.innerHTML = html.trim();
                 shop.replaceWith(wrapper.firstChild);
-                this.init();
             }
         }
     }
 
-    window.shop = new Shop();
+
+    // The widget changes the quantity of a product in the cart and updates the shop.
+    class ProductWidget {
+        constructor (shop) {
+            this.shop = shop;
+            document.addEventListener('click', (event) => {
+                const button = event.target.closest('.product-widget button');
+                if (button) this.changeQuantity(button);
+            });
+        }
+
+        // The data-delta of the button changes the quantity of the product. The new
+        // quantity is passed as get parameter to the update_product view given by
+        // the data-url of the widget.
+        changeQuantity (button) {
+            const widget = button.closest('.product-widget');
+            const input = widget.querySelector('input');
+            const quantity = Math.max((parseInt(input.value) || 0) + parseInt(button.dataset.delta), 0);
+            return Ajax.get(`${widget.dataset.url}?quantity=${quantity}`)
+                .then((html) => {
+                    this.shop.update(html);
+                    input.value = quantity;
+                })
+                .catch(showError);
+        }
+    }
+
+    const shop = new Shop();
+    new Formset();
+    new ProductWidget(shop);
 })();

@@ -23,8 +23,8 @@
         {% endfor %}
 
         <div class="row">
-            <div><input type="button" value="Add" data-action="addForm"></div>
-            <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.id %}" data-action="post"></div>
+            <div><input class="add-form" type="button" value="Add"></div>
+            <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.id %}"></div>
         </div>
 
     </form>
