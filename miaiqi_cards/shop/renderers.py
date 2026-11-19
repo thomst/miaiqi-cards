@@ -73,6 +73,10 @@ class ShopRenderer(renderers.SectionRenderer):
                 data.append(form.cleaned_data)
         self.setup_cart(data)
 
+    def get_quantities(self):
+        """Return the quantities of the cart by the ids of their products."""
+        return {item.object_id: item.quantity for item in self.cart}
+
     def update_product(self, product_id, quantity):
         product = get_object_or_404(models.Product, pk=product_id)
         if product in self.cart:

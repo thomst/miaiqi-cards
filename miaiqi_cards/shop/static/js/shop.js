@@ -35,7 +35,8 @@
     class Formset {
         static FORM = 'div.shop form:has(div.form)';
 
-        constructor () {
+        constructor (widgets) {
+            this.widgets = widgets;
             document.addEventListener('click', (event) => this.#onClick(event));
             document.addEventListener('change', (event) => this.#onChange(event));
         }
@@ -58,9 +59,12 @@
             this.save(form);
         }
 
-        // The cart is saved on the server without reloading the shop.
+        // The cart is saved on the server without reloading the shop. The server
+        // answers with the quantities of the cart to keep the widgets in sync.
         save (form) {
-            Ajax.post(form.dataset.url, form).catch(showError);
+            return Ajax.post(form.dataset.url, form)
+                .then((text) => this.widgets.sync(JSON.parse(text)))
+                .catch(showError);
         }
 
         #updateFormCount (form) {
@@ -133,6 +137,14 @@
             });
         }
 
+        // Set the quantity of every widget to the one of its product in the given
+        // quantities, which are keyed by product id. Missing products count as 0.
+        sync (quantities) {
+            document.querySelectorAll('.product-widget').forEach((widget) => {
+                widget.querySelector('input').value = quantities[widget.dataset.product] || 0;
+            });
+        }
+
         // The data-delta of the button changes the quantity of the product. The new
         // quantity is passed as get parameter to the update_product view given by
         // the data-url of the widget.
@@ -150,6 +162,6 @@
     }
 
     const shop = new Shop();
-    new Formset();
-    new ProductWidget(shop);
+    const widgets = new ProductWidget(shop);
+    new Formset(widgets);
 })();

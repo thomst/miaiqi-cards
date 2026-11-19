@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.shortcuts import get_object_or_404
 from .renderers import ShopRenderer
@@ -12,7 +12,7 @@ def update_cart(request, shop_id):
     shop = ShopRenderer(section, request)
 
     shop.update_cart()
-    return HttpResponse(status=204)
+    return JsonResponse(shop.get_quantities())
 
 
 @require_GET
