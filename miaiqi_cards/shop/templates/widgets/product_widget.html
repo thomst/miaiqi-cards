@@ -1,0 +1,7 @@
+{% if product %}
+<span class="product-widget" data-product="{{ product.pk }}" data-url="{% url 'update-product' shop.pk product.pk %}">
+    <button type="button" class="product-minus" data-delta="-1" aria-label="Remove one">&minus;</button>
+    <input type="number" class="product-quantity" value="{{ quantity }}" min="0" readonly aria-label="Quantity">
+    <button type="button" class="product-plus" data-delta="1" aria-label="Add one">+</button>
+</span>
+{% endif %}
