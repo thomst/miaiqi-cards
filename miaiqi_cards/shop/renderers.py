@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.forms import formset_factory, ModelChoiceField
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
@@ -73,12 +74,11 @@ class ShopRenderer(renderers.SectionRenderer):
         self.setup_cart(data)
 
     def update_product(self, product_id, quantity):
-        if self.cart.has_product(product_id) and not quantity:
-            self.cart.remove_product(product_id)
-        elif self.cart.has_product(product_id) and quantity:
-            self.cart.update_product(product_id, quantity)
-        elif not self.cart.has_product(product_id) and quantity:
-            self.cart.add_product(product_id, quantity)
+        product = get_object_or_404(models.Product, pk=product_id)
+        if product in self.cart:
+            self.cart.update(product, quantity, unit_price=product.price)
+        elif quantity:
+            self.cart.add(product, unit_price=product.price, quantity=quantity)
 
     @set_state(ORDER_STATE)
     def get_order_html(self, formset=None):
