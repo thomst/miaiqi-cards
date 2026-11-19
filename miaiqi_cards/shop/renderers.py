@@ -1,5 +1,5 @@
+from django.forms import formset_factory
 from django.shortcuts import get_object_or_404
-from django.forms import formset_factory, ModelChoiceField
 from django.template.loader import render_to_string
 from django.utils.functional import cached_property
 from simple_page import renderers
