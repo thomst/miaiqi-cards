@@ -4,27 +4,30 @@
     <h2>{{ section.title }}</h2>
     <div>
         {% for postcard_set in section.postcard_sets.all %}
+            {% url 'postcard_set' section.slug postcard_set.slug as set_href %}
             <div class="postcard-set">
-                <a href="{% url 'postcard_set' section.slug postcard_set.slug %}">
-                    {% postcards_grid postcard_set.postcards.all as postcards %}
-                    <div class="postcard-stack" style="--count: {{ postcards|length }};">
-                        {% for postcard in postcards %}
-                            {% if postcard %}
-                                <figure>
-                                    <img
-                                        class="postcard"
-                                        src="{{ postcard.image.small.url }}"
-                                        alt="{{ postcard.title }}">
-                                </figure>
-                            {% else %}
-                                <figure class="postcard-placeholder"></figure>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </a>
-                <div class="caption">
-                    <h3><a href="{% url 'postcard_set' section.slug postcard_set.slug %}">{{ postcard_set.title }}</a></h3>
+                <div>
                     {% if page.shop_section %}{% product_widget postcard_set %}{% endif %}
+                    <a href="{{ set_href }}">
+                        {% postcards_grid postcard_set.postcards.all as postcards %}
+                        <div class="postcard-stack" style="--count: {{ postcards|length }};">
+                            {% for postcard in postcards %}
+                                {% if postcard %}
+                                    <figure>
+                                        <img
+                                            class="postcard"
+                                            src="{{ postcard.image.small.url }}"
+                                            alt="{{ postcard.title }}">
+                                    </figure>
+                                {% else %}
+                                    <figure class="postcard-placeholder"></figure>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </a>
+                </div>
+                <div class="caption">
+                    <a href="{{ set_href }}"><h3>{{ postcard_set.title }}</h3></a>
                 </div>
             </div>
         {% endfor %}

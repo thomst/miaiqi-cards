@@ -28,15 +28,14 @@ section.gallery-section, section.postcard-set {
         background-color: var(--background-color);
     }
 
-    figure {
-        width: min-content;
+    figure > div {
+        position: relative;
     }
 
-    figcaption {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5em;
+    figure > div > .product-widget {
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 
     nav a {

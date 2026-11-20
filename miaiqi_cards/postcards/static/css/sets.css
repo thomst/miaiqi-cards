@@ -42,11 +42,14 @@ section.sets-section {
         background-color: var(--background-color);
     }
 
-    .caption {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5em;
+    .postcard-set > div {
+        position: relative;
+    }
+
+    .postcard-set > div > .product-widget {
+        position: absolute;
+        bottom: 0;
+        right: 0;
     }
 
     h3 {

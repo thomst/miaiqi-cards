@@ -9,18 +9,20 @@
         {% for postcard in section.postcards.all %}
             {% postcard_url section postcard url_params as postcard_href %}
             <figure>
-                <a href="{{ postcard_href }}">
-                    <img
-                        class="postcard"
-                        src="{{ postcard.image.medium.url }}"
-                        srcset="{{ postcard.image.srcset }}"
-                        sizes="(max-width: 680px) 80vw, 22vw"
-                        fetchpriority="high"
-                        alt="{{ postcard.title }}">
-                </a>
+                <div>
+                    {% if page.shop_section %}{% product_widget postcard %}{% endif %}
+                    <a href="{{ postcard_href }}">
+                        <img
+                            class="postcard"
+                            src="{{ postcard.image.medium.url }}"
+                            srcset="{{ postcard.image.srcset }}"
+                            sizes="(max-width: 680px) 80vw, 22vw"
+                            fetchpriority="high"
+                            alt="{{ postcard.title }}">
+                    </a>
+                </div>
                 <figcaption>
                     <a href="{{ postcard_href }}">{{ postcard.title }}</a>
-                    {% if page.shop_section %}{% product_widget postcard %}{% endif %}
                 </figcaption>
             </figure>
         {% endfor %}
