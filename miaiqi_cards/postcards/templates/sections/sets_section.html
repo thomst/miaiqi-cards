@@ -1,4 +1,4 @@
-{% load sections sets %}
+{% load sections sets product %}
 
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
@@ -21,8 +21,11 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <h3>{{ postcard_set.title }}</h3>
                 </a>
+                <div class="caption">
+                    <h3><a href="{% url 'postcard_set' section.slug postcard_set.slug %}">{{ postcard_set.title }}</a></h3>
+                    {% if page.shop_section %}{% product_widget postcard_set %}{% endif %}
+                </div>
             </div>
         {% endfor %}
     </div>

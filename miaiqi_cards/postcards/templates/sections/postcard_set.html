@@ -1,4 +1,4 @@
-{% load markdown sections navigation %}
+{% load markdown sections navigation product %}
 
 <section id="{{ section|as_html_id }}" class="{{ section|as_html_class }}">
     <h2>{{ section.title }}</h2>
@@ -7,8 +7,9 @@
     {% endif %}
     <div>
         {% for postcard in section.postcards.all %}
-            <a href="{% postcard_url section postcard url_params %}">
-                <figure>
+            {% postcard_url section postcard url_params as postcard_href %}
+            <figure>
+                <a href="{{ postcard_href }}">
                     <img
                         class="postcard"
                         src="{{ postcard.image.medium.url }}"
@@ -16,9 +17,12 @@
                         sizes="(max-width: 680px) 80vw, 22vw"
                         fetchpriority="high"
                         alt="{{ postcard.title }}">
-                    <figcaption>{{ postcard.title }}</figcaption>
-                </figure>
-            </a>
+                </a>
+                <figcaption>
+                    <a href="{{ postcard_href }}">{{ postcard.title }}</a>
+                    {% if page.shop_section %}{% product_widget postcard %}{% endif %}
+                </figcaption>
+            </figure>
         {% endfor %}
 
         {% if page.is_root_node %}

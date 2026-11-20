@@ -42,6 +42,13 @@ section.sets-section {
         background-color: var(--background-color);
     }
 
+    .caption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5em;
+    }
+
     h3 {
         font-family: "Albert Sans", sans-serif;
         font-size: inherit;

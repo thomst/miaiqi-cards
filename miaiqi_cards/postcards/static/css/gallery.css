@@ -28,6 +28,17 @@ section.gallery-section, section.postcard-set {
         background-color: var(--background-color);
     }
 
+    figure {
+        width: min-content;
+    }
+
+    figcaption {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5em;
+    }
+
     nav a {
         font-family: "Albert Sans", sans serif;
         display: inline-block;
