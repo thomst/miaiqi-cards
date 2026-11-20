@@ -27,8 +27,8 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    POSTCARD_PRICE = Decimal("2.20")
-    SET_DISCOUNT = POSTCARD_PRICE / 6
+    POSTCARD_PRICE = Decimal("2.50")
+    SET_DISCOUNT = POSTCARD_PRICE / 5
 
     content_type = models.ForeignKey(
         ContentType,
@@ -48,9 +48,9 @@ class Product(models.Model):
         if self.content_type.model == Postcard._meta.model_name:
             return self.POSTCARD_PRICE
         else:
-            discount = self.SET_DISCOUNT * self.content.postcards.count()
-            price = self.POSTCARD_PRICE * self.content.postcards.count()
-            return round(price - discount, 2)
+            count = self.content.postcards.count()
+            price = self.POSTCARD_PRICE * count - self.SET_DISCOUNT * count
+            return round(price, 2)
 
     def __str__(self):
         if isinstance(self.content, Postcard):
