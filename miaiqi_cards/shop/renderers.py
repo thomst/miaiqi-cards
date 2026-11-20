@@ -27,7 +27,7 @@ class ShopRenderer(renderers.SectionRenderer):
     CONFIRMATION_CART_SESSION_KEY = 'shop-confirmation-cart-id'
 
     class Media:
-        css = dict(all=['css/shop.css'])
+        css = dict(all=['css/shop.css', 'css/product_widget.css'])
         js = ['js/shop.js']
 
     @property
