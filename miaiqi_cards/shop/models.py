@@ -53,10 +53,10 @@ class Product(models.Model):
             return round(price - discount, 2)
 
     def __str__(self):
-        if self.content_type.model == Postcard._meta.model_name:
-            return f'{self.content.title} - {self.price} €'
+        if isinstance(self.content, Postcard):
+            return self.content.title
         else:
-            return f'{self.content.title} - {self.content.postcards.count()} cards - {self.price} €'
+            return f'{self.content.title} ({self.content.postcards.count()} cards)'
 
     class Meta:
         unique_together = (('content_type', 'object_id'),)
