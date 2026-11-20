@@ -1,6 +1,6 @@
 {% load markdown %}
 
-<div class="shop">
+<div class="shop" data-step="order">
     {{ shop.order_text|markdown_to_html }}
 
     <form method="POST" data-url="{% url 'update-cart' shop.id %}">

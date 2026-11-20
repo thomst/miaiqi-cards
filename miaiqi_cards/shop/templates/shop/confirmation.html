@@ -1,6 +1,6 @@
 {% load markdown %}
 
-<div class="shop">
+<div class="shop" data-step="confirmation">
     {{ shop.confirmation_text|markdown_to_html }}
 
     {% for item in cart %}
