@@ -124,19 +124,16 @@
         update (html) {
             // Replace the whole shop div.
             const shop = document.querySelector('div.shop');
-            if (html && shop) {
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = html.trim();
-                const newShop = wrapper.firstChild;
-                shop.replaceWith(newShop);
-                return newShop;
-            }
-            return null;
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html.trim();
+            const newShop = wrapper.firstChild;
+            shop.replaceWith(newShop);
+            return newShop;
         }
 
         // Dispatches a shop:load event with the new shop div as detail.
         dispatchLoad (shop) {
-            if (shop) document.dispatchEvent(new CustomEvent('shop:load', {detail: shop}));
+            document.dispatchEvent(new CustomEvent('shop:load', {detail: shop}));
         }
     }
 
