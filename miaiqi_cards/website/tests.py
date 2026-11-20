@@ -8,23 +8,20 @@ from miaiqi_cards.postcards.models import (
     PostcardSet,
     PostcardSetPostcard,
     SetsSection,
-    SetsSectionPostcardSet,
 )
 
 
 class PostcardSetModelTest(TestCase):
-    def test_gallery_section_inherits_postcard_set(self):
+    def test_gallery_section_contains_all_postcards(self):
         gallery = GallerySection.objects.create(
             title="Gallery",
             slug="gallery",
         )
+        postcard = Postcard.objects.create(title="Card")
 
-        postcard_set = PostcardSet.objects.get(pk=gallery.pk)
+        self.assertEqual(list(gallery.postcards), [postcard])
 
-        self.assertEqual(postcard_set.title, gallery.title)
-        self.assertEqual(postcard_set.slug, gallery.slug)
-
-    def test_sets_section_can_contain_non_section_postcard_set(self):
+    def test_sets_section_contains_all_postcard_sets(self):
         postcard_set = PostcardSet.objects.create(
             title="Cards",
             slug="cards",
@@ -33,13 +30,8 @@ class PostcardSetModelTest(TestCase):
             title="Collections",
             slug="collections",
         )
-        SetsSectionPostcardSet.objects.create(
-            sets_section=sets_section,
-            postcard_set=postcard_set,
-            index=0,
-        )
 
-        self.assertEqual(list(sets_section.postcard_sets.all()), [postcard_set])
+        self.assertEqual(list(sets_section.postcard_sets), [postcard_set])
 
     def test_postcard_set_membership(self):
         postcard_set = PostcardSet.objects.create(
@@ -71,18 +63,13 @@ class PostcardSetPageTest(TestCase):
             title="Collections",
             slug="collections",
         )
-        SetsSectionPostcardSet.objects.create(
-            sets_section=sets_section,
-            postcard_set=postcard_set,
-            index=0,
-        )
 
         response = self.client.get(
             reverse(
                 'postcard_set',
                 kwargs={
                     'sets_section_slug': sets_section.slug,
-                    'postcard_set_slug': postcard_set.slug,
+                    'set_slug': postcard_set.slug,
                 },
             )
         )
