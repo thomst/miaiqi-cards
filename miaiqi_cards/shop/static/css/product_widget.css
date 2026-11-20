@@ -1,11 +1,12 @@
-/* Small quantity widget, sized relative to the surrounding text. */
+/* Small quantity widget, sized relative to the surrounding text. It is only
+   visible while the shop shows its order step. */
 
 .product-widget {
-    display: inline-flex;
+    display: none;
     align-items: center;
     gap: 0.15em;
     font-family: "Albert Sans", sans-serif;
-    font-size: 0.7em;
+    font-size: 0.55em;
     vertical-align: middle;
     white-space: nowrap;
 
@@ -43,4 +44,8 @@
             margin: 0;
         }
     }
+}
+
+body:has(div.shop[data-step="order"]) .product-widget {
+    display: inline-flex;
 }
