@@ -4,9 +4,8 @@
 .product-widget {
     display: none;
     align-items: center;
-    gap: 0.15em;
     font-family: "Albert Sans", sans-serif;
-    font-size: 0.55em;
+    font-size: 3.5vh;
     vertical-align: middle;
     white-space: nowrap;
 
@@ -18,9 +17,8 @@
         font: inherit;
         line-height: 1;
         color: var(--not-so-dark-color);
-        background-color: var(--background-color);
+        background-color: rgba(255, 255, 255, 0.7);
         border: 1px solid var(--light-color);
-        border-radius: 0.3em;
     }
 
     button {
@@ -28,7 +26,7 @@
         cursor: pointer;
 
         &:hover {
-            background-color: var(--light-color);
+            background-color: rgba(220, 220, 220, 0.7);
         }
     }
 
