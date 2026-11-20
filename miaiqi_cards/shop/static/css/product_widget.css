@@ -3,7 +3,8 @@
 
 .product-widget {
     display: none;
-    align-items: center;
+    align-items: flex-end;
+    width: 100%;
     font-family: "Albert Sans", sans-serif;
     font-size: 3.5vh;
     vertical-align: middle;
@@ -41,6 +42,12 @@
             appearance: none;
             margin: 0;
         }
+    }
+
+    input.product-price {
+        flex: 1;
+        min-width: 0;
+        width: auto;
     }
 }
 

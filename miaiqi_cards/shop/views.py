@@ -28,7 +28,7 @@ def update_product(request, shop_id, product_id):
     shop = ShopRenderer(section, request)
 
     shop.update_product(product_id, quantity)
-    return HttpResponse(shop.get_order_html())
+    return JsonResponse(dict(html=shop.get_order_html(), quantities=shop.get_quantities()))
 
 
 @require_GET

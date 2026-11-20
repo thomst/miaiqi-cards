@@ -60,7 +60,7 @@
         }
 
         // The cart is saved on the server without reloading the shop. The server
-        // answers with the quantities of the cart to keep the widgets in sync.
+        // answers with the cart items to keep the widgets in sync.
         save (form) {
             return Ajax.post(form.dataset.url, form)
                 .then((text) => this.widgets.sync(JSON.parse(text)))
@@ -153,25 +153,30 @@
             });
         }
 
-        // Set the quantity of every widget to the one of its product in the given
-        // quantities, which are keyed by product id. Missing products count as 0.
-        sync (quantities) {
+        // Set quantity and total price of every widget to the ones of its product in
+        // the given cart items, which are keyed by product id. Missing products
+        // count as 0 and show no price.
+        sync (items) {
             document.querySelectorAll('.product-widget').forEach((widget) => {
-                widget.querySelector('input').value = quantities[widget.dataset.product] || 0;
+                const item = items[widget.dataset.product] || {quantity: 0};
+                widget.querySelector('.product-quantity').value = item.quantity;
+                widget.querySelector('.product-price').value = item.quantity ? `${item.total_price} €` : '';
             });
         }
 
         // The data-delta of the button changes the quantity of the product. The new
         // quantity is passed as get parameter to the update_product view given by
-        // the data-url of the widget.
+        // the data-url of the widget. It answers with the new order html and the
+        // cart items.
         changeQuantity (button) {
             const widget = button.closest('.product-widget');
-            const input = widget.querySelector('input');
+            const input = widget.querySelector('.product-quantity');
             const quantity = Math.max((parseInt(input.value) || 0) + parseInt(button.dataset.delta), 0);
             return Ajax.get(`${widget.dataset.url}?quantity=${quantity}`)
-                .then((html) => {
-                    this.shop.update(html);
-                    input.value = quantity;
+                .then((text) => {
+                    const answer = JSON.parse(text);
+                    this.shop.update(answer.html);
+                    this.sync(answer.quantities);
                 })
                 .catch(showError);
         }

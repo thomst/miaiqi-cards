@@ -75,8 +75,11 @@ class ShopRenderer(renderers.SectionRenderer):
         self.setup_cart(data)
 
     def get_quantities(self):
-        """Return the quantities of the cart by the ids of their products."""
-        return {item.object_id: item.quantity for item in self.cart}
+        """Return quantity and total price of the cart items by their product ids."""
+        return {
+            item.object_id: dict(quantity=item.quantity, total_price=str(item.total_price))
+            for item in self.cart
+        }
 
     def update_product(self, product_id, quantity):
         product = get_object_or_404(models.Product, pk=product_id)
