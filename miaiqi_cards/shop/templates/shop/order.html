@@ -11,7 +11,7 @@
             {% if forloop.first %}
                 <div class="row">
                     {% for field in form %}<div>{{ field.label }}</div>{% endfor %}
-                    <div></div>
+                    <div><input class="add-form" type="button" value="Add"></div>
                 </div>
             {% endif %}
             <div class="row form">
@@ -23,7 +23,7 @@
         {% endfor %}
 
         <div class="row">
-            <div><input class="add-form" type="button" value="Add"></div>
+            <div><input type="button" value="Back" data-url="{% url 'shop-description' shop.id %}" data-method="get"></div>
             <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.id %}"></div>
         </div>
 
