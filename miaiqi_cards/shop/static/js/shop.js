@@ -97,6 +97,8 @@
 
 
     // Replaces the shop html and loads the next step of the shop by its buttons.
+    // After a step has been loaded by a button it is announced by a shop:load
+    // event carrying the step's name (the data-step of the new shop div).
     class Shop {
         constructor () {
             document.addEventListener('click', (event) => {
@@ -112,17 +114,29 @@
             const request = button.dataset.method === 'get'
                 ? Ajax.get(url)
                 : Ajax.post(url, button.closest('form'));
-            return request.then((html) => this.update(html)).catch(showError);
+            return request
+                .then((html) => this.update(html))
+                .then((shop) => this.dispatchLoad(shop))
+                .catch(showError);
         }
 
+        // Returns the new shop div or null if nothing was replaced.
         update (html) {
             // Replace the whole shop div.
             const shop = document.querySelector('div.shop');
             if (html && shop) {
                 const wrapper = document.createElement('div');
                 wrapper.innerHTML = html.trim();
-                shop.replaceWith(wrapper.firstChild);
+                const newShop = wrapper.firstChild;
+                shop.replaceWith(newShop);
+                return newShop;
             }
+            return null;
+        }
+
+        // Dispatches a shop:load event with the new shop div as detail.
+        dispatchLoad (shop) {
+            if (shop) document.dispatchEvent(new CustomEvent('shop:load', {detail: shop}));
         }
     }
 
@@ -134,6 +148,11 @@
             document.addEventListener('click', (event) => {
                 const button = event.target.closest('.product-widget button');
                 if (button) this.changeQuantity(button);
+            });
+
+            // The purchase closes the cart, so the next one starts empty.
+            document.addEventListener('shop:load', (event) => {
+                if (event.detail.dataset.step === 'confirmation') this.sync({});
             });
         }
 
