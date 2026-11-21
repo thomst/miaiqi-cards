@@ -101,7 +101,7 @@ class ShopRenderer(renderers.SectionRenderer):
         else:
             formset = formset or self.formset_class()
 
-        context = dict(shop=self.section, formset=formset)
+        context = dict(shop=self.section, formset=formset, cart=self.cart)
         return render_to_string('shop/order.html', context, self.request)
 
     @set_state(CHECKOUT_STATE)

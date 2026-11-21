@@ -7,10 +7,11 @@
         {% csrf_token %}
         {{ formset.management_form }}
 
+        {% comment %} Render the formset shown for desktop view {% endcomment %}
         {% for form in formset %}
             {% if forloop.first %}
                 <div class="row header">
-                    {% for field in form %}<div>{{ field.label }}</div>{% endfor %}
+                    {% for field in form %}<div><span>{{ field.label }}</span></div>{% endfor %}
                     <div><input class="add-form" type="button" value="Add"></div>
                 </div>
             {% endif %}
@@ -19,6 +20,13 @@
                     <div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>
                 {% endfor %}
                 <div><input class="remove-form" type="button" value="Delete"></div>
+            </div>
+        {% endfor %}
+
+        {% comment %} Render the cart items shown for mobile view {% endcomment %}
+        {% for item in cart %}
+            <div class="row item">
+                <div>{{ item.product }}</div><div>{{ item.quantity }} Stk.</div>
             </div>
         {% endfor %}
 
