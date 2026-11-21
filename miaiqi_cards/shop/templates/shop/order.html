@@ -9,7 +9,7 @@
 
         {% for form in formset %}
             {% if forloop.first %}
-                <div class="row">
+                <div class="row header">
                     {% for field in form %}<div>{{ field.label }}</div>{% endfor %}
                     <div><input class="add-form" type="button" value="Add"></div>
                 </div>
@@ -22,7 +22,7 @@
             </div>
         {% endfor %}
 
-        <div class="row">
+        <div class="row button">
             <div><input type="button" value="Back" data-url="{% url 'shop-description' shop.id %}" data-method="get"></div>
             <div><input type="button" value="Checkout" data-url="{% url 'shop-checkout' shop.id %}"></div>
         </div>

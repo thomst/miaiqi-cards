@@ -7,18 +7,18 @@
         {% csrf_token %}
 
         {% for item in cart %}
-            <div class="row">
+            <div class="row item">
                 <div>{{ item.product }}</div><div>{{ item.quantity }} Stk.</div><div>{{ item.total_price }} €</div>
             </div>
         {% endfor %}
 
-        <div class="row"><div>Total</div><div>{{ cart.total }} €</div></div>
+        <div class="row total"><div>Total</div><div>{{ cart.total }} €</div></div>
 
-        <div class="row">
+        <div class="row email">
             {% for field in email_form %}<div{% if field.errors %} class="error"{% endif %}>{{ field }}</div>{% endfor %}
         </div>
 
-        <div class="row">
+        <div class="row button">
             <div><input type="button" value="Back" data-url="{% url 'shop-order' shop.id %}" data-method="get"></div>
             <div><input type="button" value="Buy" data-url="{% url 'shop-confirmation' shop.id %}"></div>
         </div>

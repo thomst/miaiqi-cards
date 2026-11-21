@@ -3,7 +3,7 @@
 <div class="shop" data-step="description">
     {{ shop.description_text|markdown_to_html }}
 
-    <div class="row">
+    <div class="row button">
         <div><input type="button" value="To the shop" data-url="{% url 'shop-order' shop.id %}" data-method="get"></div>
     </div>
 
