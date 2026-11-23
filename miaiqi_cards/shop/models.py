@@ -13,6 +13,11 @@ class ShopSection(Section):
     checkout_text = models.TextField(blank=True)
     confirmation_text = models.TextField(blank=True)
 
+    privacy_policy = models.FileField(upload_to='legal_documents')
+    terms_and_conditions = models.FileField(upload_to='legal_documents')
+    cancellation_policy = models.FileField(upload_to='legal_documents')
+    model_withdrawal_form = models.FileField(upload_to='legal_documents')
+
     def __str__(self):
         return self.title
 
