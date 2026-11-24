@@ -1,4 +1,4 @@
-{% load markdown %}
+{% load markdown shop %}
 
 <div class="shop" data-step="checkout">
     {{ shop.checkout_text|markdown_to_html }}
@@ -20,7 +20,7 @@
 
         <div class="row legal">
             {% for field in legal_form %}
-                <div{% if field.errors %} class="error"{% endif %}>{{ field }}{{ field.label_tag }}</div>
+                <div{% if field.errors %} class="error"{% endif %}>{{ field }}{% legal_form_label field %}</div>
             {% endfor %}
         </div>
 

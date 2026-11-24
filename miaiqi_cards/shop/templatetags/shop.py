@@ -1,4 +1,5 @@
 from django import template
+from django.utils.safestring import mark_safe
 from cart.cart import CART_ID
 from cart.models import Item
 from miaiqi_cards.shop.models import Product
@@ -36,3 +37,21 @@ def product_widget(context, content):
     quantity = item.quantity if item else 0
     total_price = item.total_price if item else None
     return dict(product=product, shop=shop, quantity=quantity, total_price=total_price)
+
+
+@register.simple_tag(takes_context=True)
+def legal_form_label(context, field):
+    """
+    Render the label for a legal form field with a link to the corresponding
+    document.
+    """
+    shop = context['shop']
+    label = field.label_tag()
+    link = '<a href="{}" target="_blank"><i>{}</i></a>'
+    if field.name == 'ts_and_cs_confirmation':
+        needle = 'AGBs'
+        link = link.format(shop.terms_and_conditions.url, needle)
+    elif field.name == 'cancellation_confirmation':
+        needle = 'Widerrufsbelehrung'
+        link = link.format(shop.cancellation_policy.url, needle)
+    return mark_safe(label.replace(needle, link))
