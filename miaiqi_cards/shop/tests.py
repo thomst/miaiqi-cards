@@ -1,30 +1,25 @@
 import json
+from decimal import Decimal
+from types import SimpleNamespace
 from django.http import QueryDict
 from django.template import Context, Template
-from django.test import RequestFactory, TestCase
+from django.template.loader import render_to_string
+from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.db import IntegrityError, transaction
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from cart.cart import Cart
 from cart.models import Cart as CartModel
-from .forms import CartItemForm
+from .forms import AddressForm, EmailForm, LegalForm
 from miaiqi_cards.postcards.models import GallerySection, Postcard, PostcardSet, PostcardSetPostcard, SetsSection
 from miaiqi_cards.website.models import MiaiqiCardsPage
 from simple_page.models import PageSection
 from .models import Product, ShopSection
 from .renderers import ShopRenderer
-from .views import confirmation_view, description_view, order_view, update_cart, update_product
+from .views import confirmation_view, description_view, update_product
 
 
 class ProductTest(TestCase):
-    def test_grouped_product_choices_are_lazy(self):
-        field = CartItemForm.base_fields['product']
-
-        choices = field.choices
-
-        self.assertIsNone(field.queryset._result_cache)
-        self.assertEqual(list(choices), [('', '---------')])
-
     def product_for(self, instance):
         return Product.objects.get_from_content(instance)
 
@@ -94,7 +89,7 @@ class ShopStepsTests(TestCase):
 
         self.assertIn('<strong>cards</strong>', html)
         self.assertIn(f'data-url="/shop/{self.shop.pk}/order/"', html)
-        self.assertIn('data-method="get"', html)
+        self.assertNotIn('data-method="post"', html)
         self.assertNotIn('form-TOTAL_FORMS', html)
 
     def test_get_html_continues_with_the_step_stored_in_the_session(self):
@@ -102,7 +97,7 @@ class ShopStepsTests(TestCase):
 
         html = ShopRenderer(self.shop, self.request(session)).get_html()
 
-        self.assertIn('form-TOTAL_FORMS', html)
+        self.assertIn('Choose your postcards above...', html)
 
     def test_description_view_returns_the_description_and_stores_the_state(self):
         request = self.request()
@@ -118,25 +113,78 @@ class ShopStepsTests(TestCase):
         for step, html in [
             ('description', renderer.get_description_html()),
             ('order', renderer.get_order_html()),
+            ('cart', renderer.get_cart_html()),
             ('checkout', renderer.get_checkout_html()),
             ('confirmation', renderer.get_confirmation_html()),
         ]:
             self.assertIn(f'<div class="shop" data-step="{step}">', html)
 
-    def test_order_step_has_the_add_button_in_the_header_and_a_back_button_below(self):
+    def test_checkout_renders_labels_for_legal_checkboxes(self):
+        html = ShopRenderer(self.shop, self.request()).get_checkout_html()
+
+        for field in LegalForm():
+            self.assertIn(f'name="{field.name}"', html)
+            self.assertIn(f'<label for="{field.id_for_label}">{field.label}:</label>', html)
+
+    def test_cart_shows_shipping_for_a_nonempty_cart(self):
+        request = self.request()
+        cart = Cart(request)
+        self.assertEqual(cart.shipping(), Decimal('0.00'))
+
+        product = Product.objects.get_from_content(Postcard.objects.create(title='Test Postcard'))
+        cart.add(product, unit_price=product.price)
+        self.assertEqual(cart.shipping(), Decimal('2.00'))
+        self.assertEqual(cart.total(), product.price + Decimal('2.00'))
+
+        html = ShopRenderer(self.shop, request).get_cart_html()
+        self.assertIn('<div>Shipping</div><div>2.00 €</div>', html)
+
+    def test_order_step_has_back_and_cart_buttons(self):
         html = ShopRenderer(self.shop, self.request()).get_order_html()
 
-        self.assertEqual(html.count('class="add-form"'), 1)
-        self.assertLess(html.index('class="add-form"'), html.index('class="row form"'))
-        back = html[html.index('value="Back"'):]
+        back = html[html.index('value="Zurück"'):]
         self.assertIn(f'data-url="/shop/{self.shop.pk}/description/"', back.split('>')[0])
-        self.assertIn('data-method="get"', back.split('>')[0])
+        self.assertNotIn('data-method="post"', back.split('>')[0])
+        cart_button = html[html.index('value="Weiter"'):]
+        self.assertIn(f'data-url="/shop/{self.shop.pk}/cart/"', cart_button.split('>')[0])
+        self.assertNotIn('data-method="post"', cart_button.split('>')[0])
+
+    def test_cart_button_tracks_cart_contents(self):
+        request = self.request()
+        product = Product.objects.get_from_content(Postcard.objects.create(title='Test Postcard'))
+
+        def cart_button(html):
+            return html[html.index('value="Weiter"'):].split('>')[0]
+
+        html = ShopRenderer(self.shop, request).get_order_html()
+        self.assertIn('disabled', cart_button(html))
+
+        request.GET = QueryDict('quantity=1')
+        html = json.loads(update_product(request, self.shop.pk, product.pk).content)['html']
+        self.assertNotIn('disabled', cart_button(html))
+
+        request.GET = QueryDict('quantity=0')
+        html = json.loads(update_product(request, self.shop.pk, product.pk).content)['html']
+        self.assertIn('disabled', cart_button(html))
+
+    def test_delete_url_uses_product_id_not_cart_item_id(self):
+        Product.objects.get_from_content(Postcard.objects.create(title='Unused'))
+        product = Product.objects.get_from_content(Postcard.objects.create(title='In cart'))
+        request = self.request()
+        cart = Cart(request)
+        cart.add(product, unit_price=product.price)
+        item = next(iter(cart))
+        self.assertNotEqual(item.pk, product.pk)
+
+        html = ShopRenderer(self.shop, request).get_order_html()
+
+        self.assertIn(f'data-url="/shop/{self.shop.pk}/update-product/{product.pk}/"', html)
 
     def test_confirmation_leads_back_to_the_description(self):
         html = ShopRenderer(self.shop, self.request()).get_confirmation_html()
 
         self.assertIn(f'data-url="/shop/{self.shop.pk}/description/"', html)
-        self.assertIn('value="Back"', html)
+        self.assertIn('value="Neue Bestellung"', html)
 
 
 class ShopCartSessionTests(TestCase):
@@ -151,7 +199,17 @@ class ShopCartSessionTests(TestCase):
         session = {}
         request = RequestFactory().post(
             '/shop/',
-            {'email_address': 'test@example.com', 'repeated_email_address': 'test@example.com'},
+            {
+                'first_name': 'Test',
+                'last_name': 'Customer',
+                'street': 'Test Street 1',
+                'city': 'Test City',
+                'postal_code': '12345',
+                'email_address': 'test@example.com',
+                'repeated_email_address': 'test@example.com',
+                'ts_and_cs_confirmation': 'on',
+                'cancellation_confirmation': 'on',
+            },
         )
         request.session = session
         cart = Cart(request)
@@ -299,9 +357,9 @@ class UpdateProductTests(TestCase):
 
         request.GET = QueryDict('quantity=2')
         answer = json.loads(update_product(request, shop.pk, product.pk).content)
-        self.assertIn('form-TOTAL_FORMS', answer['html'])
+        self.assertIn('Test Postcard', answer['html'])
         self.assertEqual(
-            answer['quantities'],
+            answer['data'],
             {str(product.pk): {'quantity': 2, 'total_price': str(2 * product.price)}},
         )
         request.session.clear()
@@ -317,33 +375,37 @@ class UpdateProductTests(TestCase):
             self.assertEqual(update_product(request, shop.pk, product.pk).status_code, 400)
 
 
-class UpdateCartTests(TestCase):
-    def test_returns_the_quantities_of_the_saved_cart_by_product_id(self):
-        # The last row of a repeated product wins and invalid rows are skipped.
-        shop = ShopSection.objects.create(title='Test Shop')
-        first = Product.objects.get_from_content(Postcard.objects.create(title='First'))
-        second = Product.objects.get_from_content(Postcard.objects.create(title='Second'))
-        request = RequestFactory().post('/', {
-            'form-TOTAL_FORMS': '4',
-            'form-INITIAL_FORMS': '0',
-            'form-0-product': first.pk,
-            'form-0-quantity': '2',
-            'form-1-product': second.pk,
-            'form-1-quantity': '1',
-            'form-2-product': first.pk,
-            'form-2-quantity': '3',
-            'form-3-product': '',
-            'form-3-quantity': '',
+class EmailFormTests(SimpleTestCase):
+    def test_matching_emails_are_valid(self):
+        form = EmailForm({
+            'email_address': 'test@example.com',
+            'repeated_email_address': 'test@example.com',
         })
-        request.session = {}
 
-        response = update_cart(request, shop.pk)
+        self.assertTrue(form.is_valid())
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            json.loads(response.content),
-            {
-                str(first.pk): {'quantity': 3, 'total_price': str(3 * first.price)},
-                str(second.pk): {'quantity': 1, 'total_price': str(second.price)},
-            },
-        )
+    def test_mismatch_marks_the_repeated_field_on_checkout(self):
+        form = EmailForm({
+            'email_address': 'test@example.com',
+            'repeated_email_address': 'other@example.com',
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('Die E-Mail-Adressen stimmen nicht überein.', form.errors['repeated_email_address'])
+        html = render_to_string('shop/checkout.html', {
+            'shop': SimpleNamespace(id=1),
+            'address_form': AddressForm(),
+            'email_form': form,
+            'legal_form': LegalForm(),
+        }, RequestFactory().get('/'))
+        self.assertIn('<div class="error"><input type="text" name="repeated_email_address"', html)
+
+    def test_invalid_first_email_does_not_add_a_mismatch_error(self):
+        form = EmailForm({
+            'email_address': 'invalid',
+            'repeated_email_address': 'test@example.com',
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('email_address', form.errors)
+        self.assertNotIn('repeated_email_address', form.errors)

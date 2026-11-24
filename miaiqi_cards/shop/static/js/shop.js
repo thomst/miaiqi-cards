@@ -1,8 +1,10 @@
 (function() {
     "use strict";
 
-    const showError = () => alert('Error reloading the shop.');
-
+    const showError = (error) => {
+        console.error('Error reloading the shop:', error);
+        alert('Error reloading the shop.');
+    };
 
     // Requests to the shop views. They return a promise resolving to the response text.
     class Ajax {
@@ -30,98 +32,32 @@
     }
 
 
-    // Everything that belongs to the order form. The handlers are delegated to the
-    // document, so they survive the replacement of the shop html.
-    class Formset {
-        static FORM = 'div.shop form:has(div.form)';
-
-        constructor (widgets) {
-            this.widgets = widgets;
-            document.addEventListener('click', (event) => this.#onClick(event));
-            document.addEventListener('change', (event) => this.#onChange(event));
-        }
-
-        addForm (form) {
-            const rows = form.querySelectorAll('div.form');
-            const newRow = rows[0].cloneNode(true);
-            newRow.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
-            rows[rows.length - 1].after(newRow);
-            this.#updateFormCount(form);
-        }
-
-        removeForm (form, row) {
-            if (form.querySelectorAll('div.form').length == 1) {
-                row.querySelectorAll('[name^="form-"]').forEach(element => { element.value = ''; });
-            } else {
-                row.remove();
-                this.#updateFormCount(form);
-            }
-            this.save(form);
-        }
-
-        // The cart is saved on the server without reloading the shop. The server
-        // answers with the cart items to keep the widgets in sync.
-        save (form) {
-            return Ajax.post(form.dataset.url, form)
-                .then((text) => this.widgets.sync(JSON.parse(text)))
-                .catch(showError);
-        }
-
-        #updateFormCount (form) {
-            const rows = form.querySelectorAll('div.form');
-            form.querySelector('input[id$="-TOTAL_FORMS"]').value = rows.length;
-            rows.forEach((row, index) => {
-                row.querySelectorAll('[name^="form-"]').forEach(element => {
-                    element.name = element.name.replace(/form-\d+/, `form-${index}`);
-                    element.id = element.id.replace(/form-\d+/, `form-${index}`);
-                });
-            });
-        }
-
-        #onClick (event) {
-            const button = event.target.closest(`${Formset.FORM} input[type="button"]`);
-            if (!button) return;
-            const form = button.closest('form');
-            if (button.classList.contains('add-form')) {
-                this.addForm(form);
-            } else if (button.classList.contains('remove-form')) {
-                this.removeForm(form, button.closest('div.form'));
-            }
-        }
-
-        #onChange (event) {
-            const row = event.target.closest(`${Formset.FORM} div.form`);
-            if (row) this.save(row.closest('form'));
-        }
-    }
-
-
     // Replaces the shop html and loads the next step of the shop by its buttons.
-    // After a step has been loaded by a button it is announced by a shop:load
+    // After a step has been loaded by a button it is announced by a shop:#
     // event carrying the step's name (the data-step of the new shop div).
     class Shop {
         constructor () {
             document.addEventListener('click', (event) => {
-                const button = event.target.closest('div.shop input[data-url]');
-                if (button) this.load(button);
+                const button = event.target.closest('div.shop div.button input[data-url]');
+                if (button) this.#load(button);
             });
         }
 
-        // The button's data-url is requested by get if its data-method is "get" and
-        // otherwise by post of the surrounding form.
-        load (button) {
+        // The button's data-url is requested by post if its data-method is "post" and
+        // otherwise by get of the surrounding form.
+        #load (button) {
             const url = button.dataset.url;
-            const request = button.dataset.method === 'get'
-                ? Ajax.get(url)
-                : Ajax.post(url, button.closest('form'));
+            const request = button.dataset.method === 'post'
+                ? Ajax.post(url, button.closest('form'))
+                : Ajax.get(url);
             return request
-                .then((html) => this.update(html))
-                .then((shop) => this.dispatchLoad(shop))
+                .then((html) => this.#updateHtml(html))
+                .then((shop) => this.#resetWidgets(shop))
                 .catch(showError);
         }
 
-        // Returns the new shop div or null if nothing was replaced.
-        update (html) {
+        // Returns the new shop div.
+        #updateHtml (html) {
             // Replace the whole shop div.
             const shop = document.querySelector('div.shop');
             const wrapper = document.createElement('div');
@@ -131,9 +67,27 @@
             return newShop;
         }
 
-        // Dispatches a shop:load event with the new shop div as detail.
-        dispatchLoad (shop) {
-            document.dispatchEvent(new CustomEvent('shop:load', {detail: shop}));
+        // Update widget data to the current cart items.
+        #syncWidgets (data) {
+            document.querySelectorAll('.product-widget').forEach((widget) => {
+                const item = data[widget.dataset.product] || {quantity: 0};
+                widget.querySelector('.product-quantity').value = item.quantity;
+                widget.querySelector('.product-price').value = item.quantity ? `${item.total_price} €` : '';
+            });
+        }
+
+        // Resets widgets if the shop is in the confirmation step. The cart was
+        // closed so we'll restart with an empty one. The widgets must be reset
+        // accordingly.
+        #resetWidgets (shop) {
+            if (shop.dataset.step === 'confirmation') this.#syncWidgets({});
+        }
+
+        // Update widget data and update the shop html.
+        update (text) {
+            const json = JSON.parse(text);
+            this.#syncWidgets(json.data);
+            this.#updateHtml(json.html);
         }
     }
 
@@ -144,23 +98,7 @@
             this.shop = shop;
             document.addEventListener('click', (event) => {
                 const button = event.target.closest('.product-widget button');
-                if (button) this.changeQuantity(button);
-            });
-
-            // The purchase closes the cart, so the next one starts empty.
-            document.addEventListener('shop:load', (event) => {
-                if (event.detail.dataset.step === 'confirmation') this.sync({});
-            });
-        }
-
-        // Set quantity and total price of every widget to the ones of its product in
-        // the given cart items, which are keyed by product id. Missing products
-        // count as 0 and show no price.
-        sync (items) {
-            document.querySelectorAll('.product-widget').forEach((widget) => {
-                const item = items[widget.dataset.product] || {quantity: 0};
-                widget.querySelector('.product-quantity').value = item.quantity;
-                widget.querySelector('.product-price').value = item.quantity ? `${item.total_price} €` : '';
+                if (button) this.#updateProduct(button);
             });
         }
 
@@ -168,21 +106,42 @@
         // quantity is passed as get parameter to the update_product view given by
         // the data-url of the widget. It answers with the new order html and the
         // cart items.
-        changeQuantity (button) {
+        #updateProduct (button) {
             const widget = button.closest('.product-widget');
             const input = widget.querySelector('.product-quantity');
             const quantity = Math.max((parseInt(input.value) || 0) + parseInt(button.dataset.delta), 0);
-            return Ajax.get(`${widget.dataset.url}?quantity=${quantity}`)
-                .then((text) => {
-                    const answer = JSON.parse(text);
-                    this.shop.update(answer.html);
-                    this.sync(answer.quantities);
-                })
+            Ajax.get(`${widget.dataset.url}?quantity=${quantity}`)
+                .then((text) => this.shop.update(text))
                 .catch(showError);
         }
     }
 
+
+    // Cart representation for the shop.
+    class Cart {
+        static CART = 'div.shop[data-step="order"]';
+
+        constructor (shop, widgets) {
+            this.shop = shop;
+            this.widgets = widgets;
+            document.addEventListener('click', (event) => {
+                const button = event.target.closest(`${Cart.CART} input.remove-item`);
+                if (button) this.#removeProduct(button);
+            });
+        }
+
+        // Remove the item corresponding to the clicked button from the cart by
+        // sending an Ajax request to set its quantity to 0. The server responds
+        // with the updated order HTML and cart data.
+        #removeProduct (button) {
+            Ajax.get(`${button.dataset.url}?quantity=0`)
+                .then((text) => this.shop.update(text))
+                .catch(showError);
+        }
+    }
+
+
     const shop = new Shop();
-    const widgets = new ProductWidget(shop);
-    new Formset(widgets);
+    new ProductWidget(shop);
+    new Cart(shop);
 })();

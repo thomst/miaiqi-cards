@@ -78,6 +78,12 @@ div.shop {
         background-color: aliceblue;
     }
 
+    div.row input:disabled {
+        cursor: not-allowed;
+        background-color: var(--light-color);
+        color: var(--not-so-dark-color);
+    }
+
     div.row :is(div, input, select) {
         text-align: center;
     }
@@ -86,9 +92,22 @@ div.shop {
         border: 2px solid red;
     }
 
-    /* We hide the item rows of the order step for the desktop view. */
-    &[data-step="order"] div.row.item {
-        display: none;
+    div.row.legal > div {
+        display: flex;
+        align-items: center;
+        gap: 1em;
+        padding: 3vh;
+        text-align: left;
+        color: var(--not-so-dark-color);
+        font-size: 2vh;
+    }
+
+    div.row.legal input[type="checkbox"] {
+        width: auto;
+        height: auto;
+        padding: 0;
+        margin: 0;
+        flex: none;
     }
 
     /* Responsive adjustments for mobile view */
@@ -115,49 +134,6 @@ div.shop {
 
             > div:nth-child(2) {
                 border-left: 2px solid #ccc;
-            }
-        }
-
-        /* We disable the formset completely. The widget can be used for picking
-        products. The formset keeps visible as overview only.  */
-        &[data-step="order"] {
-
-            /* Hide the form rows and show the item rows for mobile view */
-            div.row.form, div.row.header {
-                display: none;
-            }
-            div.row.item {
-                display: flex;
-
-                div:first-child {
-                    width: 75%;
-                }
-                div:not(:first-child) {
-                    width: 25%;
-                }
-            }
-
-             /* Adjust widths for rows with three child divs. */
-            div.row:has(div:nth-child(3)) {
-                div:first-child {
-                    width: 75%;
-                }
-                div:not(:first-child) {
-                    width: 25%;
-                }
-            }
-
-            /* Replace the quantity label with "Qty" for mobile view */
-            div.header div:nth-child(2) > span {
-                position: relative;
-                visibility: hidden;
-            }
-            div.header div:nth-child(2) > span:after {
-                content: "Stk";
-                visibility: visible;
-                position: absolute;
-                left: 0;
-                top: 0;
             }
         }
 

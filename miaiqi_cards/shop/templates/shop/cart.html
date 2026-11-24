@@ -1,0 +1,20 @@
+{% load markdown %}
+
+<div class="shop" data-step="cart">
+    {{ shop.checkout_text|markdown_to_html }}
+
+    {% for item in cart %}
+        <div class="row item">
+            <div>{{ item.product }}</div><div>{{ item.quantity }} Stk.</div><div>{{ item.total_price }} €</div>
+        </div>
+    {% endfor %}
+
+    <div class="row shipping"><div>Shipping</div><div>{{ cart.shipping }} €</div></div>
+    <div class="row total"><div>Total</div><div>{{ cart.total }} €</div></div>
+
+    <div class="row button">
+        <div><input type="button" value="Zurück" data-url="{% url 'shop-order' shop.id %}"></div>
+        <div><input type="button" value="Weiter" data-url="{% url 'shop-checkout' shop.id %}"></div>
+    </div>
+
+</div>

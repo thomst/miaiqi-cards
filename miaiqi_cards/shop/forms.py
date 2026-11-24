@@ -1,40 +1,40 @@
 from django import forms
-from django.forms.models import ModelChoiceIterator
-from .models import Product
 
 
-class GroupedModelChoiceIterator(ModelChoiceIterator):
-    def __iter__(self):
-        if self.field.empty_label is not None:
-            yield ('', self.field.empty_label)
-
-        grouped = {}
-        queryset = self.queryset.select_related(self.field.group_by_field)
-        for obj in queryset.iterator():
-            group_object = getattr(obj, self.field.group_by_field)
-            group_label = group_object.model_class()._meta.verbose_name.title()
-            grouped.setdefault(group_label, []).append(self.choice(obj))
-
-        yield from grouped.items()
-
-
-class GroupedModelChoiceField(forms.ModelChoiceField):
-    iterator = GroupedModelChoiceIterator
-
-    def __init__(self, queryset, group_by_field, *args, **kwargs):
-        self.group_by_field = group_by_field
-        super().__init__(queryset, *args, **kwargs)
-
-
-class CartItemForm(forms.Form):
-    product = GroupedModelChoiceField(
-        Product.objects.all(),
-        group_by_field='content_type',
-        widget=forms.Select(attrs={'placeholder': 'Produkt'}),
+class AddressForm(forms.Form):
+    first_name = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Vorname'}),
         )
-    quantity = forms.IntegerField(
-        min_value=1,
-        widget=forms.NumberInput(attrs={'placeholder': 'Anzahl'}),
+    last_name = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Nachname'}),
+        )
+    street = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Straße und Hausnummer'}),
+        )
+    city = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Stadt'}),
+        )
+    postal_code = forms.CharField(
+        widget=forms.TextInput(attrs={'placeholder': 'Postleitzahl'}),
+        )
+
+    @property
+    def name_fields(self):
+        return [self['first_name'], self['last_name']]
+
+    @property
+    def address_fields(self):
+        return [self['street'], self['city'], self['postal_code']]
+
+
+class LegalForm(forms.Form):
+    ts_and_cs_confirmation = forms.BooleanField(
+        widget=forms.CheckboxInput(),
+        label='Ich stimme den AGBs zu.',
+        )
+    cancellation_confirmation = forms.BooleanField(
+        widget=forms.CheckboxInput(),
+        label='Ich habe die Widerrufsbelehrung zur Kenntnis genommen.',
         )
 
 
@@ -45,3 +45,10 @@ class EmailForm(forms.Form):
     repeated_email_address = forms.EmailField(
         widget=forms.TextInput(attrs={'placeholder': 'Email Adresse wiederholen'}),
         )
+
+    def clean_repeated_email_address(self):
+        repeated_email = self.cleaned_data['repeated_email_address']
+        email = self.cleaned_data.get('email_address')
+        if email and repeated_email != email:
+            raise forms.ValidationError('Die E-Mail-Adressen stimmen nicht überein.')
+        return repeated_email

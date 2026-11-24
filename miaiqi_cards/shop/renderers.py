@@ -22,6 +22,7 @@ def set_state(state):
 class ShopRenderer(renderers.SectionRenderer):
     DESCRIPTION_STATE = 'description'
     ORDER_STATE = 'order'
+    CART_STATE = 'cart'
     CHECKOUT_STATE = 'checkout'
     CONFIRMATION_STATE = 'confirmation'
     CONFIRMATION_CART_SESSION_KEY = 'shop-confirmation-cart-id'
@@ -57,24 +58,7 @@ class ShopRenderer(renderers.SectionRenderer):
     def cart(self):
         return Cart(self.request)
 
-    @cached_property
-    def formset_class(self):
-        return formset_factory(forms.CartItemForm, extra=0, min_num=1, validate_min=True)
-
-    def setup_cart(self, data):
-        self.cart.clear()
-        data = [dict(**d, unit_price=d['product'].price) for d in data if d]
-        self.cart.add_bulk(data)
-
-    def update_cart(self):
-        formset = self.formset_class(self.request.POST)
-        data = list()
-        for form in formset.forms:
-            if form.is_valid():
-                data.append(form.cleaned_data)
-        self.setup_cart(data)
-
-    def get_quantities(self):
+    def get_cart_data(self):
         """Return quantity and total price of the cart items by their product ids."""
         return {
             item.object_id: dict(quantity=item.quantity, total_price=str(item.total_price))
@@ -94,20 +78,26 @@ class ShopRenderer(renderers.SectionRenderer):
         return render_to_string('shop/description.html', context, self.request)
 
     @set_state(ORDER_STATE)
-    def get_order_html(self, formset=None):
-        if not formset and not self.cart.is_empty():
-            initial = [dict(product=i.product.pk, quantity=i.quantity) for i in self.cart]
-            formset = self.formset_class(initial=initial)
-        else:
-            formset = formset or self.formset_class()
-
-        context = dict(shop=self.section, formset=formset, cart=self.cart)
+    def get_order_html(self):
+        context = dict(shop=self.section, cart=self.cart)
         return render_to_string('shop/order.html', context, self.request)
 
+    @set_state(CART_STATE)
+    def get_cart_html(self):
+        context = dict(shop=self.section, cart=self.cart)
+        return render_to_string('shop/cart.html', context, self.request)
+
     @set_state(CHECKOUT_STATE)
-    def get_checkout_html(self, email_form=None):
-        email_form = email_form or forms.EmailForm()
-        context = dict(shop=self.section, cart=self.cart, email_form=email_form)
+    def get_checkout_html(self, all_forms=None):
+        context = dict(shop=self.section)
+        if all_forms:
+            context.update(all_forms)
+        else:
+            context.update(dict(
+                address_form=forms.AddressForm(),
+                email_form=forms.EmailForm(),
+                legal_form=forms.LegalForm(),
+            ))
         return render_to_string('shop/checkout.html', context, self.request)
 
     @set_state(CONFIRMATION_STATE)
@@ -125,6 +115,8 @@ class ShopRenderer(renderers.SectionRenderer):
             return self.get_order_html()
         if self.state == self.CHECKOUT_STATE:
             return self.get_checkout_html()
+        if self.state == self.CART_STATE:
+            return self.get_cart_html()
         elif self.state == self.CONFIRMATION_STATE:
             return self.get_confirmation_html()
 

@@ -6,15 +6,6 @@ from .models import ShopSection
 from . import forms
 
 
-@require_POST
-def update_cart(request, shop_id):
-    section = get_object_or_404(ShopSection, pk=shop_id)
-    shop = ShopRenderer(section, request)
-
-    shop.update_cart()
-    return JsonResponse(shop.get_quantities())
-
-
 @require_GET
 def update_product(request, shop_id, product_id):
     try:
@@ -28,7 +19,10 @@ def update_product(request, shop_id, product_id):
     shop = ShopRenderer(section, request)
 
     shop.update_product(product_id, quantity)
-    return JsonResponse(dict(html=shop.get_order_html(), quantities=shop.get_quantities()))
+    return JsonResponse(dict(
+        html=shop.get_order_html(),
+        data=shop.get_cart_data()
+        ))
 
 
 @require_GET
@@ -46,17 +40,18 @@ def order_view(request, shop_id):
     return HttpResponse(shop.get_order_html())
 
 
-@require_POST
+@require_GET
+def cart_view(request, shop_id):
+    section = get_object_or_404(ShopSection, pk=shop_id)
+    shop = ShopRenderer(section, request)
+    return HttpResponse(shop.get_cart_html())
+
+
+@require_GET
 def checkout_view(request, shop_id):
     section = get_object_or_404(ShopSection, pk=shop_id)
     shop = ShopRenderer(section, request)
-
-    formset = shop.formset_class(request.POST)
-    if formset.is_valid():
-        shop.setup_cart(formset.cleaned_data)
-        return HttpResponse(shop.get_checkout_html())
-    else:
-        return HttpResponse(shop.get_order_html(formset))
+    return HttpResponse(shop.get_checkout_html())
 
 
 @require_POST
@@ -64,11 +59,15 @@ def confirmation_view(request, shop_id):
     section = get_object_or_404(ShopSection, pk=shop_id)
     shop = ShopRenderer(section, request)
 
-    email_form = forms.EmailForm(request.POST)
-    if email_form.is_valid():
+    all_forms = dict(
+        address_form=forms.AddressForm(request.POST),
+        email_form=forms.EmailForm(request.POST),
+        legal_form=forms.LegalForm(request.POST)
+    )
+    if all(f.is_valid() for f in all_forms.values()):
         # TODO: Send confirmation email.
         shop.cart.checkout()
         shop.confirmation_cart = shop.cart
         return HttpResponse(shop.get_confirmation_html())
     else:
-        return HttpResponse(shop.get_checkout_html(email_form))
+        return HttpResponse(shop.get_checkout_html(all_forms))
