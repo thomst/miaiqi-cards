@@ -173,3 +173,7 @@ EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', '0') == '1'
 # Contact form
 # The contact messages are sent to this address.
 CONTACT_RECIPIENT = os.environ.get('CONTACT_RECIPIENT', '')
+
+
+# Cart shipping calculator.
+CART_SHIPPING_CALCULATOR = "miaiqi_cards.shop.shipping.DefaultShipping"
