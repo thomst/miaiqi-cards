@@ -95,9 +95,9 @@ div.shop {
     div.row.legal > div {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 1em;
         padding: 3vh;
-        text-align: left;
         color: var(--not-so-dark-color);
         font-size: 2vh;
     }
