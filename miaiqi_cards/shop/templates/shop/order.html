@@ -7,7 +7,7 @@
         <div class="row item">
             <div>{{ item.product }}</div>
             <div>{{ item.quantity }} Stk.</div>
-            <div><input class="remove-item" type="button" value="Delete" data-url="{% url 'update-product' shop.pk item.product.pk %}"></div>
+            <div><input class="remove-item" type="button" value="Löschen" data-url="{% url 'update-product' shop.pk item.product.pk %}"></div>
         </div>
     {% empty %}
         <div class="row item">
