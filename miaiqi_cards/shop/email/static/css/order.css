@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 22px;
+}
+
+h2 {
+    font-size: 17px;
+    margin-top: 24px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 12px;
+}
+
+th, td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+td:last-child, th:last-child {
+    text-align: right;
+}
+
+.totals th {
+    font-weight: normal;
+}
+
+.totals .total th,
+.totals .total td {
+    font-weight: bold;
+    border-bottom: none;
+}

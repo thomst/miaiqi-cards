@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>Ihre Bestellung {{ invoice_number }}</title>
+    <style>{{ css|safe }}</style>
+</head>
+<body>
+    <h1>Vielen Dank für Ihre Bestellung!</h1>
+    <p>Ihre Rechnung {{ invoice_number }} finden Sie im Anhang.</p>
+
+    <section>
+        <h2>Bestellung</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Artikel</th>
+                    <th>Menge</th>
+                    <th>Gesamt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                    <tr>
+                        <td>{{ item.product }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.total_price|floatformat:2 }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <table class="totals">
+            <tr>
+                <th>Zwischensumme</th>
+                <td>{{ cart.summary|floatformat:2 }} €</td>
+            </tr>
+            {% if cart.discount_amount %}
+                <tr>
+                    <th>Rabatt</th>
+                    <td>-{{ cart.discount_amount|floatformat:2 }} €</td>
+                </tr>
+            {% endif %}
+            {% if cart.tax %}
+                <tr>
+                    <th>Steuer</th>
+                    <td>{{ cart.tax|floatformat:2 }} €</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Versand</th>
+                <td>{{ cart.shipping|floatformat:2 }} €</td>
+            </tr>
+            <tr class="total">
+                <th>Gesamtbetrag</th>
+                <td>{{ cart.total|floatformat:2 }} €</td>
+            </tr>
+        </table>
+    </section>
+
+    <section>
+        <h2>Lieferadresse</h2>
+        <p>{{ address.first_name }} {{ address.last_name }}</p>
+        <p>{{ address.street }}</p>
+        <p>{{ address.postal_code }} {{ address.city }}</p>
+    </section>
+
+    <section>
+        <h2>Zahlung</h2>
+        <p>
+            Bitte überweisen Sie {{ cart.total|floatformat:2 }} € unter Angabe von {{ invoice_number }} an:
+        </p>
+        <p>
+            {{ recipient_name }}<br>
+            IBAN: {{ recipient_iban }}<br>
+            BIC: {{ recipient_bic }}
+        </p>
+        <p>Alternativ können Sie den folgenden QR-Code mit Ihrer Banking-App scannen:</p>
+        <img src="{{ qr_data_uri }}" alt="EPC-QR-Code" width="200" height="200">
+    </section>
+</body>
+</html>
