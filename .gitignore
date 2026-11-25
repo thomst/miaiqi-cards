@@ -12,3 +12,4 @@ media/
 /my.cnf
 /backups/
 /email-env.sh
+/invoice-env.sh
