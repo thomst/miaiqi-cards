@@ -10,6 +10,7 @@ from django.tasks import task
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from miaiqi_cards.mail_retry import retry_on_temporary_error
 from miaiqi_cards.shop.invoices.epc_qr import EPCPayment
 from miaiqi_cards.shop.invoices.invoices import generate_invoice, invoice_number
 
@@ -30,7 +31,8 @@ def load_closed_cart(cart_pk):
     return cart
 
 
-@task
+@task(takes_context=True)
+@retry_on_temporary_error
 def send_order_email(cart_pk, address, email_address):
     """Send the order details, EPC payment QR code and invoice PDF to the customer."""
     cart = load_closed_cart(cart_pk)

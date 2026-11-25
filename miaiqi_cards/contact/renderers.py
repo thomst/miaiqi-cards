@@ -29,7 +29,7 @@ class ContactRenderer(renderers.SectionRenderer):
         if not form.is_valid():
             return self.get_form_html(form)
         try:
-            email.send_contact_mail(**form.cleaned_data)
+            email.send_contact_mail.enqueue(**form.cleaned_data)
         except (smtplib.SMTPException, OSError):
             logger.exception('Sending the contact mail failed.')
             form.add_error(None, 'Die Nachricht konnte nicht gesendet werden.')
