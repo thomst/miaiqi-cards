@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.shortcuts import get_object_or_404
+from .email.orders import send_order_email
 from .renderers import ShopRenderer
 from .models import ShopSection
 from . import forms
@@ -65,8 +66,12 @@ def confirmation_view(request, shop_id):
         legal_form=forms.LegalForm(request.POST)
     )
     if all(f.is_valid() for f in all_forms.values()):
-        # TODO: Send confirmation email.
         shop.cart.checkout()
+        send_order_email.enqueue(
+            shop.cart.cart.pk,
+            all_forms['address_form'].cleaned_data,
+            all_forms['email_form'].cleaned_data['email_address'],
+        )
         shop.confirmation_cart = shop.cart
         return HttpResponse(shop.get_confirmation_html())
     else:
