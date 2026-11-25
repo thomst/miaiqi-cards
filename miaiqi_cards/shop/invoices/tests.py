@@ -5,8 +5,9 @@ from django.test import RequestFactory, TestCase, override_settings
 
 from miaiqi_cards.postcards.models import Postcard
 from miaiqi_cards.shop.forms import AddressForm
-from miaiqi_cards.shop.models import InvoiceNumber, Product
+from miaiqi_cards.shop.models import Product
 from .invoices import generate_invoice
+from .models import InvoiceNumber
 
 
 class InvoiceNumberTests(TestCase):
@@ -26,6 +27,13 @@ class InvoiceNumberTests(TestCase):
         again = InvoiceNumber.get_invoice_number(cart)
         self.assertEqual(first, again)
         self.assertEqual(InvoiceNumber.objects.count(), 1)
+
+    def test_numbers_start_at_one_each_year(self):
+        InvoiceNumber.objects.create(cart_id=1000, year=2000, number=7)
+        self.assertEqual(InvoiceNumber.get_invoice_number(self.create_cart()), 1)
+        with patch('miaiqi_cards.shop.invoices.models.date') as mock_date:
+            mock_date.today.return_value.year = 2000
+            self.assertEqual(InvoiceNumber.get_invoice_number(self.create_cart()), 8)
 
 
 class InvoiceTests(TestCase):

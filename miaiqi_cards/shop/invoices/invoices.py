@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from weasyprint import CSS, HTML
 
-from miaiqi_cards.shop.models import InvoiceNumber
+from .models import InvoiceNumber
 
 PACKAGE_DIR = Path(__file__).parent
 
