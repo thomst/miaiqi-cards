@@ -3,7 +3,7 @@ import smtplib
 from django.template.loader import render_to_string
 from simple_page import renderers
 from . import forms
-from . import mail
+from . import email
 from . import models
 
 logger = logging.getLogger(__name__)
@@ -29,7 +29,7 @@ class ContactRenderer(renderers.SectionRenderer):
         if not form.is_valid():
             return self.get_form_html(form)
         try:
-            mail.send_contact_mail(**form.cleaned_data)
+            email.send_contact_mail(**form.cleaned_data)
         except (smtplib.SMTPException, OSError):
             logger.exception('Sending the contact mail failed.')
             form.add_error(None, 'Die Nachricht konnte nicht gesendet werden.')
