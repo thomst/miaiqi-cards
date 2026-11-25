@@ -77,7 +77,12 @@ class ProductTest(TestCase):
 
 class ShopStepsTests(TestCase):
     def setUp(self):
-        self.shop = ShopSection.objects.create(title='Test Shop', description_text='All about **cards**')
+        self.shop = ShopSection.objects.create(
+            title='Test Shop',
+            description_text='All about **cards**',
+            terms_and_conditions='legal_documents/terms.pdf',
+            cancellation_policy='legal_documents/cancellation.pdf',
+        )
 
     def request(self, session=None):
         request = RequestFactory().get('/')
@@ -124,7 +129,9 @@ class ShopStepsTests(TestCase):
 
         for field in LegalForm():
             self.assertIn(f'name="{field.name}"', html)
-            self.assertIn(f'<label for="{field.id_for_label}">{field.label}:</label>', html)
+            self.assertIn(f'<label for="{field.id_for_label}">', html)
+        self.assertIn(f'href="{self.shop.terms_and_conditions.url}"', html)
+        self.assertIn(f'href="{self.shop.cancellation_policy.url}"', html)
 
     def test_cart_shows_shipping_for_a_nonempty_cart(self):
         request = self.request()
@@ -393,7 +400,11 @@ class EmailFormTests(SimpleTestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('Die E-Mail-Adressen stimmen nicht überein.', form.errors['repeated_email_address'])
         html = render_to_string('shop/checkout.html', {
-            'shop': SimpleNamespace(id=1),
+            'shop': SimpleNamespace(
+                id=1,
+                terms_and_conditions=SimpleNamespace(url='/terms.pdf'),
+                cancellation_policy=SimpleNamespace(url='/cancellation.pdf'),
+            ),
             'address_form': AddressForm(),
             'email_form': form,
             'legal_form': LegalForm(),

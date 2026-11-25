@@ -1,9 +1,13 @@
+from unittest.mock import patch
+
 from django.core import mail
+from django.tasks.base import TaskResultStatus
 from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from simple_page import renderers
 from . import forms
 from . import models
+from .email import send_contact_mail
 from .renderers import ContactRenderer
 
 DATA = dict(email_address='visitor@example.com', subject='Hello', body='A message.')
@@ -41,12 +45,20 @@ class ContactTests(TestCase):
         self.assertEqual(len(mail.outbox), 0)
         self.assertContains(response, 'class="error"')
 
-    @override_settings(
-        EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend',
-        EMAIL_HOST='127.0.0.1',
-        EMAIL_PORT=1,
-    )
-    def test_send_failure_shows_error(self):
+    @patch('django.core.mail.EmailMessage.send', side_effect=ConnectionRefusedError('connection refused'))
+    def test_send_failure_is_logged_by_task(self, send):
+        with self.assertLogs('miaiqi_cards.mail_retry', level='ERROR') as logs:
+            result = send_contact_mail.enqueue(**DATA)
+        self.assertEqual(result.status, TaskResultStatus.FAILED)
+        self.assertIn('send_contact_mail', logs.output[0])
+
+        with self.assertLogs('miaiqi_cards.mail_retry', level='ERROR'):
+            response = self.client.post(self.url, DATA)
+        self.assertContains(response, 'Thank you!')
+
+    @patch('miaiqi_cards.contact.renderers.email.send_contact_mail')
+    def test_enqueue_failure_shows_error(self, task):
+        task.enqueue.side_effect = OSError('queue unavailable')
         with self.assertLogs('miaiqi_cards.contact.renderers', level='ERROR'):
             response = self.client.post(self.url, DATA)
         self.assertContains(response, 'konnte nicht gesendet werden')
