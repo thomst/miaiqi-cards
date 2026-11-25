@@ -49,12 +49,13 @@ def send_order_email(cart_pk, address, email_address):
         'recipient_bic': settings.INVOICE_RECIPIENT_BIC,
     })
 
-    sender = settings.CONTACT_RECIPIENT
+    sender = settings.INVOICE_RECIPIENT_ADDRESS
     message = EmailMultiAlternatives(
         subject=f'Ihre Bestellung {number}',
         body=strip_tags(html),
         from_email=sender,
         to=[email_address],
+        bcc=[sender, settings.INVOICE_UPLOAD_ADDRESS],
         reply_to=[sender],
     )
     message.attach_alternative(html, 'text/html')
