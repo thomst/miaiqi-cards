@@ -250,7 +250,7 @@ class ProductWidgetTests(TestCase):
         PageSection.objects.create(page=self.page, section=self.shop, region='main', index=0)
 
     def render(self, content, request=None):
-        template = Template('{% load product %}{% product_widget content %}')
+        template = Template('{% load shop %}{% product_widget content %}')
         return template.render(Context({'content': content, 'request': request, 'page': self.page}))
 
     def test_renders_readonly_quantity_between_minus_and_plus(self):
