@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <title>Rechnung {{ invoice_number }}</title>
+</head>
+<body>
+    <header>
+        <h1>Rechnung</h1>
+        <p>Rechnungsnummer: {{ invoice_number }}</p>
+        <p>Rechnungsdatum: {{ invoice_date|date:"d.m.Y" }}</p>
+    </header>
+
+    <section class="addresses">
+        <div>
+            <h2>Rechnungssteller</h2>
+            <p>{{ recipient_name }}</p>
+            <p>IBAN: {{ recipient_iban }}</p>
+            <p>BIC: {{ recipient_bic }}</p>
+        </div>
+        <div>
+            <h2>Rechnungsempfänger</h2>
+            <p>{{ address.first_name }} {{ address.last_name }}</p>
+            <p>{{ address.street }}</p>
+            <p>{{ address.postal_code }} {{ address.city }}</p>
+        </div>
+    </section>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Artikel</th>
+                <th>Menge</th>
+                <th>Einzelpreis</th>
+                <th>Gesamt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.product }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.unit_price|floatformat:2 }} €</td>
+                    <td>{{ item.total_price|floatformat:2 }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="totals">
+        <tbody>
+            <tr>
+                <th>Zwischensumme</th>
+                <td>{{ subtotal|floatformat:2 }} €</td>
+            </tr>
+            {% if discount %}
+                <tr>
+                    <th>Rabatt</th>
+                    <td>-{{ discount|floatformat:2 }} €</td>
+                </tr>
+            {% endif %}
+            {% if tax %}
+                <tr>
+                    <th>Steuer</th>
+                    <td>{{ tax|floatformat:2 }} €</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <th>Versand</th>
+                <td>{{ shipping|floatformat:2 }} €</td>
+            </tr>
+            <tr class="total">
+                <th>Gesamtbetrag</th>
+                <td>{{ total|floatformat:2 }} €</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

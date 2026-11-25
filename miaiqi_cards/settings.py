@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+from datetime import date
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -48,6 +49,7 @@ INSTALLED_APPS = [
     'miaiqi_cards.responsive_image',
     'miaiqi_cards.postcards',
     'miaiqi_cards.shop',
+    'miaiqi_cards.shop.invoices',
     'miaiqi_cards.contact',
 ]
 
@@ -177,3 +179,10 @@ CONTACT_RECIPIENT = os.environ.get('CONTACT_RECIPIENT', '')
 
 # Cart shipping calculator.
 CART_SHIPPING_CALCULATOR = "miaiqi_cards.shop.shipping.DefaultShipping"
+
+
+# Invoices recipient banking details.
+INVOICE_RECIPIENT_NAME = os.environ.get('INVOICE_RECIPIENT_NAME', '')
+INVOICE_RECIPIENT_IBAN = os.environ.get('INVOICE_RECIPIENT_IBAN', '')
+INVOICE_RECIPIENT_BIC = os.environ.get('INVOICE_RECIPIENT_BIC', '')
+INVOICE_NUMBER_PATTERN = f'SHOP-{date.today().year}-{{number:0>5}}'
