@@ -1,5 +1,6 @@
 from datetime import date
 
+from django.conf import settings
 from django.db import IntegrityError, models, transaction
 from django.db.models import Max
 
@@ -28,7 +29,7 @@ class InvoiceNumber(models.Model):
                     except cls.DoesNotExist:
                         last = cls.objects.filter(year=year).aggregate(Max('number'))['number__max']
                         entry = cls.objects.create(cart_id=cart.cart.pk, year=year, number=(last or 0) + 1)
-                    return entry.number
+                    return settings.INVOICE_NUMBER_PATTERN.format(year=entry.year, number=entry.number)
             except IntegrityError:
                 # A concurrent request took the number; try again with the new maximum.
                 continue

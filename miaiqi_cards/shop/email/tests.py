@@ -1,17 +1,25 @@
+from unittest.mock import patch
+
 from cart.cart import Cart
 from django.core import mail
 from django.test import RequestFactory, TestCase, override_settings
 
 from miaiqi_cards.postcards.models import Postcard
 from miaiqi_cards.shop.forms import AddressForm
-from miaiqi_cards.shop.invoices.invoices import invoice_number
 from miaiqi_cards.shop.models import Product
 from .orders import send_order_email
 
 
-@override_settings(CONTACT_RECIPIENT='info@example.com')
+@override_settings(
+    INVOICE_NUMBER_PATTERN='TEST-{year}-{number:0>5}',
+    INVOICE_RECIPIENT_ADDRESS='info@example.com',
+    INVOICE_UPLOAD_ADDRESS='upload@example.com',
+)
 class OrderEmailTests(TestCase):
     def setUp(self):
+        date_patch = patch('miaiqi_cards.shop.invoices.models.date')
+        self.addCleanup(date_patch.stop)
+        date_patch.start().today.return_value.year = 2026
         request = RequestFactory().get('/')
         request.session = {}
         self.cart = Cart(request)
@@ -37,7 +45,9 @@ class OrderEmailTests(TestCase):
         html, mimetype = message.alternatives[0]
         self.assertEqual(mimetype, 'text/html')
         self.assertIn('Order mail postcard', html)
-        self.assertIn(invoice_number(self.cart), html)
+        number = 'TEST-2026-00001'
+        self.assertEqual(message.subject, f'Ihre Bestellung {number}')
+        self.assertIn(number, html)
         self.assertIn('Postcard Street 1', html)
         self.assertIn('data:image/png;base64,', html)
 
@@ -45,6 +55,6 @@ class OrderEmailTests(TestCase):
         send_order_email.enqueue(self.cart.cart.pk, self.address, 'customer@example.com')
 
         filename, content, mimetype = mail.outbox[0].attachments[0]
-        self.assertEqual(filename, f'{invoice_number(self.cart)}.pdf')
+        self.assertEqual(filename, 'TEST-2026-00001.pdf')
         self.assertEqual(mimetype, 'application/pdf')
         self.assertTrue(content.startswith(b'%PDF-'))

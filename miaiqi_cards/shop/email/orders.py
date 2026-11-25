@@ -12,7 +12,8 @@ from django.utils.html import strip_tags
 
 from miaiqi_cards.mail_retry import retry_on_temporary_error
 from miaiqi_cards.shop.invoices.epc_qr import EPCPayment
-from miaiqi_cards.shop.invoices.invoices import generate_invoice, invoice_number
+from miaiqi_cards.shop.invoices.invoices import generate_invoice
+from miaiqi_cards.shop.invoices.models import InvoiceNumber
 
 CSS_PATH = Path(__file__).parent / 'static' / 'css' / 'order.css'
 
@@ -36,7 +37,7 @@ def load_closed_cart(cart_pk):
 def send_order_email(cart_pk, address, email_address):
     """Send the order details, EPC payment QR code and invoice PDF to the customer."""
     cart = load_closed_cart(cart_pk)
-    number = invoice_number(cart)
+    number = InvoiceNumber.get_invoice_number(cart)
     qr_data_uri = epc_qr_data_uri(EPCPayment(amount=cart.total(), remittance=number))
     html = render_to_string('email/order.html', {
         'cart': cart,

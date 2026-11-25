@@ -10,6 +10,7 @@ from .invoices import generate_invoice
 from .models import InvoiceNumber
 
 
+@override_settings(INVOICE_NUMBER_PATTERN='TEST-{year}-{number:0>5}')
 class InvoiceNumberTests(TestCase):
     def create_cart(self):
         request = RequestFactory().get('/')
@@ -17,9 +18,12 @@ class InvoiceNumberTests(TestCase):
         return Cart(request)
 
     def test_numbers_are_consecutive_for_different_carts(self):
-        first = InvoiceNumber.get_invoice_number(self.create_cart())
-        second = InvoiceNumber.get_invoice_number(self.create_cart())
-        self.assertEqual(second, first + 1)
+        with patch('miaiqi_cards.shop.invoices.models.date') as mock_date:
+            mock_date.today.return_value.year = 2026
+            first = InvoiceNumber.get_invoice_number(self.create_cart())
+            second = InvoiceNumber.get_invoice_number(self.create_cart())
+        self.assertEqual(first, 'TEST-2026-00001')
+        self.assertEqual(second, 'TEST-2026-00002')
 
     def test_the_same_cart_keeps_its_number(self):
         cart = self.create_cart()
@@ -30,10 +34,21 @@ class InvoiceNumberTests(TestCase):
 
     def test_numbers_start_at_one_each_year(self):
         InvoiceNumber.objects.create(cart_id=1000, year=2000, number=7)
-        self.assertEqual(InvoiceNumber.get_invoice_number(self.create_cart()), 1)
         with patch('miaiqi_cards.shop.invoices.models.date') as mock_date:
+            mock_date.today.return_value.year = 2001
+            self.assertEqual(InvoiceNumber.get_invoice_number(self.create_cart()), 'TEST-2001-00001')
             mock_date.today.return_value.year = 2000
-            self.assertEqual(InvoiceNumber.get_invoice_number(self.create_cart()), 8)
+            self.assertEqual(InvoiceNumber.get_invoice_number(self.create_cart()), 'TEST-2000-00008')
+
+    def test_existing_cart_keeps_its_year_after_new_year(self):
+        cart = self.create_cart()
+        with patch('miaiqi_cards.shop.invoices.models.date') as mock_date:
+            mock_date.today.return_value.year = 2026
+            first = InvoiceNumber.get_invoice_number(cart)
+            mock_date.today.return_value.year = 2027
+            again = InvoiceNumber.get_invoice_number(cart)
+        self.assertEqual(first, 'TEST-2026-00001')
+        self.assertEqual(again, first)
 
 
 class InvoiceTests(TestCase):
@@ -61,7 +76,7 @@ class InvoiceTests(TestCase):
         INVOICE_RECIPIENT_NAME='Miaiqi Cards',
         INVOICE_RECIPIENT_IBAN='DE123',
         INVOICE_RECIPIENT_BIC='TESTDEFF',
-        INVOICE_NUMBER_PATTERN='TEST-{number:0>5}',
+        INVOICE_NUMBER_PATTERN='TEST-{year}-{number:0>5}',
     )
     def test_generate_invoice_returns_pdf_for_checked_out_cart(self):
         cart = self.create_cart()
@@ -75,17 +90,19 @@ class InvoiceTests(TestCase):
         INVOICE_RECIPIENT_NAME='Miaiqi Cards',
         INVOICE_RECIPIENT_IBAN='DE123',
         INVOICE_RECIPIENT_BIC='TESTDEFF',
-        INVOICE_NUMBER_PATTERN='TEST-{number:0>5}',
+        INVOICE_NUMBER_PATTERN='TEST-{year}-{number:0>5}',
     )
     @patch('miaiqi_cards.shop.invoices.invoices.HTML')
     def test_invoice_template_includes_order_and_address_data(self, html_class):
         cart = self.create_cart()
         cart.checkout()
 
-        generate_invoice(cart, self.create_address())
+        with patch('miaiqi_cards.shop.invoices.models.date') as mock_date:
+            mock_date.today.return_value.year = 2026
+            generate_invoice(cart, self.create_address())
 
         rendered_html = html_class.call_args.kwargs['string']
-        self.assertIn('TEST-00001', rendered_html)
+        self.assertIn('TEST-2026-00001', rendered_html)
         self.assertIn('Miaiqi Cards', rendered_html)
         self.assertIn('DE123', rendered_html)
         self.assertIn('Test Customer', rendered_html)
