@@ -5,8 +5,27 @@ from django.test import RequestFactory, TestCase, override_settings
 
 from miaiqi_cards.postcards.models import Postcard
 from miaiqi_cards.shop.forms import AddressForm
-from miaiqi_cards.shop.models import Product
+from miaiqi_cards.shop.models import InvoiceNumber, Product
 from .invoices import generate_invoice
+
+
+class InvoiceNumberTests(TestCase):
+    def create_cart(self):
+        request = RequestFactory().get('/')
+        request.session = {}
+        return Cart(request)
+
+    def test_numbers_are_consecutive_for_different_carts(self):
+        first = InvoiceNumber.get_invoice_number(self.create_cart())
+        second = InvoiceNumber.get_invoice_number(self.create_cart())
+        self.assertEqual(second, first + 1)
+
+    def test_the_same_cart_keeps_its_number(self):
+        cart = self.create_cart()
+        first = InvoiceNumber.get_invoice_number(cart)
+        again = InvoiceNumber.get_invoice_number(cart)
+        self.assertEqual(first, again)
+        self.assertEqual(InvoiceNumber.objects.count(), 1)
 
 
 class InvoiceTests(TestCase):
@@ -58,7 +77,7 @@ class InvoiceTests(TestCase):
         generate_invoice(cart, self.create_address())
 
         rendered_html = html_class.call_args.kwargs['string']
-        self.assertIn(f'TEST-{cart.cart.pk:0>5}', rendered_html)
+        self.assertIn('TEST-00001', rendered_html)
         self.assertIn('Miaiqi Cards', rendered_html)
         self.assertIn('DE123', rendered_html)
         self.assertIn('Test Customer', rendered_html)

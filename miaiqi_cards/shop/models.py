@@ -65,3 +65,17 @@ class Product(models.Model):
 
     class Meta:
         unique_together = (('content_type', 'object_id'),)
+
+
+class InvoiceNumber(models.Model):
+    """
+    The invoice number of a cart is the id of its row. The id is
+    auto-incremented by the database, so numbers are consecutive and never
+    reused, and the unique cart_id keeps the number stable per cart.
+    """
+    cart_id = models.PositiveIntegerField(unique=True)
+
+    @classmethod
+    def get_invoice_number(cls, cart):
+        invoice_number, _ = cls.objects.get_or_create(cart_id=cart.cart.pk)
+        return invoice_number.pk

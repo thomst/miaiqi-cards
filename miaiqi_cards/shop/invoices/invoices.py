@@ -5,11 +5,14 @@ from django.conf import settings
 from django.template.loader import render_to_string
 from weasyprint import CSS, HTML
 
+from miaiqi_cards.shop.models import InvoiceNumber
+
 PACKAGE_DIR = Path(__file__).parent
 
 
 def invoice_number(cart):
-    return settings.INVOICE_NUMBER_PATTERN.format(number=cart.cart.pk)
+    pattern = settings.INVOICE_NUMBER_PATTERN
+    return pattern.format(number=InvoiceNumber.get_invoice_number(cart))
 
 
 def generate_invoice(cart, address):
