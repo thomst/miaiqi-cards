@@ -69,9 +69,17 @@ def confirmation_view(request, shop_id):
     if all(f.is_valid() for f in (address_form, email_form, legal_form)):
         if shop.cart.cart.checked_out:
             return HttpResponseBadRequest('Cart has already been checked out.')
-        try:
-            with transaction.atomic():
+
+        with transaction.atomic():
+            try:
                 shop.cart.checkout()
+            except MinimumOrderNotMet:
+                return HttpResponseBadRequest('The minimum order requirement is not met.')
+            except InvalidDiscountError:
+                return HttpResponseBadRequest('The discount applied is invalid.')
+            except CartException:
+                return HttpResponseBadRequest('The cart is empty.')
+            else:
                 order = Order.objects.create(
                     cart_id=shop.cart.cart.pk,
                     cart_data=serialize_cart(shop.cart),
@@ -82,12 +90,6 @@ def confirmation_view(request, shop_id):
                     postal_code=address_form.cleaned_data['postal_code'],
                     email_address=email_form.cleaned_data['email_address'],
                 )
-        except MinimumOrderNotMet:
-            return HttpResponseBadRequest('The minimum order requirement is not met.')
-        except InvalidDiscountError:
-            return HttpResponseBadRequest('The discount applied is invalid.')
-        except CartException:
-            return HttpResponseBadRequest('The cart is empty.')
 
         transaction.on_commit(lambda: send_order_email.enqueue(order.pk))
         shop.confirmation_cart = shop.cart
