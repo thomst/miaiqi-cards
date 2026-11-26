@@ -4,6 +4,7 @@ from django.db import models
 class Order(models.Model):
     cart_id = models.PositiveBigIntegerField(unique=True)
     cart_data = models.JSONField()
+    invoice_number = models.CharField(max_length=255, unique=True)
     first_name = models.TextField()
     last_name = models.TextField()
     street = models.TextField()

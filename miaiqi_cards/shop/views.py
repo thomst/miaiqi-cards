@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST, require_GET
 from django.shortcuts import get_object_or_404
 from .order.models import Order
 from .order.orders import send_order_email, serialize_cart
+from .invoices.models import InvoiceNumber
 from .renderers import ShopRenderer
 from .models import ShopSection
 from . import forms
@@ -83,6 +84,7 @@ def confirmation_view(request, shop_id):
                 order = Order.objects.create(
                     cart_id=shop.cart.cart.pk,
                     cart_data=serialize_cart(shop.cart),
+                    invoice_number=InvoiceNumber.get_invoice_number(shop.cart.cart.pk),
                     first_name=address_form.cleaned_data['first_name'],
                     last_name=address_form.cleaned_data['last_name'],
                     street=address_form.cleaned_data['street'],

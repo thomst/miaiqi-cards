@@ -8,22 +8,21 @@ from django.test import RequestFactory, TestCase, override_settings
 
 from miaiqi_cards.postcards.models import Postcard
 from miaiqi_cards.shop.forms import AddressForm
+from miaiqi_cards.shop.invoices.epc_qr import EPCPayment
 from miaiqi_cards.shop.invoices.invoices import generate_invoice
 from miaiqi_cards.shop.models import Product
 from .models import Order
-from .orders import epc_qr_data_uri, generate_email_content, send_order_email, serialize_cart
+from .orders import generate_email_content, send_order_email, serialize_cart
 
 
 @override_settings(
     INVOICE_NUMBER_PATTERN='TEST-{year}-{number:0>5}',
     INVOICE_RECIPIENT_ADDRESS='info@example.com',
     INVOICE_UPLOAD_ADDRESS='upload@example.com',
+    PAYMENT_REMITTANCE_PATTERN='MIAIQI-CARDS ORDER {order.invoice_number}',
 )
 class OrderEmailTests(TestCase):
     def setUp(self):
-        date_patch = patch('miaiqi_cards.shop.invoices.models.date')
-        self.addCleanup(date_patch.stop)
-        date_patch.start().today.return_value.year = 2026
         request = RequestFactory().get('/')
         request.session = {}
         self.cart = Cart(request)
@@ -42,6 +41,7 @@ class OrderEmailTests(TestCase):
         self.order = Order.objects.create(
             cart_id=self.cart.cart.pk,
             cart_data=serialize_cart(self.cart),
+            invoice_number='TEST-2026-00001',
             email_address='customer@example.com',
             **address_form.cleaned_data,
         )
@@ -79,7 +79,7 @@ class OrderEmailTests(TestCase):
         self.assertEqual(snapshot['discount_amount'], '1.25')
         self.assertEqual(snapshot['tax'], '0.45')
 
-    @patch('miaiqi_cards.shop.order.orders.epc_qr_data_uri', wraps=epc_qr_data_uri)
+    @patch('miaiqi_cards.shop.invoices.epc_qr.EPCPayment.as_qr', autospec=True, side_effect=EPCPayment.as_qr)
     def test_html_body_contains_order_details_and_qr_code(self, qr_generator):
         Order.objects.filter(pk=self.order.pk).update(
             street='Updated Street 2',
@@ -102,13 +102,13 @@ class OrderEmailTests(TestCase):
         self.assertNotIn('Steuer', html)
         payload = qr_generator.call_args.args[0].as_payload()
         self.assertIn('EUR7.00', payload)
-        self.assertIn(number, payload)
+        self.assertIn(f'MIAIQI-CARDS ORDER {number}', payload)
 
     def test_email_includes_nonzero_discount_and_tax(self):
         self.order.cart_data['discount_amount'] = '1.25'
         self.order.cart_data['tax'] = '0.45'
 
-        html = generate_email_content(self.order, 'TEST-2026-00001', 'qr')
+        html = generate_email_content(self.order, 'qr')
 
         self.assertIn('Rabatt', html)
         self.assertIn('Steuer', html)

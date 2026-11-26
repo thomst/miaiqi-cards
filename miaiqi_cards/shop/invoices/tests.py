@@ -115,6 +115,7 @@ class InvoiceTests(TestCase):
         return Order.objects.create(
             cart_id=cart.cart.pk,
             cart_data=serialize_cart(cart),
+            invoice_number='TEST-2026-00001',
             email_address='customer@example.com',
             **self.create_address(),
         )
@@ -141,9 +142,7 @@ class InvoiceTests(TestCase):
         order = self.create_order()
         Postcard.objects.filter(title='Invoice test postcard').update(title='Renamed postcard')
 
-        with patch('miaiqi_cards.shop.invoices.models.date') as mock_date:
-            mock_date.today.return_value.year = 2026
-            generate_invoice(order)
+        generate_invoice(order)
 
         rendered_html = html_class.call_args.kwargs['string']
         self.assertIn('TEST-2026-00001', rendered_html)

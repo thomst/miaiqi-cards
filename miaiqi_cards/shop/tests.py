@@ -33,6 +33,7 @@ class OrderTests(TestCase):
         order = Order.objects.create(
             cart_id=1,
             cart_data={'items': [], 'total': '0.00'},
+            invoice_number='TEST-00001',
             email_address='customer@example.com',
             **address,
         )
@@ -40,6 +41,7 @@ class OrderTests(TestCase):
         stored = Order.objects.get(pk=order.pk)
         self.assertEqual(stored.cart_id, 1)
         self.assertEqual(stored.cart_data, {'items': [], 'total': '0.00'})
+        self.assertEqual(stored.invoice_number, 'TEST-00001')
         self.assertEqual(stored.email_address, 'customer@example.com')
         for field, value in address.items():
             self.assertEqual(getattr(stored, field), value)
