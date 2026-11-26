@@ -1,7 +1,8 @@
 from unittest.mock import patch
 
 from cart.cart import Cart
-from django.test import RequestFactory, TestCase, override_settings
+from django.template.loader import render_to_string
+from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 
 from miaiqi_cards.postcards.models import Postcard
 from miaiqi_cards.shop.forms import AddressForm
@@ -10,6 +11,40 @@ from miaiqi_cards.shop.order.models import Order
 from miaiqi_cards.shop.order.orders import serialize_cart
 from .invoices import generate_invoice
 from .models import InvoiceNumber
+
+
+class InvoiceTemplateTests(SimpleTestCase):
+    def test_renders_cart_snapshot_and_totals(self):
+        cart = {
+            'items': [{
+                'product': 'Test postcard',
+                'quantity': 3,
+                'unit_price': '2.51',
+                'total_price': '7.53',
+            }],
+            'summary': '7.53',
+            'discount_amount': '1.25',
+            'tax': '0.45',
+            'shipping': '2.00',
+            'total': '8.73',
+        }
+
+        html = render_to_string('invoices/invoice.html', {'cart': cart})
+
+        self.assertInHTML('<td>Test postcard</td>', html)
+        self.assertInHTML('<td>3</td>', html)
+        for value in ('2.51', '7.53', '-1.25', '0.45', '2.00', '8.73'):
+            self.assertInHTML(f'<td>{value} €</td>', html)
+        self.assertIn('Rabatt', html)
+        self.assertIn('Steuer', html)
+
+    def test_omits_zero_discount_and_tax(self):
+        cart = {'items': [], 'discount_amount': '0.00', 'tax': '0.00'}
+
+        html = render_to_string('invoices/invoice.html', {'cart': cart})
+
+        self.assertNotIn('Rabatt', html)
+        self.assertNotIn('Steuer', html)
 
 
 @override_settings(INVOICE_NUMBER_PATTERN='TEST-{year}-{number:0>5}')

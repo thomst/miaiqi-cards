@@ -36,7 +36,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for item in items %}
+            {% for item in cart.items %}
                 <tr>
                     <td>{{ item.product }}</td>
                     <td>{{ item.quantity }}</td>
@@ -51,27 +51,27 @@
         <tbody>
             <tr>
                 <th>Zwischensumme</th>
-                <td>{{ subtotal|floatformat:2 }} €</td>
+                <td>{{ cart.summary|floatformat:2 }} €</td>
             </tr>
-            {% if discount != '0.00' %}
+            {% if cart.discount_amount != '0.00' %}
                 <tr>
                     <th>Rabatt</th>
-                    <td>-{{ discount|floatformat:2 }} €</td>
+                    <td>-{{ cart.discount_amount|floatformat:2 }} €</td>
                 </tr>
             {% endif %}
-            {% if tax != '0.00' %}
+            {% if cart.tax != '0.00' %}
                 <tr>
                     <th>Steuer</th>
-                    <td>{{ tax|floatformat:2 }} €</td>
+                    <td>{{ cart.tax|floatformat:2 }} €</td>
                 </tr>
             {% endif %}
             <tr>
                 <th>Versand</th>
-                <td>{{ shipping|floatformat:2 }} €</td>
+                <td>{{ cart.shipping|floatformat:2 }} €</td>
             </tr>
             <tr class="total">
                 <th>Gesamtbetrag</th>
-                <td>{{ total|floatformat:2 }} €</td>
+                <td>{{ cart.total|floatformat:2 }} €</td>
             </tr>
         </tbody>
     </table>

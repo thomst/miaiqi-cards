@@ -1,5 +1,4 @@
 from datetime import date
-from decimal import Decimal
 from pathlib import Path
 
 from django.conf import settings
@@ -20,12 +19,7 @@ def generate_invoice(order):
         'recipient_iban': settings.INVOICE_RECIPIENT_IBAN,
         'recipient_bic': settings.INVOICE_RECIPIENT_BIC,
         'address': order,
-        'items': order.cart_data['items'],
-        'subtotal': order.cart_data['summary'],
-        'discount': order.cart_data['discount_amount'],
-        'tax': order.cart_data['tax'],
-        'shipping': order.cart_data['shipping'],
-        'total': order.cart_data['total'],
+        'cart': order.cart_data,
     })
 
     css_path = PACKAGE_DIR / 'static' / 'css' / 'invoice.css'
