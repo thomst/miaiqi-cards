@@ -1,6 +1,7 @@
 import json
 from decimal import Decimal
 from types import SimpleNamespace
+from unittest.mock import patch
 from django.http import QueryDict
 from django.template import Context, Template
 from django.template.loader import render_to_string
@@ -8,15 +9,40 @@ from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.db import IntegrityError, transaction
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
-from cart.cart import Cart
+from cart.cart import Cart, CartException, InvalidDiscountError, MinimumOrderNotMet
 from cart.models import Cart as CartModel
 from .forms import AddressForm, EmailForm, LegalForm
 from miaiqi_cards.postcards.models import GallerySection, Postcard, PostcardSet, PostcardSetPostcard, SetsSection
 from miaiqi_cards.website.models import MiaiqiCardsPage
 from simple_page.models import PageSection
 from .models import Product, ShopSection
+from .order.models import Order
 from .renderers import ShopRenderer
 from .views import confirmation_view, description_view, update_product
+
+
+class OrderTests(TestCase):
+    def test_order_stores_address_and_email(self):
+        address = {
+            'first_name': 'Test',
+            'last_name': 'Customer',
+            'street': 'Postcard Street 1',
+            'city': 'Berlin',
+            'postal_code': '01234',
+        }
+        order = Order.objects.create(
+            cart_id=1,
+            cart_data={'items': [], 'total': '0.00'},
+            email_address='customer@example.com',
+            **address,
+        )
+
+        stored = Order.objects.get(pk=order.pk)
+        self.assertEqual(stored.cart_id, 1)
+        self.assertEqual(stored.cart_data, {'items': [], 'total': '0.00'})
+        self.assertEqual(stored.email_address, 'customer@example.com')
+        for field, value in address.items():
+            self.assertEqual(getattr(stored, field), value)
 
 
 class ProductTest(TestCase):
@@ -195,7 +221,7 @@ class ShopStepsTests(TestCase):
 
 
 class ShopCartSessionTests(TestCase):
-    def test_confirmation_cart_is_retained_until_a_new_order(self):
+    def create_checkout(self):
         shop = ShopSection.objects.create(title='Test Shop')
         postcard = Postcard.objects.create(title='Test Postcard')
         product = Product.objects.get(
@@ -221,9 +247,16 @@ class ShopCartSessionTests(TestCase):
         request.session = session
         cart = Cart(request)
         cart.add(product, unit_price=product.price)
+        return shop, request, cart
+
+    @patch('miaiqi_cards.shop.views.send_order_email')
+    def test_confirmation_cart_is_retained_until_a_new_order(self, send_order_email):
+        shop, request, cart = self.create_checkout()
+        session = request.session
         checked_out_cart_id = cart.cart.pk
 
-        response = confirmation_view(request, shop_id=shop.pk)
+        with self.captureOnCommitCallbacks(execute=True):
+            response = confirmation_view(request, shop_id=shop.pk)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -231,6 +264,17 @@ class ShopCartSessionTests(TestCase):
             checked_out_cart_id,
         )
         self.assertTrue(CartModel.objects.get(pk=checked_out_cart_id).checked_out)
+        order = Order.objects.get(cart_id=checked_out_cart_id)
+        self.assertEqual(order.cart_data['items'][0]['product'], 'Test Postcard')
+        self.assertEqual(order.cart_data['items'][0]['quantity'], 1)
+        self.assertEqual(order.cart_data['total'], '4.50')
+        self.assertEqual(order.email_address, 'test@example.com')
+        self.assertEqual(order.first_name, 'Test')
+        self.assertEqual(order.last_name, 'Customer')
+        self.assertEqual(order.street, 'Test Street 1')
+        self.assertEqual(order.city, 'Test City')
+        self.assertEqual(order.postal_code, '12345')
+        send_order_email.enqueue.assert_called_once_with(order.pk)
 
         confirmation_request = RequestFactory().get('/shop/')
         confirmation_request.session = session
@@ -242,6 +286,48 @@ class ShopCartSessionTests(TestCase):
         description_view(description_request, shop_id=shop.pk)
         self.assertNotIn(ShopRenderer.CONFIRMATION_CART_SESSION_KEY, session)
         self.assertTrue(Cart(description_request).is_empty())
+
+    @patch('miaiqi_cards.shop.views.send_order_email')
+    @patch('miaiqi_cards.shop.views.serialize_cart', side_effect=RuntimeError('snapshot failed'))
+    def test_checkout_is_rolled_back_if_order_creation_fails(self, serialize_cart, send_order_email):
+        shop, request, cart = self.create_checkout()
+
+        with self.captureOnCommitCallbacks(execute=True):
+            with self.assertRaisesRegex(RuntimeError, 'snapshot failed'):
+                confirmation_view(request, shop_id=shop.pk)
+
+        self.assertFalse(CartModel.objects.get(pk=cart.cart.pk).checked_out)
+        self.assertFalse(Order.objects.filter(cart_id=cart.cart.pk).exists())
+        send_order_email.enqueue.assert_not_called()
+
+    @patch('miaiqi_cards.shop.views.send_order_email')
+    def test_email_is_not_queued_when_outer_transaction_rolls_back(self, send_order_email):
+        shop, request, cart = self.create_checkout()
+
+        with self.captureOnCommitCallbacks(execute=True) as callbacks:
+            with self.assertRaisesRegex(RuntimeError, 'rollback'):
+                with transaction.atomic():
+                    confirmation_view(request, shop_id=shop.pk)
+                    send_order_email.enqueue.assert_not_called()
+                    raise RuntimeError('rollback')
+
+        self.assertEqual(callbacks, [])
+        self.assertFalse(CartModel.objects.get(pk=cart.cart.pk).checked_out)
+        self.assertFalse(Order.objects.filter(cart_id=cart.cart.pk).exists())
+        send_order_email.enqueue.assert_not_called()
+
+    def test_checkout_reports_specific_cart_errors(self):
+        shop, request, cart = self.create_checkout()
+        for error, message in (
+            (CartException, 'The cart is empty.'),
+            (MinimumOrderNotMet, 'The minimum order requirement is not met.'),
+            (InvalidDiscountError, 'The discount applied is invalid.'),
+        ):
+            with self.subTest(error=error):
+                with patch.object(Cart, 'checkout', side_effect=error):
+                    response = confirmation_view(request, shop_id=shop.pk)
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(response.content.decode(), message)
 
 
 class ProductWidgetTests(TestCase):

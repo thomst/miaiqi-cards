@@ -88,7 +88,7 @@ class ShopRenderer(renderers.SectionRenderer):
         return render_to_string('shop/cart.html', context, self.request)
 
     @set_state(CHECKOUT_STATE)
-    def get_checkout_html(self, all_forms=None):
+    def get_checkout_html(self, **all_forms):
         context = dict(shop=self.section)
         if all_forms:
             context.update(all_forms)

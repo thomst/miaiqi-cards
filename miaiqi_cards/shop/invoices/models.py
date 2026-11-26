@@ -19,16 +19,16 @@ class InvoiceNumber(models.Model):
         unique_together = (('year', 'number'),)
 
     @classmethod
-    def get_invoice_number(cls, cart):
+    def get_invoice_number(cls, cart_id):
         year = date.today().year
         while True:
             try:
                 with transaction.atomic():
                     try:
-                        entry = cls.objects.get(cart_id=cart.cart.pk)
+                        entry = cls.objects.get(cart_id=cart_id)
                     except cls.DoesNotExist:
                         last = cls.objects.filter(year=year).aggregate(Max('number'))['number__max']
-                        entry = cls.objects.create(cart_id=cart.cart.pk, year=year, number=(last or 0) + 1)
+                        entry = cls.objects.create(cart_id=cart_id, year=year, number=(last or 0) + 1)
                     return settings.INVOICE_NUMBER_PATTERN.format(year=entry.year, number=entry.number)
             except IntegrityError:
                 # A concurrent request took the number; try again with the new maximum.

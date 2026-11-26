@@ -1,4 +1,5 @@
 from datetime import date
+from decimal import Decimal
 from pathlib import Path
 
 from django.conf import settings
@@ -10,29 +11,21 @@ from .models import InvoiceNumber
 PACKAGE_DIR = Path(__file__).parent
 
 
-def generate_invoice(cart, address):
-    """Return PDF bytes for a checked-out cart."""
-    if not cart.cart.checked_out:
-        raise ValueError('An invoice can only be generated for a checked-out cart.')
-
+def generate_invoice(order):
+    """Return PDF bytes for a checked-out order."""
     html = render_to_string('invoices/invoice.html', {
-        'invoice_number': InvoiceNumber.get_invoice_number(cart),
+        'invoice_number': InvoiceNumber.get_invoice_number(order.cart_id),
         'invoice_date': date.today(),
         'recipient_name': settings.INVOICE_RECIPIENT_NAME,
         'recipient_iban': settings.INVOICE_RECIPIENT_IBAN,
         'recipient_bic': settings.INVOICE_RECIPIENT_BIC,
-        'address': address,
-        'items': [{
-            'product': item.product,
-            'quantity': item.quantity,
-            'unit_price': item.unit_price,
-            'total_price': item.total_price,
-        } for item in cart],
-        'subtotal': cart.summary(),
-        'discount': cart.discount_amount(),
-        'tax': cart.tax(),
-        'shipping': cart.shipping(),
-        'total': cart.total(),
+        'address': order,
+        'items': order.cart_data['items'],
+        'subtotal': order.cart_data['summary'],
+        'discount': Decimal(order.cart_data['discount_amount']),
+        'tax': Decimal(order.cart_data['tax']),
+        'shipping': order.cart_data['shipping'],
+        'total': order.cart_data['total'],
     })
 
     css_path = PACKAGE_DIR / 'static' / 'css' / 'invoice.css'

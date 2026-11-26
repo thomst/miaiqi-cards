@@ -1,9 +1,8 @@
 import base64
+from decimal import Decimal
 from io import BytesIO
 from pathlib import Path
 
-from cart.cart import Cart
-from cart.models import Cart as CartModel
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.tasks import task
@@ -14,8 +13,25 @@ from miaiqi_cards.mail_retry import retry_on_temporary_error
 from miaiqi_cards.shop.invoices.epc_qr import EPCPayment
 from miaiqi_cards.shop.invoices.invoices import generate_invoice
 from miaiqi_cards.shop.invoices.models import InvoiceNumber
+from .models import Order
 
 CSS_PATH = Path(__file__).parent / 'static' / 'css' / 'order.css'
+
+
+def serialize_cart(cart):
+    return {
+        'items': [{
+            'product': str(item.product),
+            'quantity': item.quantity,
+            'unit_price': str(item.unit_price),
+            'total_price': str(item.total_price),
+        } for item in cart],
+        'summary': str(cart.summary()),
+        'discount_amount': str(cart.discount_amount()),
+        'tax': str(cart.tax()),
+        'shipping': str(cart.shipping()),
+        'total': str(cart.total()),
+    }
 
 
 def epc_qr_data_uri(payment):
@@ -24,24 +40,15 @@ def epc_qr_data_uri(payment):
     return 'data:image/png;base64,' + base64.b64encode(buffer.getvalue()).decode('ascii')
 
 
-def load_closed_cart(cart_pk):
-    # Skips Cart.__init__, which needs a request and session; the pricing methods only use self.cart.
-    cart = Cart.__new__(Cart)
-    cart.cart = CartModel.objects.get(pk=cart_pk, checked_out=True)
-    cart._cache = {}
-    return cart
-
-
-@task(takes_context=True)
-@retry_on_temporary_error
-def send_order_email(cart_pk, address, email_address):
-    """Send the order details, EPC payment QR code and invoice PDF to the customer."""
-    cart = load_closed_cart(cart_pk)
-    number = InvoiceNumber.get_invoice_number(cart)
-    qr_data_uri = epc_qr_data_uri(EPCPayment(amount=cart.total(), remittance=number))
-    html = render_to_string('email/order.html', {
+def generate_email_content(order, number, qr_data_uri):
+    cart = {
+        **order.cart_data,
+        'discount_amount': Decimal(order.cart_data['discount_amount']),
+        'tax': Decimal(order.cart_data['tax']),
+    }
+    return render_to_string('order/order.html', {
         'cart': cart,
-        'address': address,
+        'address': order,
         'invoice_number': number,
         'css': CSS_PATH.read_text(encoding='utf-8'),
         'qr_data_uri': qr_data_uri,
@@ -50,15 +57,25 @@ def send_order_email(cart_pk, address, email_address):
         'recipient_bic': settings.INVOICE_RECIPIENT_BIC,
     })
 
+
+@task(takes_context=True)
+@retry_on_temporary_error
+def send_order_email(order_id):
+    """Send the order details, EPC payment QR code and invoice PDF to the customer."""
+    order = Order.objects.get(pk=order_id)
+    number = InvoiceNumber.get_invoice_number(order.cart_id)
+    qr_data_uri = epc_qr_data_uri(EPCPayment(amount=Decimal(order.cart_data['total']), remittance=number))
+    html = generate_email_content(order, number, qr_data_uri)
+
     sender = settings.INVOICE_RECIPIENT_ADDRESS
     message = EmailMultiAlternatives(
         subject=f'Ihre Bestellung {number}',
         body=strip_tags(html),
         from_email=sender,
-        to=[email_address],
+        to=[order.email_address],
         bcc=[sender, settings.INVOICE_UPLOAD_ADDRESS],
         reply_to=[sender],
     )
     message.attach_alternative(html, 'text/html')
-    message.attach(f'{number}.pdf', generate_invoice(cart, address), 'application/pdf')
+    message.attach(f'{number}.pdf', generate_invoice(order), 'application/pdf')
     message.send()

@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'miaiqi_cards.postcards',
     'miaiqi_cards.shop',
     'miaiqi_cards.shop.invoices',
-    'miaiqi_cards.shop.email',
+    'miaiqi_cards.shop.order',
     'miaiqi_cards.contact',
 ]
 
