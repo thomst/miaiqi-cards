@@ -53,13 +53,13 @@
                 <th>Zwischensumme</th>
                 <td>{{ subtotal|floatformat:2 }} €</td>
             </tr>
-            {% if discount %}
+            {% if discount != '0.00' %}
                 <tr>
                     <th>Rabatt</th>
                     <td>-{{ discount|floatformat:2 }} €</td>
                 </tr>
             {% endif %}
-            {% if tax %}
+            {% if tax != '0.00' %}
                 <tr>
                     <th>Steuer</th>
                     <td>{{ tax|floatformat:2 }} €</td>

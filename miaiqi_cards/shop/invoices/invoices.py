@@ -22,8 +22,8 @@ def generate_invoice(order):
         'address': order,
         'items': order.cart_data['items'],
         'subtotal': order.cart_data['summary'],
-        'discount': Decimal(order.cart_data['discount_amount']),
-        'tax': Decimal(order.cart_data['tax']),
+        'discount': order.cart_data['discount_amount'],
+        'tax': order.cart_data['tax'],
         'shipping': order.cart_data['shipping'],
         'total': order.cart_data['total'],
     })

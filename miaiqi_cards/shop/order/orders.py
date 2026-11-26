@@ -41,13 +41,8 @@ def epc_qr_data_uri(payment):
 
 
 def generate_email_content(order, number, qr_data_uri):
-    cart = {
-        **order.cart_data,
-        'discount_amount': Decimal(order.cart_data['discount_amount']),
-        'tax': Decimal(order.cart_data['tax']),
-    }
     return render_to_string('order/order.html', {
-        'cart': cart,
+        'cart': order.cart_data,
         'address': order,
         'invoice_number': number,
         'css': CSS_PATH.read_text(encoding='utf-8'),

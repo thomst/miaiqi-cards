@@ -35,13 +35,13 @@
                 <th>Zwischensumme</th>
                 <td>{{ cart.summary|floatformat:2 }} €</td>
             </tr>
-            {% if cart.discount_amount %}
+            {% if cart.discount_amount != '0.00' %}
                 <tr>
                     <th>Rabatt</th>
                     <td>-{{ cart.discount_amount|floatformat:2 }} €</td>
                 </tr>
             {% endif %}
-            {% if cart.tax %}
+            {% if cart.tax != '0.00' %}
                 <tr>
                     <th>Steuer</th>
                     <td>{{ cart.tax|floatformat:2 }} €</td>
